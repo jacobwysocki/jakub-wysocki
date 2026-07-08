@@ -1,6 +1,14 @@
 import type { L10n } from "@/lib/lang-store";
 
 /**
+ * Publiczny adres produkcyjny — bazowy URL dla metadanych OG, robots
+ * i sitemap. Po podpięciu własnej domeny ustaw NEXT_PUBLIC_SITE_URL
+ * w env Vercela (albo podmień fallback).
+ */
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://jakub-wysocki.vercel.app";
+
+/**
  * Realne dane kontaktowe i linki — jedno źródło prawdy dla obu trybów
  * (prosty layout, tryb pulpitu), menu systemowych, stopki i mailto.
  */

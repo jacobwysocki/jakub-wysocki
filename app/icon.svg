@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Favicon: ciemny squircle jak kafelki pulpitu, "jw" + vermilion kropka -->
+  <rect width="64" height="64" rx="15" fill="#1D1D1F"/>
+  <text x="27" y="43" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="-1.5" fill="#FFFFFF" text-anchor="middle">jw</text>
+  <circle cx="46" cy="40" r="4" fill="#FF6A3D"/>
+</svg>
