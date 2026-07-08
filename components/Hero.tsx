@@ -32,7 +32,7 @@ function Portrait() {
   };
 
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-[300px] md:max-w-[520px]">
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-[220px] md:max-w-[520px]">
       {/* Dociemnienie górnej krawędzi i narożników — tło zdjęcia jest tam
           jaśniejsze niż czerń hero, a maska nie może gasić głowy */}
       <div

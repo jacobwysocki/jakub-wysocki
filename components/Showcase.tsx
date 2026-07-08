@@ -80,7 +80,7 @@ export default function Showcase() {
   // Reduced motion / dotyk: zwykła sekcja bez pinningu
   if (reduced || coarse) {
     return (
-      <div className="mx-auto mt-24 max-w-content px-6">
+      <div className="mx-auto mt-16 max-w-content px-6 md:mt-24">
         <FeaturedImage />
         <div className="mt-10 space-y-10 text-center">
           {steps.map((step) => (
@@ -99,7 +99,7 @@ export default function Showcase() {
   return (
     // Wysokość kontenera wyznacza długość scrub-a: ~1 ekran na krok.
     // Na mobile mniej (120vh/krok byłoby męczące przy czytaniu).
-    <div ref={ref} className="relative mt-24 md:mt-32" style={{ height: `${(steps.length + 1) * 80}vh` }}>
+    <div ref={ref} className="relative mt-16 md:mt-32" style={{ height: `${(steps.length + 1) * 80}vh` }}>
       <div className="sticky top-0 flex h-screen items-center justify-center px-6">
         <div className="relative aspect-[4/5] w-full max-w-content overflow-hidden rounded-card shadow-lift sm:aspect-[16/10]">
           <motion.div style={{ scale: imageScale }} className="h-full w-full will-change-transform">
