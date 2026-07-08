@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { MODE_INIT_SCRIPT } from "@/lib/mode-store";
 import { LANG_INIT_SCRIPT } from "@/lib/lang-store";
@@ -30,6 +32,8 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
