@@ -96,10 +96,26 @@ export default function ProjectModal({
         </div>
 
         <div className="px-7 py-7 sm:px-10 sm:py-9">
-          <p className="text-caption uppercase text-muted">{t(project.tag)}</p>
-          <h2 className="mt-2 text-[28px] font-bold tracking-tight text-ink">
-            {project.client}
-          </h2>
+          {/* Nagłówek z CTA po prawej — przycisk widać od razu, bez scrollowania */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-caption uppercase text-muted">{t(project.tag)}</p>
+              <h2 className="mt-2 text-[28px] font-bold tracking-tight text-ink">
+                {project.client}
+              </h2>
+            </div>
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-accent px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent/90"
+              >
+                {t(project.linkLabel ?? ui.actions.openSite)}
+                <ArrowUpRight size={15} aria-hidden />
+              </a>
+            )}
+          </div>
           <p className="mt-3 max-w-prose text-body text-muted">
             {t(project.description)}
           </p>
@@ -144,18 +160,6 @@ export default function ProjectModal({
                 </div>
               ))}
             </div>
-          )}
-
-          {project.link && (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent/90"
-            >
-              {t(ui.actions.openSite)}
-              <ArrowUpRight size={15} aria-hidden />
-            </a>
           )}
         </div>
       </motion.article>

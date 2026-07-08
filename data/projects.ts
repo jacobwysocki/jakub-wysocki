@@ -18,66 +18,40 @@ export type StudioProject = {
   gallery: string[];
   gradient: string;
   link?: string;
+  /** Etykieta przycisku CTA w modalu (domyślnie „Otwórz stronę") */
+  linkLabel?: L10n;
 };
 
 export const studioProjects: StudioProject[] = [
   {
-    slug: "printly",
-    client: "Printly",
-    tag: { pl: "UX/UI + architektura informacji", en: "UX/UI + information architecture" },
+    slug: "squizzu",
+    client: "Squizzu",
+    tag: { pl: "Software + branding", en: "Software + branding" },
     description: {
-      pl: "Kompletny projekt UX/UI i architektury informacji dla e-commerce'owej platformy druku.",
-      en: "Complete UX/UI and information-architecture design for an e-commerce print platform.",
+      pl: "Grywalizowany SaaS rekrutacyjny dostarczony w pełnym zakresie: core software development oraz kompletny branding i identyfikacja wizualna.",
+      en: "A gamified recruitment SaaS delivered end to end: core software development plus full branding and identity design.",
     },
     details: [
       {
-        title: { pl: "Wyzwanie", en: "The challenge" },
+        title: { pl: "Produkt", en: "The product" },
         text: {
-          pl: "Checkout B2B dla druku to dziesiątki wariantów: formaty, gramatury, uszlachetnienia, nakłady i wyceny. Klienci gubili się przed finalizacją zamówienia.",
-          en: "A B2B print checkout means dozens of variables: formats, paper weights, finishes, volumes and quotes. Customers were getting lost before completing an order.",
+          pl: "Współtworzę Squizzu od pierwszej linijki kodu: architektura .NET 8 z orkiestracją Aspire, frontend Next.js z React 19 i CosmosDB na Azure.",
+          en: "I co-build Squizzu from the first line of code: .NET 8 architecture with Aspire orchestration, a Next.js/React 19 frontend and CosmosDB on Azure.",
         },
       },
       {
-        title: { pl: "Rozwiązanie", en: "The solution" },
+        title: { pl: "Marka", en: "The brand" },
         text: {
-          pl: "Przeprojektowałem architekturę informacji od zera i uprościłem wysoce złożony proces zakupowy B2B do eleganckiego, kilkukrokowego przepływu, który prowadzi użytkownika za rękę.",
-          en: "I redesigned the information architecture from the ground up and simplified a highly complex B2B checkout into an elegant, guided multi-step flow.",
+          pl: "Pełna identyfikacja wizualna powstała w studiu: logo, system kolorów i komponentów oraz ponad 100 ekranów produktu zaprojektowanych od zera.",
+          en: "The complete identity was designed in-studio: the logo, colour and component system, and 100+ product screens designed from scratch.",
         },
       },
     ],
-    services: ["UX/UI", "Information Architecture", "E-commerce"],
-    image: "/projects/printly.jpg",
+    services: ["Core Software Development", "Branding / Identity", "UX/UI"],
+    image: "/projects/squizzu.jpg",
     gallery: [],
-    gradient: "linear-gradient(135deg, #40180A 0%, #C2410C 100%)",
-  },
-  {
-    slug: "alumed",
-    client: "Alumed",
-    tag: { pl: "UX design + web development", en: "UX design + web development" },
-    description: {
-      pl: "Kompleksowy UX design i strona premium dla kliniki medycyny estetycznej.",
-      en: "End-to-end premium UX design and web development for an aesthetic medicine clinic.",
-    },
-    details: [
-      {
-        title: { pl: "Wyzwanie", en: "The challenge" },
-        text: {
-          pl: "Klinika premium potrzebowała strony, która wygląda ekskluzywnie, a jednocześnie ładuje się błyskawicznie i jest łatwa w edycji dla zespołu.",
-          en: "A premium clinic needed a site that looks exclusive yet loads instantly and stays easy for the team to edit.",
-        },
-      },
-      {
-        title: { pl: "Rozwiązanie", en: "The solution" },
-        text: {
-          pl: "Zaprojektowałem doświadczenie od zera i zbudowałem błyskawiczną stronę na lekkim, w pełni customowym HTML, CSS i JavaScript, osadzonym na skrojonej pod klienta strukturze WordPressa.",
-          en: "I designed the experience from scratch and built a lightning-fast site with lightweight, fully custom HTML, CSS and JavaScript on top of a tailored WordPress structure.",
-        },
-      },
-    ],
-    services: ["UX Design", "Custom HTML/CSS/JS", "WordPress"],
-    image: "/projects/alumed.jpg",
-    gallery: [],
-    gradient: "linear-gradient(135deg, #1D1D1F 0%, #6E6E73 100%)",
+    gradient: "linear-gradient(150deg, #FFC205 0%, #FF8C00 100%)",
+    link: contactInfo.squizzu,
   },
   {
     slug: "ultrastudio-site",
@@ -110,34 +84,66 @@ export const studioProjects: StudioProject[] = [
     link: contactInfo.ultrastudio,
   },
   {
-    slug: "squizzu",
-    client: "Squizzu",
-    tag: { pl: "Software + branding", en: "Software + branding" },
+    slug: "alumed",
+    client: "Alumed",
+    tag: { pl: "UX design + web development", en: "UX design + web development" },
     description: {
-      pl: "Grywalizowany SaaS rekrutacyjny dostarczony w pełnym zakresie: core software development oraz kompletny branding i identyfikacja wizualna.",
-      en: "A gamified recruitment SaaS delivered end to end: core software development plus full branding and identity design.",
+      pl: "Kompleksowy UX design i strona premium dla kliniki medycyny estetycznej.",
+      en: "End-to-end premium UX design and web development for an aesthetic medicine clinic.",
     },
     details: [
       {
-        title: { pl: "Produkt", en: "The product" },
+        title: { pl: "Wyzwanie", en: "The challenge" },
         text: {
-          pl: "Współtworzę Squizzu od pierwszej linijki kodu: architektura .NET 8 z orkiestracją Aspire, frontend Next.js z React 19 i CosmosDB na Azure.",
-          en: "I co-build Squizzu from the first line of code: .NET 8 architecture with Aspire orchestration, a Next.js/React 19 frontend and CosmosDB on Azure.",
+          pl: "Klinika premium potrzebowała strony, która wygląda ekskluzywnie, a jednocześnie ładuje się błyskawicznie i jest łatwa w edycji dla zespołu.",
+          en: "A premium clinic needed a site that looks exclusive yet loads instantly and stays easy for the team to edit.",
         },
       },
       {
-        title: { pl: "Marka", en: "The brand" },
+        title: { pl: "Rozwiązanie", en: "The solution" },
         text: {
-          pl: "Pełna identyfikacja wizualna powstała w studiu: logo, system kolorów i komponentów oraz ponad 100 ekranów produktu zaprojektowanych od zera.",
-          en: "The complete identity was designed in-studio: the logo, colour and component system, and 100+ product screens designed from scratch.",
+          pl: "Zaprojektowałem doświadczenie od zera i zbudowałem błyskawiczną stronę na lekkim, w pełni customowym HTML, CSS i JavaScript, osadzonym na skrojonej pod klienta strukturze WordPressa.",
+          en: "I designed the experience from scratch and built a lightning-fast site with lightweight, fully custom HTML, CSS and JavaScript on top of a tailored WordPress structure.",
         },
       },
     ],
-    services: ["Core Software Development", "Branding / Identity", "UX/UI"],
-    image: "/projects/squizzu.jpg",
+    services: ["UX Design", "Custom HTML/CSS/JS", "WordPress"],
+    image: "/projects/alumed.jpg",
     gallery: [],
-    gradient: "linear-gradient(150deg, #FFC205 0%, #FF8C00 100%)",
-    link: contactInfo.squizzu,
+    gradient: "linear-gradient(135deg, #1D1D1F 0%, #6E6E73 100%)",
+    link: "https://alumed.mx",
+    linkLabel: { pl: "Zobacz stronę", en: "Visit site" },
+  },
+  {
+    slug: "printly",
+    client: "Printly",
+    tag: { pl: "UX/UI + architektura informacji", en: "UX/UI + information architecture" },
+    description: {
+      pl: "Kompletny projekt UX/UI i architektury informacji dla e-commerce'owej platformy druku.",
+      en: "Complete UX/UI and information-architecture design for an e-commerce print platform.",
+    },
+    details: [
+      {
+        title: { pl: "Wyzwanie", en: "The challenge" },
+        text: {
+          pl: "Checkout B2B dla druku to dziesiątki wariantów: formaty, gramatury, uszlachetnienia, nakłady i wyceny. Klienci gubili się przed finalizacją zamówienia.",
+          en: "A B2B print checkout means dozens of variables: formats, paper weights, finishes, volumes and quotes. Customers were getting lost before completing an order.",
+        },
+      },
+      {
+        title: { pl: "Rozwiązanie", en: "The solution" },
+        text: {
+          pl: "Przeprojektowałem architekturę informacji od zera i uprościłem wysoce złożony proces zakupowy B2B do eleganckiego, kilkukrokowego przepływu, który prowadzi użytkownika za rękę.",
+          en: "I redesigned the information architecture from the ground up and simplified a highly complex B2B checkout into an elegant, guided multi-step flow.",
+        },
+      },
+    ],
+    services: ["UX/UI", "Information Architecture", "E-commerce"],
+    image: "/projects/printly.jpg",
+    gallery: [],
+    gradient: "linear-gradient(135deg, #40180A 0%, #C2410C 100%)",
+    link: "https://ultrastud.io/portfolio/printly",
+    linkLabel: { pl: "Zobacz case study na ultrastud.io", en: "See the case study on ultrastud.io" },
   },
 ];
 
@@ -156,42 +162,42 @@ export const studioInfo = {
 
 /**
  * Wyróżnione case study (pinned showcase w sekcji C) — historia
- * upraszczania checkoutu Printly w trzech krokach.
+ * własnego studia: marka, strona we Framerze i AI w służbie SEO.
  */
 export const featuredProject = {
-  client: "Printly",
+  client: "Ultra Studio",
   tag: { pl: "Case study", en: "Case study" } satisfies L10n,
-  image: null as string | null,
-  gradient: "linear-gradient(160deg, #000000 0%, #40180A 55%, #C2410C 130%)",
+  image: "/projects/ultrastudio-case2.jpg" as string | null,
+  gradient: "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
   steps: [
     {
       title: {
-        pl: "Złożoność pod kontrolą.",
-        en: "Complexity, tamed.",
+        pl: "Ta sama poprzeczka, co dla klientów.",
+        en: "The same bar we set for clients.",
       },
       text: {
-        pl: "Dziesiątki formatów, gramatur i uszlachetnień — uporządkowane w architekturę informacji, która myśli za użytkownika.",
-        en: "Dozens of formats, paper weights and finishes — organised into an information architecture that thinks for the user.",
+        pl: "Markę i stronę studia dopracowaliśmy równie skrupulatnie jak każdy projekt klientowski — to nasza najlepsza wizytówka.",
+        en: "We crafted the studio's own brand and site with the same rigour as any client project — it's our best calling card.",
       },
     },
     {
       title: {
-        pl: "Checkout jak przewodnik.",
-        en: "A checkout that guides.",
+        pl: "Projekt, który trafia na żywo tego samego dnia.",
+        en: "Design that ships the same day.",
       },
       text: {
-        pl: "Wieloetapowy proces B2B sprowadzony do kilku czytelnych kroków — każdy z jasnym celem i podglądem ceny.",
-        en: "A multi-stage B2B flow distilled into a few clear steps — each with a single purpose and a live price preview.",
+        pl: "Zbudowana we Framerze: zmiany w projekcie wdrażamy natychmiast, bez oddawania kontroli nad detalem i wydajnością.",
+        en: "Built in Framer: design decisions go live at once, without giving up control over detail or performance.",
       },
     },
     {
       title: {
-        pl: "Elegancja, która sprzedaje.",
-        en: "Elegance that converts.",
+        pl: "SEO, które pracuje w tle.",
+        en: "SEO that runs on autopilot.",
       },
       text: {
-        pl: "Prosty przepływ obniżył próg wejścia dla nowych klientów biznesowych platformy.",
-        en: "The simplified flow lowered the barrier to entry for the platform's new business customers.",
+        pl: "Autonomiczny agent AI crawluje strony klientów i sam generuje dane JSON-LD — pozycjonowanie napędzane kodem, nie ręczną robotą.",
+        en: "An autonomous AI agent crawls client sites and generates their JSON-LD on its own — rankings driven by code, not manual busywork.",
       },
     },
   ] as { title: L10n; text: L10n }[],
