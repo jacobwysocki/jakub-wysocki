@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-surface: #fbfbfd;
+  --color-ink: #1d1d1f;
+  --color-muted: #86868b;
+  --color-line: #d2d2d7;
+  --color-accent: #c2410c;
+  --color-accent-bright: #ff6a3d;
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  /* Lenis przejmuje scroll; natywny smooth wyłączony, żeby nie dublować */
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Widoczny focus tylko z klawiatury — subtelny ring w kolorze akcentu */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Rama okna pulpitu sygnalizuje fokus cieniem i światłami — bez outline'u */
+section[role="dialog"]:focus-visible {
+  outline: none;
+}
+
+/*
+ * Tryb pulpitu przed hydratacją: prosty layout ukryty, tło czarne
+ * (przechodzi płynnie w boot screen / tapetę). Atrybut data-hydrated
+ * dostaje <html> po starcie Reacta — od tego momentu widocznością
+ * zarządza ModeGate (cross-fade), nie CSS.
+ */
+html[data-mode="desktop"]:not([data-hydrated]) body {
+  background-color: #000;
+}
+html[data-mode="desktop"]:not([data-hydrated]) [data-simple-root] {
+  visibility: hidden;
+}
+
+/* Gdy użytkownik prosi o mniej ruchu: wszystko natychmiastowe */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
