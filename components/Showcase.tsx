@@ -143,7 +143,12 @@ function FeaturedImage({ fill = false }: { fill?: boolean }) {
         width={fill ? undefined : 1600}
         height={fill ? undefined : 1000}
         sizes="(max-width: 1120px) 100vw, 1120px"
-        className={fill ? "object-cover" : "w-full rounded-card object-cover"}
+        // Kadr przypięty wyżej — mockup siedzi nad strefą tekstu kroków
+        className={
+          fill
+            ? "object-cover object-bottom"
+            : "w-full rounded-card object-cover"
+        }
       />
     );
   }
