@@ -7,6 +7,7 @@ import { contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
 import { DroneIcon } from "@/components/logos";
+import LazyVideo from "@/components/LazyVideo";
 import { useDesktop } from "@/components/desktop/DesktopContext";
 
 /**
@@ -76,14 +77,9 @@ export default function EducationApp() {
         {/* Pętla/kadr z symulacji — renderuje się po podmianie media w data/education.ts */}
         {education.dissertation.media &&
           (/\.(webm|mp4)$/.test(education.dissertation.media) ? (
-            <video
+            <LazyVideo
               src={education.dissertation.media}
-              autoPlay
-              muted
-              loop
-              playsInline
-              aria-hidden
-              className="mt-4 aspect-video w-full rounded-xl object-cover ring-1 ring-white/10"
+              className="mt-4 aspect-video w-full rounded-xl ring-1 ring-white/10"
             />
           ) : (
             <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-xl ring-1 ring-white/10">
