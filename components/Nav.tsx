@@ -44,7 +44,7 @@ export default function Nav() {
       <div
         className={`transition-all duration-500 ease-apple ${
           scrolled
-            ? "border-b border-line/60 bg-surface/70 backdrop-blur-xl"
+            ? "border-b border-line/60 bg-surface/90 supports-[backdrop-filter]:md:bg-surface/70 supports-[backdrop-filter]:md:backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >

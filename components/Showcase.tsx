@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import { featuredProject } from "@/data/projects";
 import { useT } from "@/lib/lang-store";
+import { useMediaQuerySafe } from "@/lib/useMediaQuery";
 import Reveal from "@/components/Reveal";
 
 /**
@@ -61,6 +62,9 @@ function Step({
 export default function Showcase() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  // Pinned scrub = useScroll + ~9 useTransform + warstwa sticky na klatkę.
+  // Na dotyku dajemy prostą, ułożoną wersję (jak przy reduced motion).
+  const coarse = useMediaQuerySafe("(pointer: coarse)");
   const t = useT();
   const steps = featuredProject.steps.map((step) => ({
     title: t(step.title),
@@ -73,8 +77,8 @@ export default function Showcase() {
   });
   const imageScale = useTransform(scrollYProgress, [0, 0.4], [1.06, 1]);
 
-  // Reduced motion / prostszy wariant: zwykła sekcja bez pinningu
-  if (reduced) {
+  // Reduced motion / dotyk: zwykła sekcja bez pinningu
+  if (reduced || coarse) {
     return (
       <div className="mx-auto mt-24 max-w-content px-6">
         <FeaturedImage />

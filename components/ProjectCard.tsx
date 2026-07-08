@@ -31,7 +31,7 @@ export default function ProjectCard({
         <div className="relative aspect-[4/3] shrink-0 overflow-hidden rounded-[14px]">
           {project.image ? (
             <motion.div
-              className="h-full w-full will-change-transform"
+              className="h-full w-full"
               whileHover={reduced ? undefined : { scale: 1.06 }}
               transition={SPRING}
             >
@@ -47,7 +47,7 @@ export default function ProjectCard({
             /* Placeholder do czasu dostarczenia realnych okładek */
             <motion.div
               aria-hidden
-              className="flex h-full w-full items-center justify-center will-change-transform"
+              className="flex h-full w-full items-center justify-center"
               style={{ background: project.gradient }}
               whileHover={reduced ? undefined : { scale: 1.06 }}
               transition={SPRING}

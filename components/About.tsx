@@ -11,6 +11,7 @@ import {
 import { site } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
+import { useMediaQuerySafe } from "@/lib/useMediaQuery";
 import Reveal from "@/components/Reveal";
 import CountUp from "@/components/CountUp";
 
@@ -70,6 +71,10 @@ function HighlightedParagraph({ text }: { text: string }) {
 
 export default function About() {
   const reduced = useReducedMotion();
+  // Podświetlanie słowo-po-słowie to ~45 useTransform liczonych na każdej
+  // klatce scrolla — na dotyku dajemy statyczny akapit (jak przy reduced).
+  const coarse = useMediaQuerySafe("(pointer: coarse)");
+  const plain = reduced || coarse;
   const t = useT();
 
   const paragraph = t(site.about.paragraph);
@@ -82,7 +87,7 @@ export default function About() {
           <h2 className="mt-4 text-h2">{t(ui.sections.aboutTitle)}</h2>
         </Reveal>
 
-        {reduced ? (
+        {plain ? (
           <Reveal className="mx-auto mt-10 max-w-prose">
             <p className="text-center text-h3 font-medium leading-snug">{paragraph}</p>
           </Reveal>
