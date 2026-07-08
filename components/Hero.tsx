@@ -96,11 +96,13 @@ export default function Hero() {
       className="relative flex min-h-screen items-center overflow-hidden bg-black text-white"
     >
       {/* Delikatna poświata w tle */}
+      {/* Poświata bez filtra blur — miękkość daje sam gradient (rasteryzacja
+          120px blura na GPU telefonu obciąża pierwszy paint i LCP) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[20%] top-1/3 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[120px]"
+        className="pointer-events-none absolute left-[20%] top-1/3 h-[75vmin] w-[75vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
         style={{
-          background: "radial-gradient(circle, #FF6A3D 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(255,106,61,0.55) 0%, transparent 60%)",
         }}
       />
 
@@ -123,7 +125,7 @@ export default function Hero() {
                     <motion.span
                       key={`${word}-${i}`}
                       variants={wordVariants}
-                      className="inline-block whitespace-pre will-change-transform"
+                      className="inline-block whitespace-pre"
                     >
                       {word}
                       {i < arr.length - 1 ? " " : ""}

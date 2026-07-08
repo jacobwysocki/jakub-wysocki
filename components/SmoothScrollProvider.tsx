@@ -23,7 +23,13 @@ export default function SmoothScrollProvider({
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Płynny scroll tylko na desktopie. Na dotyku (telefon/tablet) natywny
+    // scroll działa poza wątkiem głównym i jest płynniejszy niż RAF Lenisa,
+    // który dodatkowo re-triggeruje każdy useScroll na każdej klatce.
+    const noSmooth =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(pointer: coarse)").matches;
+    if (noSmooth) return;
 
     const instance = new Lenis({ lerp: 0.1 });
     setLenis(instance);
