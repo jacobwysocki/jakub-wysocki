@@ -134,11 +134,13 @@ export default function Hero() {
             </StableText>
           </h1>
 
+          {/* Transform-only: tekst maluje się od razu (też bez JS), bez
+              bramkowania opacity — spójnie z portretem i pod kątem LCP */}
           <motion.p
             className="mx-auto mt-7 max-w-prose text-body text-white/60 md:mx-0"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.6 }}
+            initial={reduced ? false : { y: 24 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.2 }}
           >
             <StableText l10n={site.hero.subline} />
           </motion.p>
@@ -146,9 +148,9 @@ export default function Hero() {
           {/* Szybkie fakty — cichy dowód zamiast pustego sloganu */}
           <motion.ul
             className="mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:justify-start"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.9 }}
+            initial={reduced ? false : { y: 16 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.3 }}
           >
             {site.hero.facts.map((fact, i) => (
               <li
@@ -162,9 +164,9 @@ export default function Hero() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.1, ease: [...EASE_APPLE], delay: 0.35 }}
+          initial={reduced ? false : { scale: 0.98, y: 16 }}
+          animate={{ scale: 1, y: 0 }}
+          transition={{ duration: 1.1, ease: [...EASE_APPLE], delay: 0.1 }}
           className="order-first md:order-none"
         >
           <Portrait />
