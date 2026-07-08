@@ -96,9 +96,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-white/10 bg-black pb-10 pt-16 text-white">
+    <footer className="border-t border-white/10 bg-black pb-10 pt-14 text-white">
       <div className="mx-auto max-w-content px-6">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="col-span-2 md:col-span-1">
             <p className="text-[17px] font-semibold tracking-tight">{site.name}</p>
             <p className="mt-2 max-w-[30ch] text-[13px] leading-relaxed text-white/50">
@@ -164,7 +164,7 @@ export default function Footer() {
         </div>
 
         {/* Wiersz statusu systemu */}
-        <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-[12px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-[12px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. {t(ui.footer.rights)}
           </p>

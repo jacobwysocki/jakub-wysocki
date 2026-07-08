@@ -21,7 +21,7 @@ export default function UltraStudio() {
     <section
       id="studio"
       aria-label="Ultra Studio"
-      className="bg-surface py-20 md:py-32"
+      className="bg-surface py-16 md:py-32"
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">

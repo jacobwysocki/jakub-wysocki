@@ -80,7 +80,7 @@ export default function About() {
   const paragraph = t(site.about.paragraph);
 
   return (
-    <section id="about" aria-label={t(ui.sections.about)} className="bg-surface py-20 md:py-32">
+    <section id="about" aria-label={t(ui.sections.about)} className="bg-surface py-16 md:py-32">
       <div className="mx-auto max-w-content px-6">
         <Reveal className="text-center">
           <p className="text-caption uppercase text-muted">{t(ui.sections.about)}</p>
@@ -95,10 +95,15 @@ export default function About() {
           <HighlightedParagraph key={paragraph} text={paragraph} />
         )}
 
-        {/* Metryki z CV — count-up; 5 kart, środek wyróżniony na szerokich */}
-        <div className="mx-auto mt-20 grid max-w-5xl grid-cols-2 gap-x-6 gap-y-12 text-center sm:grid-cols-3 md:mt-28 lg:grid-cols-5">
+        {/* Metryki z CV — count-up. Flex-wrap + justify-center: ostatni
+            (nieparzysty) wiersz sam się centruje, zamiast wisieć przy lewej. */}
+        <div className="mx-auto mt-16 flex max-w-5xl flex-wrap justify-center gap-x-6 gap-y-12 text-center md:mt-28">
           {site.metrics.map((metric, i) => (
-            <Reveal key={i} delay={i * 0.08}>
+            <Reveal
+              key={i}
+              delay={i * 0.08}
+              className="basis-[calc(50%-0.75rem)] sm:basis-[calc(33.333%-1rem)] lg:basis-[calc(20%-1.2rem)]"
+            >
               <p className="text-h2 tabular-nums text-ink">
                 <CountUp value={metric.value} suffix={metric.suffix} />
               </p>

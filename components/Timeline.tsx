@@ -97,7 +97,7 @@ function Education() {
   const t = useT();
 
   return (
-    <div className="mx-auto mt-24 max-w-4xl md:mt-32">
+    <div className="mx-auto mt-16 max-w-4xl md:mt-32">
       <Reveal className="text-center">
         <h3 className="text-h3 text-ink">{t(ui.sections.educationTitle)}</h3>
       </Reveal>
@@ -265,7 +265,7 @@ export default function Timeline() {
     <section
       id="engineering"
       aria-label={t(ui.sections.engineering)}
-      className="bg-white py-20 md:py-32"
+      className="bg-white py-16 md:py-32"
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">
@@ -281,7 +281,7 @@ export default function Timeline() {
             absolutnie pozycjonowanym szynom i spycha wypełnienie 64px w dół */}
         <ol
           ref={ref}
-          className="relative mx-auto mt-20 flex max-w-3xl flex-col gap-16 md:mt-28 md:gap-20"
+          className="relative mx-auto mt-14 flex max-w-3xl flex-col gap-16 md:mt-28 md:gap-20"
         >
           {/* Centrowanie szyn przez -ml zamiast -translate-x-1/2 — inline'owe
               transformy Framera nadpisują klasy transformujące Tailwinda */}

@@ -32,7 +32,7 @@ export default function Extras() {
     <section
       id="extras"
       aria-label={t(ui.sections.extras)}
-      className="bg-white py-20 md:py-28"
+      className="bg-white py-16 md:py-32"
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">
