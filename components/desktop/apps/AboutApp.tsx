@@ -5,7 +5,7 @@ import { Earth, Footprints, Mountain, Trophy, Waves, Zap } from "lucide-react";
 import { site } from "@/data/site";
 import { hobbies } from "@/data/education";
 import { ui } from "@/data/ui";
-import { useLang, useT } from "@/lib/lang-store";
+import { isWordSuffix, useLang, useT } from "@/lib/lang-store";
 
 /** Ikony pasji — lustrzane do sekcji Extras w prostej wersji */
 const HOBBY_ICONS: Record<string, LucideIcon> = {
@@ -66,7 +66,8 @@ export default function AboutApp() {
             </dt>
             <dd className="order-1 text-[22px] font-bold tracking-tight text-ink">
               {metric.value}
-              {metric.suffix}
+              {isWordSuffix(t(metric.suffix)) ? " " : ""}
+              {t(metric.suffix)}
             </dd>
           </div>
         ))}

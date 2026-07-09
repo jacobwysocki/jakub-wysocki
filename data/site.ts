@@ -55,15 +55,18 @@ export const site = {
   metrics: [
     {
       value: 5,
-      suffix: "",
+      suffix: {
+        pl: "lat",
+        en: "years",
+      },
       label: {
-        pl: "lat doświadczenia — Polska, UK i Meksyk",
-        en: "years of experience across Poland, the UK & Mexico",
+        pl: "doświadczenia — Polska, UK i Meksyk",
+        en: "of experience across Poland, the UK & Mexico",
       },
     },
     {
       value: 100,
-      suffix: "+",
+      suffix: { pl: "+", en: "+" },
       label: {
         pl: "ekranów Squizzu zaprojektowanych od zera, bez szablonów",
         en: "Squizzu screens designed from scratch, no UI templates",
@@ -71,7 +74,7 @@ export const site = {
     },
     {
       value: 40,
-      suffix: "k+",
+      suffix: { pl: "k+", en: "k+" },
       label: {
         pl: "aktywnych użytkowników aplikacji uczelnianej po moim redesignie",
         en: "active users of the university app after my UX redesign",
@@ -79,7 +82,7 @@ export const site = {
     },
     {
       value: 35,
-      suffix: "+",
+      suffix: { pl: "+", en: "+" },
       label: {
         pl: "stron dostarczonych zespołom badawczym w UK",
         en: "sites delivered for UK research teams",
@@ -87,13 +90,13 @@ export const site = {
     },
     {
       value: 5,
-      suffix: "h",
+      suffix: { pl: "h", en: "h" },
       label: {
         pl: "tygodniowo oszczędzone dzięki mojemu interfejsowi text-to-SQL",
         en: "saved weekly by my conversational text-to-SQL interface",
       },
     },
-  ] as { value: number; suffix: string; label: L10n }[],
+  ] satisfies { value: number; suffix: L10n; label: L10n }[],
   contact: {
     heading: { pl: "Porozmawiajmy.", en: "Let's talk." } satisfies L10n,
     subline: {

@@ -35,9 +35,11 @@ export default function CountUp({ value, suffix = "", duration = 1.4 }: CountUpP
   }, [inView, value, duration, reduced]);
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className="whitespace-nowrap">
       {display}
-      {suffix}
+      {suffix && (
+        <span className="ml-1 align-middle text-[0.5em] font-semibold">{suffix.trim()}</span>
+      )}
     </span>
   );
 }
