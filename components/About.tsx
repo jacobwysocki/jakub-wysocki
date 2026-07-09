@@ -105,7 +105,7 @@ export default function About() {
               className="basis-[calc(50%-0.75rem)] sm:basis-[calc(33.333%-1rem)] lg:basis-[calc(20%-1.2rem)]"
             >
               <p className="text-h2 tabular-nums text-ink">
-                <CountUp value={metric.value} suffix={metric.suffix} />
+                <CountUp value={metric.value} suffix={t(metric.suffix)} />
               </p>
               <p className="mx-auto mt-2 max-w-[22ch] text-[14px] leading-snug text-muted">
                 {t(metric.label)}

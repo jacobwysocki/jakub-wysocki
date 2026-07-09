@@ -7,6 +7,11 @@ export type L10n = { pl: string; en: string };
 
 export const LANG_STORAGE_KEY = "jw-lang";
 
+/** Suffixes spelled out as words ("years", "lat") vs. symbols ("+", "k+", "h"). */
+export function isWordSuffix(suffix: string) {
+  return /^[a-zA-Z]+$/.test(suffix.trim()) && suffix.trim().length > 1;
+}
+
 /**
  * Skrypt blokujący w <head> — ustala język PRZED hydratacją
  * (zapis użytkownika albo heurystyka navigator.language) i zapisuje
