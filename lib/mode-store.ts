@@ -6,11 +6,11 @@ export const MODE_STORAGE_KEY = "jw-view-mode";
 
 /**
  * Skrypt blokujący w <head> — ustala tryb PRZED pierwszym paintem
- * (zapis użytkownika albo heurystyka: duży ekran + brak dotyku = pulpit),
+ * (zapis użytkownika albo domyślnie "simple"),
  * zapisuje go w data-mode na <html>. CSS w globals.css używa tego atrybutu,
  * żeby nie mignął niewłaściwy widok przed hydratacją.
  */
-export const MODE_INIT_SCRIPT = `(function(){try{var m=localStorage.getItem("${MODE_STORAGE_KEY}");if(m!=="desktop"&&m!=="simple"){m=window.matchMedia("(min-width:768px)").matches&&!window.matchMedia("(pointer:coarse)").matches?"desktop":"simple"}document.documentElement.dataset.mode=m}catch(e){document.documentElement.dataset.mode="simple"}})()`;
+export const MODE_INIT_SCRIPT = `(function(){try{var m=localStorage.getItem("${MODE_STORAGE_KEY}");if(m!=="desktop"&&m!=="simple"){m="simple"}document.documentElement.dataset.mode=m}catch(e){document.documentElement.dataset.mode="simple"}})()`;
 
 type ModeState = {
   /** null = jeszcze nie odczytany (SSR / przed hydratacją) */
