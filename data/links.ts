@@ -26,6 +26,7 @@ export type NavLink = { label: L10n; href: string };
 export const navLinks: NavLink[] = [
   { label: { pl: "O mnie", en: "About" }, href: "#about" },
   { label: { pl: "Doświadczenie", en: "Experience" }, href: "#engineering" },
+  { label: { pl: "Projekty", en: "Projects" }, href: "#personal-projects" },
   { label: { pl: "Ultra Studio", en: "Ultra Studio" }, href: "#studio" },
   { label: { pl: "Kontakt", en: "Contact" }, href: "#contact" },
 ];

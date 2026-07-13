@@ -8,12 +8,13 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import Image from "next/image";
-import { ArrowUpRight, Award, Code2, GraduationCap } from "lucide-react";
+import { ArrowUpRight, Award, Code2, GraduationCap, Monitor } from "lucide-react";
 import { engineeringRoles, studioNote, type Role } from "@/data/experience";
 import { education } from "@/data/education";
 import { contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
-import { useT } from "@/lib/lang-store";
+import { useT, type L10n } from "@/lib/lang-store";
+import { useModeStore } from "@/lib/mode-store";
 import { DroneIcon } from "@/components/logos";
 import Reveal from "@/components/Reveal";
 import LazyVideo from "@/components/LazyVideo";
@@ -227,6 +228,123 @@ function Education() {
   );
 }
 
+/** Media do sekcji Interactive OS — podmień na ścieżkę do pliku wideo/screena */
+const OS_MEDIA: string | null = "/images/DemoOS.mp4";
+
+function PersonalProjects() {
+  const t = useT();
+
+  const osHighlights = [
+    {
+      pl: "Pełny menedżer okien z przeciąganiem, skalowaniem krawędzi, minimalizacją i maksymalizacją — animowany sprężyną Framer Motion.",
+      en: "Full window manager with drag, edge resize, minimise and maximise — spring-animated by Framer Motion.",
+    },
+    {
+      pl: "Dock z magnifikacją ikon w stylu macOS: fizyczna odległość kursora steruje skalą i unoszeniem każdej ikony.",
+      en: "macOS-style dock with icon magnification: cursor distance physically drives the scale and lift of each icon.",
+    },
+    {
+      pl: "7 wbudowanych aplikacji — od live preview stron w iframe po experience timeline i kontakt — z sidebarami, zakładkami i podglądem na żywo.",
+      en: "7 built-in apps — from live site previews in iframes to an experience timeline and contact — with sidebars, tabs and live previews.",
+    },
+    {
+      pl: "Pasek menu z zegarem, menu kontekstowe z wyborem tapety oraz ekran startowy z progress barem — detale, które domykają wrażenie systemu.",
+      en: "Menu bar with a live clock, right-click context menu with wallpaper picker, and a boot screen with a progress bar — details that sell the OS feel.",
+    },
+  ] as L10n[];
+
+  return (
+    <div id="personal-projects" className="mx-auto mt-16 max-w-4xl md:mt-32">
+      <Reveal className="text-center">
+        <h3 className="text-h3 text-ink">{t(ui.sections.personalProjectsTitle)}</h3>
+      </Reveal>
+
+      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[1.1fr_0.9fr]">
+        <Reveal className="h-full">
+          <div className="flex h-full flex-col rounded-card bg-ink p-7 text-white shadow-soft">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-accent-bright">
+              <Monitor className="h-6 w-6" />
+            </span>
+            <p className="mt-5 text-caption uppercase text-white/40">
+              {t({ pl: "Eksperyment UI", en: "UI Experiment" })}
+            </p>
+            <h4 className="mt-2 text-[16px] font-semibold leading-snug tracking-tight">
+              Interactive OS
+            </h4>
+            <p className="mt-3 text-[14px] leading-relaxed text-white/65">
+              {t({
+                pl: "Webowy system operacyjny jako alternatywny sposób eksploracji mojego portfolio. Okna, dock, pasek menu, tapety, boot screen — kompletne doświadczenie budowane komponent po komponencie w React.",
+                en: "A web-based operating system as an alternative way to explore my portfolio. Windows, dock, menu bar, wallpapers, boot screen — a complete experience built component by component in React.",
+              })}
+            </p>
+
+            {/* Pętla/kadr z OS — renderuje się po podmianie OS_MEDIA */}
+            {OS_MEDIA &&
+              (/\.(webm|mp4)$/.test(OS_MEDIA) ? (
+                <LazyVideo
+                  src={OS_MEDIA}
+                  className="mt-4 aspect-video w-full rounded-xl ring-1 ring-white/10"
+                />
+              ) : (
+                <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-xl ring-1 ring-white/10">
+                  <Image
+                    src={OS_MEDIA}
+                    alt="Interactive OS"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+
+            <ul className="mt-4 flex flex-wrap gap-1.5">
+              {["Next.js", "React", "TypeScript", "Zustand", "Framer Motion"].map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] font-medium text-white/75"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-auto flex flex-wrap gap-2.5 pt-6">
+              <button
+                type="button"
+                onClick={() => useModeStore.getState().setMode("desktop")}
+                className="group flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-white/85"
+              >
+                {t(ui.actions.openDesktop)}
+                <ArrowUpRight size={14} aria-hidden className={arrowClass} />
+              </button>
+            </div>
+          </div>
+        </Reveal>
+        <div className="flex flex-col gap-6">
+          {/* Highlights — osobna karta obok, powtarza styl "sekcji case study" z Dissertation */}
+          <Reveal delay={0.1} className="flex-1">
+            <div className="flex h-full flex-col rounded-card bg-surface p-7 shadow-soft ring-1 ring-line/50">
+              <h4 className="text-[19px] font-semibold tracking-tight text-ink">
+                {t({ pl: "Co jest w środku", en: "What's inside" })}
+              </h4>
+              <ul className="mt-4 flex flex-1 flex-col space-y-3 text-[13px] leading-relaxed text-ink/75">
+                {osHighlights.map((highlight, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span
+                      aria-hidden
+                      className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-accent"
+                    />
+                    {t(highlight)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Timeline() {
   const ref = useRef<HTMLOListElement>(null);
   const reduced = useReducedMotion();
@@ -292,9 +410,8 @@ export default function Timeline() {
           <motion.div
             aria-hidden
             style={reduced ? undefined : { height: smoothHeight }}
-            className={`absolute left-[7px] top-2 -ml-px w-0.5 rounded-full bg-accent ${
-              reduced ? "bottom-2" : ""
-            }`}
+            className={`absolute left-[7px] top-2 -ml-px w-0.5 rounded-full bg-accent ${reduced ? "bottom-2" : ""
+              }`}
           />
           {entries.map((entry) => (
             <TimelineItem key={entry.id} entry={entry} />
@@ -302,6 +419,7 @@ export default function Timeline() {
         </ol>
 
         <Education />
+        <PersonalProjects />
       </div>
     </section>
   );
