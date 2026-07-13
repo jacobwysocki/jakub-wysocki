@@ -62,29 +62,31 @@ export default function Nav() {
             {site.name}
           </a>
 
-          <ul className="flex items-center gap-4 sm:gap-6">
-            {navLinks.map((link) => (
-              <li key={link.href} className="hidden md:block">
-                <a
-                  href={link.href}
-                  onClick={(e) => handleAnchor(e, link.href)}
-                  className={`text-[13px] font-medium transition-colors duration-300 ${
-                    scrolled
-                      ? "text-ink/80 hover:text-accent"
-                      : "text-white/80 hover:text-white"
-                  }`}
-                >
-                  <StableText l10n={link.label} className="whitespace-nowrap" />
-                </a>
-              </li>
-            ))}
+          <div className="flex items-center gap-4 sm:gap-6">
+            <ul className={`hidden md:flex items-center rounded-full border p-1 transition-colors duration-500 ${
+              scrolled ? "border-line/60 bg-surface/50" : "border-white/20 bg-white/5"
+            }`}>
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleAnchor(e, link.href)}
+                    className={`block w-28 rounded-full py-1.5 text-center text-[13px] font-medium transition-colors duration-300 ${
+                      scrolled
+                        ? "text-ink/80 hover:bg-black/5 hover:text-ink"
+                        : "text-white/80 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <StableText l10n={link.label} className="mx-auto block" />
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-            <li>
+            <div className="flex items-center gap-4 sm:gap-6">
               <LangSwitch tone={scrolled ? "light" : "dark"} />
-            </li>
 
-            {/* Kapsuła trybu pulpitu — celowo najmocniejszy element paska */}
-            <li>
+              {/* Kapsuła trybu pulpitu — celowo najmocniejszy element paska */}
               <button
                 type="button"
                 onClick={() => setMode("desktop")}
@@ -108,8 +110,8 @@ export default function Nav() {
                 />
                 <StableText l10n={ui.mode.toDesktop} className="whitespace-nowrap" />
               </button>
-            </li>
-          </ul>
+            </div>
+          </div>
         </nav>
       </div>
     </motion.header>

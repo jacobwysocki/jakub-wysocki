@@ -27,6 +27,7 @@ export const ui = {
       en: "Enterprise logistics, award-winning e-commerce, an app for 40,000 students and my own SaaS — written in .NET, React and TypeScript.",
     },
     educationTitle: { pl: "Edukacja i badania.", en: "Education & research." },
+    personalProjectsTitle: { pl: "Projekty osobiste.", en: "Personal projects." },
     studio: { pl: "Ultra Studio", en: "Ultra Studio" },
     studioSub: {
       pl: "Wizualna, kliencka strona mojej pracy — projekty otwierają się z pełnym opisem.",
@@ -51,6 +52,7 @@ export const ui = {
     callMe: { pl: "Zadzwoń", en: "Call me" },
     showPhone: { pl: "Pokaż numer", en: "Show number" },
     openDroneSim: { pl: "Uruchom symulację", en: "Launch the simulation" },
+    openDesktop: { pl: "Uruchom OS", en: "Launch OS" },
     visitStudio: { pl: "Zobacz ultrastud.io", en: "Visit ultrastud.io" },
   },
   desktop: {
