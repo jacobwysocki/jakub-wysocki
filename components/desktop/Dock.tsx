@@ -22,12 +22,12 @@ import { APPS, AppTile, type AppConfig } from "./registry";
  * to czysty transform scale (origin: dół) — pasek nie zmienia rozmiaru,
  * rosną wyłącznie ikony, wystając ponad krawędź paska.
  */
-const BASE = 52;
+const BASE = 48;
 // Skala trzymana w ryzach (1.24) + lekki lift w górę: sąsiednie ikony
 // nie nachodzą na siebie, a powiększenie wciąż jest wyraźne.
-const MAX_SCALE = 1.24;
-const LIFT = 10;
-const RANGE = 88;
+const MAX_SCALE = 1.2;
+const LIFT = 8;
+const RANGE = 80;
 
 /** Magnifikacja: odległość kursora od środka ikony → skala + lift (sprężyna). */
 function useDockScale(
@@ -115,7 +115,7 @@ function DockItem({
       </motion.span>
       <span
         aria-hidden
-        className={`absolute -bottom-[7px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/90 transition-opacity duration-200 ${
+        className={`absolute -bottom-[7px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent-bright shadow-[0_0_7px_rgba(255,106,61,0.9)] transition-opacity duration-200 ${
           isOpen ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -145,19 +145,18 @@ function DockModeSwitch({ mouseX }: { mouseX: MotionValue<number> }) {
       <motion.span
         style={reduced ? undefined : { scale, y, transformOrigin: "50% 100%" }}
         className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[24%] will-change-transform"
-        // Jasny kafelek odróżnia przełącznik trybu od aplikacji
       >
         <span
           aria-hidden
           className="absolute inset-0 rounded-[24%]"
-          style={{ background: "linear-gradient(160deg, #F5F5F7 0%, #C7C7CC 100%)" }}
+          style={{ background: "linear-gradient(145deg, #FF6A3D 0%, #C2410C 100%)" }}
         />
         <AppWindowMac
           strokeWidth={1.5}
-          className="relative h-[52%] w-[52%] text-ink/70"
+          className="relative h-[52%] w-[52%] text-white/90"
           aria-hidden
         />
-        <span className="pointer-events-none absolute inset-0 rounded-[24%] ring-1 ring-inset ring-white/40" />
+        <span className="pointer-events-none absolute inset-0 rounded-[24%] ring-1 ring-inset ring-white/30" />
       </motion.span>
     </button>
   );
@@ -172,17 +171,17 @@ export default function Dock() {
   return (
     <nav
       aria-label="Dock"
-      className="pointer-events-none absolute inset-x-0 bottom-2.5 z-[70] flex justify-center"
+      className="pointer-events-none absolute inset-x-0 bottom-4 z-[70] flex justify-center"
     >
       <div
         onMouseMove={reduced ? undefined : (e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="pointer-events-auto flex items-center gap-2 rounded-[22px] border border-white/25 bg-white/25 px-2.5 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+        className="pointer-events-auto flex items-center gap-1.5 rounded-[25px] border border-white/20 bg-black/25 px-2.5 py-2 shadow-[0_22px_65px_rgba(0,0,0,0.38)] backdrop-blur-2xl"
       >
         {dockApps.map((app) => (
           <DockItem key={app.id} app={app} mouseX={mouseX} />
         ))}
-        <div aria-hidden className="mx-1 h-10 w-px bg-black/15" />
+        <div aria-hidden className="mx-1 h-9 w-px bg-white/20" />
         <DockModeSwitch mouseX={mouseX} />
       </div>
     </nav>

@@ -19,6 +19,7 @@ import WindowFrame from "./Window";
 import BootScreen from "./BootScreen";
 import ContextMenu from "./ContextMenu";
 import MobileDesktop from "./MobileDesktop";
+import NowWidget from "./NowWidget";
 
 function DesktopFull({
   wallpaperId,
@@ -76,10 +77,14 @@ function DesktopFull({
         className="fixed inset-0 select-none overflow-hidden"
         style={getWallpaperStyle(wallpaperId)}
       >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_8%,rgba(255,106,61,0.10),transparent_30%),linear-gradient(to_bottom,rgba(0,0,0,0.04),rgba(0,0,0,0.16))]"
+        />
         <MenuBar />
 
         {/* Obszar roboczy: poniżej paska menu, powyżej docka */}
-        <div ref={areaRef} className="absolute inset-x-0 bottom-[92px] top-9">
+        <div ref={areaRef} className="absolute inset-x-0 bottom-[104px] top-[68px]">
           {/* Tapeta jako warstwa zdarzeń: prawy klik = menu, ikony pulpitu */}
           <div
             className="absolute inset-0"
@@ -88,7 +93,8 @@ function DesktopFull({
               setCtxMenu({ x: e.clientX, y: e.clientY });
             }}
           >
-            <DesktopIcons />
+            <DesktopIcons areaRef={areaRef} />
+            <NowWidget areaRef={areaRef} />
           </div>
 
           <AnimatePresence>

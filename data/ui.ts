@@ -48,7 +48,7 @@ export const ui = {
     back: { pl: "Wróć", en: "Back" },
     reload: { pl: "Załaduj ponownie", en: "Reload" },
     openInNewTab: { pl: "Otwórz w nowej karcie", en: "Open in a new tab" },
-    writeToMe: { pl: "Napisz do mnie", en: "Write to me" },
+    writeToMe: { pl: "Napisz do mnie", en: "Get in touch" },
     callMe: { pl: "Zadzwoń", en: "Call me" },
     showPhone: { pl: "Pokaż numer", en: "Show number" },
     openDroneSim: { pl: "Uruchom symulację", en: "Launch the simulation" },

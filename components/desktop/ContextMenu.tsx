@@ -47,7 +47,7 @@ export default function ContextMenu({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.15, ease: [...EASE_APPLE] }}
         style={{ left, top }}
-        className="fixed z-[95] w-56 rounded-xl border border-white/30 bg-[#f5f5f7]/85 p-1.5 shadow-lift backdrop-blur-2xl"
+        className="fixed z-[95] w-60 rounded-[20px] border border-white/40 bg-[#f5f5f7]/90 p-2 shadow-[0_24px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
       >
         <p className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
           {t(ui.desktop.wallpaper)}

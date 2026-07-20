@@ -19,7 +19,7 @@ import {
 import { useWindowStore, type Win } from "@/lib/window-store";
 import { useT } from "@/lib/lang-store";
 import { ui } from "@/data/ui";
-import { getApp } from "./registry";
+import { AppTile, getApp } from "./registry";
 import { EASE_APPLE } from "@/lib/motion";
 
 const MIN_W = 360;
@@ -266,10 +266,12 @@ function WindowFrame({
         }
         exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
         transition={{ duration: reduced ? 0.15 : 0.35, ease: [...EASE_APPLE] }}
-        className={`flex h-full w-full flex-col overflow-hidden rounded-[11px] bg-[#f5f5f7]/[0.86] ring-1 backdrop-blur-2xl transition-shadow duration-300 ${
+        className={`flex h-full w-full flex-col overflow-hidden bg-[#f5f5f7]/[0.9] ring-1 backdrop-blur-2xl transition-[border-radius,box-shadow] duration-300 ${
+          win.maximized ? "rounded-none" : "rounded-[18px]"
+        } ${
           focused
-            ? "shadow-[0_28px_80px_rgba(0,0,0,0.35)] ring-black/15"
-            : "shadow-[0_14px_44px_rgba(0,0,0,0.18)] ring-black/10"
+            ? "shadow-[0_32px_100px_rgba(0,0,0,0.4)] ring-white/35"
+            : "shadow-[0_16px_50px_rgba(0,0,0,0.2)] ring-black/10"
         }`}
       >
         <header
@@ -278,7 +280,7 @@ function WindowFrame({
           }}
           onDoubleClick={() => toggleMaximize(win.id)}
           style={{ touchAction: "none" }}
-          className="relative flex h-10 shrink-0 select-none items-center justify-center border-b border-black/[0.06] px-20"
+          className="relative flex h-11 shrink-0 select-none items-center justify-center border-b border-black/[0.06] bg-white/25 px-20"
         >
           <TrafficLights
             focused={focused}
@@ -286,12 +288,15 @@ function WindowFrame({
             onMinimize={() => minimize(win.id)}
             onMaximize={() => toggleMaximize(win.id)}
           />
-          <span
-            className={`pointer-events-none truncate text-[13px] font-semibold ${
+          <span className="pointer-events-none flex min-w-0 items-center gap-2">
+            <AppTile appId={app.id} className="h-5 w-5 shrink-0 shadow-sm" />
+            <span
+              className={`truncate text-[12.5px] font-semibold ${
               focused ? "text-ink/80" : "text-ink/40"
             }`}
-          >
-            {title}
+            >
+              {title}
+            </span>
           </span>
         </header>
 

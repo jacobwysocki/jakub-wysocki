@@ -36,7 +36,7 @@ export default function Contact() {
             href={`mailto:${contactInfo.email}`}
             className="inline-block rounded-full bg-white px-9 py-4 text-[17px] font-semibold text-ink"
           >
-            {contactInfo.email}
+            {t(ui.actions.writeToMe)}
           </MagneticButton>
           <p className="mt-5 text-[14px] text-white/50">
             <RevealPhone className="transition-colors hover:text-white" />

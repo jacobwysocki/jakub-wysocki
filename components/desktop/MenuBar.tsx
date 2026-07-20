@@ -48,7 +48,7 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -4, scale: 0.98 }}
         transition={{ duration: 0.18, ease: [...EASE_APPLE] }}
-        className="absolute left-0 top-[38px] w-64 origin-top-left rounded-xl border border-white/30 bg-[#f5f5f7]/85 p-1.5 shadow-lift backdrop-blur-2xl"
+        className="absolute left-0 top-[46px] w-72 origin-top-left rounded-[20px] border border-white/40 bg-[#f5f5f7]/90 p-2 shadow-[0_24px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
       >
         <button type="button" role="menuitem" className={item} onClick={run(() => openApp("info"))}>
           {t(ui.desktop.aboutPortfolio)}
@@ -118,7 +118,7 @@ export default function MenuBar() {
   );
 
   return (
-    <header className="absolute inset-x-0 top-0 z-[80] flex h-9 items-center justify-between border-b border-white/10 bg-black/25 px-2 text-[13px] text-white backdrop-blur-2xl">
+    <header className="absolute inset-x-4 top-3 z-[80] flex h-11 items-center justify-between rounded-2xl border border-white/20 bg-black/25 px-2.5 text-[13px] text-white shadow-[0_14px_45px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
       <div className="flex items-center gap-1">
         <div className="relative">
           {/* Nazwa + chevron zamiast samego monogramu — wyraźna zachęta do kliknięcia */}
@@ -128,11 +128,12 @@ export default function MenuBar() {
             aria-expanded={menuOpen}
             aria-label={t(ui.desktop.mainMenu)}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`flex items-center gap-1 rounded-md px-2.5 py-1 text-[13px] font-bold tracking-tight transition-colors ${
+            className={`flex h-8 items-center gap-2 rounded-xl px-2.5 text-[12px] font-bold tracking-[0.04em] transition-colors ${
               menuOpen ? "bg-white/25" : "hover:bg-white/15"
             }`}
           >
-            jakub-wysocki
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-bright shadow-[0_0_10px_rgba(255,106,61,0.9)]" />
+            JW / OS
             <ChevronDown
               size={12}
               strokeWidth={2.5}
@@ -144,19 +145,19 @@ export default function MenuBar() {
             {menuOpen && <LogoMenu onClose={() => setMenuOpen(false)} />}
           </AnimatePresence>
         </div>
-        <span className="px-2 font-semibold">
+        <span className="max-w-52 truncate rounded-lg border border-white/10 bg-white/[0.07] px-2.5 py-1 text-[12px] font-semibold text-white/80">
           {activeApp ? t(activeApp.title) : t(ui.desktop.desktop)}
         </span>
       </div>
 
-      <div className="flex items-center gap-3.5 pr-2">
+      <div className="flex items-center gap-2.5 pr-1">
         <MenuLangSwitch />
-        <Wifi size={15} strokeWidth={1.8} aria-hidden className="opacity-90" />
-        <Search size={13.5} strokeWidth={2} aria-hidden className="opacity-90" />
-        <BatteryFull size={19} strokeWidth={1.6} aria-hidden className="opacity-90" />
+        <Wifi size={15} strokeWidth={1.8} aria-hidden className="hidden opacity-80 lg:block" />
+        <Search size={13.5} strokeWidth={2} aria-hidden className="hidden opacity-80 lg:block" />
+        <BatteryFull size={19} strokeWidth={1.6} aria-hidden className="hidden opacity-80 lg:block" />
         <time
           dateTime={now.toISOString()}
-          className="font-medium tabular-nums opacity-95"
+          className="rounded-lg bg-white/[0.08] px-2 py-1 text-[11.5px] font-medium tabular-nums opacity-95"
         >
           {formatMenuBarClock(now, lang)}
         </time>
