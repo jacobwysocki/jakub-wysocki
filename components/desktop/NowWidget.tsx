@@ -36,7 +36,7 @@ export default function NowWidget({
       dragElastic={0}
       dragConstraints={areaRef}
       aria-label={t(copy.now)}
-      className="absolute left-4 top-4 w-[290px] overflow-hidden rounded-[28px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-2xl"
+      className="absolute bottom-4 left-4 w-[290px] overflow-hidden rounded-[28px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-2xl"
     >
       <div
         onPointerDown={(event) => dragControls.start(event)}
