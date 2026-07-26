@@ -1,4 +1,4 @@
-import { SITE_URL, contactInfo, person } from "@/data/site";
+import { SITE_URL, contactInfo, entityProfiles, person } from "@/data/site";
 import { education } from "@/data/education";
 import type { Lang } from "@/lib/lang-store";
 
@@ -22,15 +22,12 @@ export const ID = {
   profilePage: `${SITE_URL}${person.entityHome.en}#profilepage`,
 } as const;
 
-/** Profile, które Google ma uznać za tę samą osobę. */
-const sameAs: string[] = [
-  contactInfo.linkedin,
-  contactInfo.github,
-  contactInfo.behance,
-  contactInfo.stackoverflow,
-  contactInfo.ultrastudio,
-  contactInfo.squizzu,
-];
+/**
+ * Profile, które Google ma uznać za tę samą osobę. Wyprowadzone z
+ * `entityProfiles`, wspólnego źródła z widocznymi linkami na wizytówkach —
+ * dopisuj tam, nie tutaj.
+ */
+const sameAs: string[] = entityProfiles.map((p) => p.href);
 
 /**
  * Węzeł osoby — JEDNA definicja, identyczna na każdym URL-u serwisu.

@@ -28,6 +28,30 @@ export const contactInfo = {
   ultrastudio: "https://ultrastud.io",
 } as const;
 
+/**
+ * Profile reprezentujące tę samą osobę — JEDNA lista dla dwóch odbiorców:
+ * tablicy `sameAs` w danych strukturalnych (lib/schema.ts) i widocznych
+ * linków `rel="me"` na wizytówkach (components/EntityHome.tsx). Zgodność
+ * jednego z drugim jest dla Google osobnym sygnałem.
+ *
+ * Wcześniej były to dwie osobne listy i rozjazd między nimi przechodził
+ * niezauważony: dopisanie profilu w jednym miejscu nie wywala ani `tsc`,
+ * ani builda. Przy jednym źródle rozjazd jest niemożliwy, nie tylko
+ * wykrywalny — dlatego zamiast testu jest to.
+ *
+ * Dopisuj tu każdy nowy zweryfikowany profil (Wikidata, ORCID, Crunchbase).
+ * `label` jest tekstem linku na wizytówce, więc nie jest tłumaczony:
+ * nazwy własne serwisów brzmią tak samo w obu językach.
+ */
+export const entityProfiles = [
+  { label: "LinkedIn", href: contactInfo.linkedin },
+  { label: "GitHub", href: contactInfo.github },
+  { label: "Behance", href: contactInfo.behance },
+  { label: "Stack Overflow", href: contactInfo.stackoverflow },
+  { label: "Ultra Studio", href: contactInfo.ultrastudio },
+  { label: "Squizzu", href: contactInfo.squizzu },
+] as const;
+
 export const site = {
   name: "jakub-wysocki",
   studio: "Ultra Studio",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Lang } from "@/lib/lang-store";
-import { SITE_URL, contactInfo, person } from "@/data/site";
+import { SITE_URL, contactInfo, entityProfiles, person } from "@/data/site";
 import { allRoles } from "@/data/experience";
 import { education } from "@/data/education";
 
@@ -28,16 +28,6 @@ const COPY = {
 export default function EntityHome({ lang }: { lang: Lang }) {
   const t = <T,>(l10n: { pl: T; en: T }) => l10n[lang];
   const other: Lang = lang === "pl" ? "en" : "pl";
-
-  /** Widoczne odpowiedniki sameAs — linki, które crawler zobaczy w treści. */
-  const profiles = [
-    { label: "LinkedIn", href: contactInfo.linkedin },
-    { label: "GitHub", href: contactInfo.github },
-    { label: "Behance", href: contactInfo.behance },
-    { label: "Stack Overflow", href: contactInfo.stackoverflow },
-    { label: "Ultra Studio", href: contactInfo.ultrastudio },
-    { label: "Squizzu", href: contactInfo.squizzu },
-  ];
 
   return (
     // lang nadpisuje "pl" z root layoutu. min-h-screen, bo ta strona nie
@@ -161,7 +151,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
             {t(COPY.elsewhere)}
           </h2>
           <ul className="mt-4 space-y-2">
-            {profiles.map((p) => (
+            {entityProfiles.map((p) => (
               <li key={p.href}>
                 <a
                   href={p.href}
