@@ -25,12 +25,12 @@ Wkleja się raz, działa na każdej podstronie.
       "url": "https://ultrastud.io",
       "description": "Studio kreatywne zajmujące się brandingiem, web designem i custom developmentem.",
       "email": "mailto:hello@ultrastud.io",
-      "telephone": "+48795620557",
+      "telephone": "+48XXXXXXXXX",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "sales",
         "email": "mailto:hello@ultrastud.io",
-        "telephone": "+48795620557",
+        "telephone": "+48XXXXXXXXX",
         "availableLanguage": ["pl", "en"]
       },
       "foundingDate": "2024-08",
@@ -211,14 +211,20 @@ Wszędzie **Placement: `End of <head>`**, Page ustawiona na tę jedną stronę.
 ```
 
 `telephone` i `contactPoint` są już w snippecie site-wide (sekcja 1), bo
-opisują firmę, nie tę jedną stronę. Numer zapisany w formacie E.164
-`+48795620557`: bez spacji, bez nawiasów, z prefiksem kraju. To format dla
-maszyn — na stronie wyświetlaj go dalej czytelnie jako `(+48) 795 620 557`.
+opisują firmę, nie tę jedną stronę.
+
+**Numer podmień przy wklejaniu, w tym pliku jest atrapa.** To repozytorium
+jest publiczne, a numer celowo nie jest w nim trzymany: na stronie osobistej
+serwuje go `/api/phone` ze zmiennej `CONTACT_PHONE` dopiero po kliknięciu,
+żeby nie trafiał do statycznego HTML-a dla botów zbierających kontakty.
+
+Format docelowy to E.164: bez spacji, bez nawiasów, z prefiksem kraju.
+Na stronie wyświetlaj go dalej czytelnie, ze spacjami.
 
 Przy okazji popraw `href` w linkach telefonicznych. Obecnie jest
-`tel:(+48) 795 620 557`, a spacje i nawiasy są w URI niedozwolone, więc
+`tel:(+48) XXX XXX XXX`, a spacje i nawiasy są w URI niedozwolone, więc
 na części telefonów wybieranie numeru nie zadziała. Powinno być
-`tel:+48795620557`, przy niezmienionym tekście linku.
+`tel:+48XXXXXXXXX`, przy niezmienionym tekście linku.
 
 ### /portfolio
 
