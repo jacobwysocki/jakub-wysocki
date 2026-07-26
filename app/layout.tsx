@@ -73,7 +73,7 @@ export default function RootLayout({
         {/* Języka nie ustala już skrypt: rozstrzyga go serwer w app/page.tsx
             (ciastko albo Accept-Language) i wysyła gotowy HTML. Druga
             heurystyka po stronie klienta mogłaby tylko odpowiedzieć inaczej. */}
-        {/* Encja: osoba + firmy + witryna. Renderowane serwerowo w każdej podstronie. */}
+
         <JsonLd data={siteGraph()} />
       </head>
       <body className="font-sans">

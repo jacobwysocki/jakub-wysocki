@@ -6,16 +6,8 @@ import { allRoles } from "@/data/experience";
 import { education } from "@/data/education";
 
 /**
- * Strona-wizytówka („entity home") — kanoniczne, statyczne źródło faktów
- * o osobie pod /about (EN) i /o-mnie (PL).
- *
- * Trzy zasady, od których zależy jej wartość dla Google:
- *  1. Renderowana wyłącznie serwerowo — zero JavaScriptu, zero zależności
- *     od hydratacji. Crawler dostaje pełną treść w pierwszym żądaniu.
- *  2. JEDEN język na URL. Strona główna miesza PL i EN w jednym drzewie
- *     DOM; tutaj tekst jest jednoznaczny, a wersje łączy hreflang.
- *  3. Fakty pochodzą z tych samych plików w /data co reszta serwisu —
- *     nie ma drugiego źródła prawdy, które mogłoby się rozjechać.
+ * Strona-wizytówka („entity home") pod /about (EN) i /o-mnie (PL):
+ * kanoniczne fakty o osobie, jeden język na URL, wyłącznie serwerowo.
  */
 
 const COPY = {
@@ -48,12 +40,9 @@ export default function EntityHome({ lang }: { lang: Lang }) {
   ];
 
   return (
-    // lang na elemencie nadpisuje lang dokumentu (root layout ustawia "pl"
-    // dla całej witryny). Dzięki temu /about jest jednoznacznie angielskie
-    // już w HTML-u serwerowym, bez czekania na skrypt przełącznika.
-    // min-h-screen: strony-wizytówki nie renderują ModeGate, więc nigdy nie
-    // dostają data-hydrated — bez tego tło pulpitu (czarne) prześwitywałoby
-    // pod treścią u osób z zapisanym trybem "desktop".
+    // lang nadpisuje "pl" z root layoutu. min-h-screen, bo ta strona nie
+    // renderuje ModeGate, więc nigdy nie dostaje data-hydrated i bez tego
+    // czarne tło pulpitu prześwituje u osób z zapisanym trybem "desktop".
     <div lang={lang} className="min-h-screen bg-surface text-ink">
       <div className="mx-auto max-w-prose px-6 py-16 md:py-24">
         <nav className="flex items-center justify-between text-caption uppercase text-muted">
@@ -171,11 +160,6 @@ export default function EntityHome({ lang }: { lang: Lang }) {
           <h2 id="elsewhere" className="text-caption uppercase text-muted">
             {t(COPY.elsewhere)}
           </h2>
-          {/*
-            Te linki celowo dublują tablicę sameAs z lib/schema.ts.
-            Google waży zarówno dane strukturalne, jak i widoczne,
-            klikalne odnośniki — zgodność jednego z drugim to sygnał.
-          */}
           <ul className="mt-4 space-y-2">
             {profiles.map((p) => (
               <li key={p.href}>

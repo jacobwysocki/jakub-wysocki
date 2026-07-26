@@ -36,14 +36,20 @@ export const education = {
       en: "“Implementation of Path Optimization Algorithm for the Optimal Number of Unmanned Aerial Vehicles Used Within Goods Delivery”",
     },
     scope: {
-      pl: "Dogłębna analiza i symulacja podejść do wyznaczania tras dla dronów dostawczych: badanie inteligencji roju, wieloagentowego wyszukiwania ścieżek oraz algorytmów A* i Dijkstry pod kątem optymalizacji wielkości floty dronów.",
-      en: "An in-depth analysis and simulation of pathfinding approaches for drone deliveries, investigating Swarm Intelligence, Multi-Agent Pathfinding, A* and Dijkstra's algorithm to optimise drone fleet sizes.",
+      pl: "Analiza i symulacja odpowiadająca na pytanie logistyczne: jak mała flota dronów wykona zadany zestaw dostaw w granicach udźwigu i baterii oraz jak ją poprowadzić bez kolizji w powietrzu. Dostawy grupuje K-Means, kolejność odwiedzin rozwiązuje Ant Colony Optimization jako problem komiwojażera, a trasy bezkolizyjne wyznacza Cooperative A* przeszukujący stan czasoprzestrzenny (wiersz, kolumna, wysokość, czas) względem wspólnej tablicy rezerwacji. A* i Dijkstra są zaimplementowane jako baza porównawcza: dają krótsze trasy pojedynczych dronów, ale przeprowadzają je przez siebie nawzajem, co jest właśnie uzasadnieniem dla wariantu wieloagentowego.",
+      en: "An analysis and simulation answering a logistics question: how small a fleet of drones can complete a given set of deliveries within payload and battery limits, and how to route it without mid-air collisions. Deliveries are grouped with K-Means, visit order is solved as a Travelling Salesperson problem with Ant Colony Optimization, and collision-free routes come from Cooperative A* searching a space-time state of row, column, altitude and time against a shared reservation table. A* and Dijkstra are implemented as the baseline: they find shorter individual paths but fly the drones through each other, which is precisely what motivates the multi-agent variant.",
     },
     platformNote: {
-      pl: "Interaktywna platforma symulacyjna zbudowana od zera w React.js, dziś rozwinięta w pełne przepisanie 3D z kooperacyjnym wyszukiwaniem ścieżek. Działa na żywo jako Drone Simulation.",
-      en: "The interactive simulation platform was custom-built in React.js, since rewritten in full 3D with cooperative pathfinding. It runs live as Drone Simulation.",
+      pl: "Interaktywna platforma symulacyjna zbudowana od zera w React.js, dziś rozwinięta w pełne przepisanie 3D na Three.js z react-three-fiber. Wszystkie pięć algorytmów napisane od podstaw w czystym JavaScripcie, bez bibliotek. Działa na żywo jako Drone Simulation.",
+      en: "The interactive simulation platform was custom-built in React.js, since rewritten in full 3D on Three.js with react-three-fiber. All five algorithms are written from scratch in plain JavaScript, with no libraries. It runs live as Drone Simulation.",
     },
-    algorithms: ["Swarm Intelligence", "Multi-Agent Pathfinding", "A*", "Dijkstra"],
+    algorithms: [
+      "K-Means",
+      "Ant Colony Optimization",
+      "Cooperative A*",
+      "A*",
+      "Dijkstra",
+    ],
     /**
      * Kadr albo pętla z symulacji. Wrzuć plik do /public/images i podmień
      * null, np. "/images/drone-sim.webm" (wideo .webm/.mp4, autoplay

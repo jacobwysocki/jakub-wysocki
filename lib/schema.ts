@@ -22,11 +22,7 @@ export const ID = {
   profilePage: `${SITE_URL}${person.entityHome.en}#profilepage`,
 } as const;
 
-/**
- * sameAs — najważniejsze pole całego pliku. Lista profili, które Google
- * ma potraktować jako TĘ SAMĄ osobę. Dopisuj tu każdy nowy zweryfikowany
- * profil (Wikidata, ORCID, Crunchbase, X, YouTube).
- */
+/** Profile, które Google ma uznać za tę samą osobę. */
 const sameAs: string[] = [
   contactInfo.linkedin,
   contactInfo.github,

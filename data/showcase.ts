@@ -77,18 +77,27 @@ export const showcase: ShowcaseSite[] = [
     },
     overview: {
       what: {
-        pl: "Symulacja odpowiada na realne pytanie logistyczne: jaka najmniejsza flota dronów zrealizuje zestaw dostaw w limitach baterii i udźwigu, i jak poprowadzić ją bez kolizji w powietrzu? Dostawy rozmieszcza się na trójwymiarowej siatce miasta, a misja planuje się i animuje na żywo, z narracją w terminalu symulacji.",
-        en: "The simulation answers a real logistics question: what is the smallest drone fleet that can complete a set of deliveries within battery and payload limits, and how do you route it without mid-air collisions? Deliveries are placed on a 3D city grid, and each mission plans and animates live, narrated in a simulation terminal.",
+        pl: "Symulacja odpowiada na realne pytanie logistyczne: jaka najmniejsza flota dronów zrealizuje zestaw dostaw w limitach baterii i udźwigu, i jak poprowadzić ją bez kolizji w powietrzu? Dostawy rozmieszcza się na trójwymiarowej siatce miasta z drogami i wieżowcami o różnej wysokości. Wielkość floty można podać ręcznie albo pozwolić aplikacji wyliczyć ją z zasięgu i udźwigu. Dron, którego klaster przekracza ładowność, wraca w trakcie misji do bazy po doładunek. Całość planuje się i animuje na żywo, z narracją w terminalu symulacji.",
+        en: "The simulation answers a real logistics question: what is the smallest drone fleet that can complete a set of deliveries within battery and payload limits, and how do you route it without mid-air collisions? Deliveries are placed on a 3D city grid of roads and skyscrapers of varying height. Fleet size is either set by hand or derived by the app from range and payload. A drone whose cluster exceeds its capacity flies back to base mid-mission to reload. Everything plans and animates live, narrated in a simulation terminal.",
       },
       how: {
-        pl: "Trzyetapowy potok algorytmiczny napisany od zera: klasteryzacja dostaw K-Means, kolejność wizyt przez Ant Colony Optimization (TSP) i bezkolizyjna nawigacja Cooperative A* z czasoprzestrzenną tablicą rezerwacji. Scena 3D działa na Three.js (react-three-fiber), a klasyczne A* i Dijkstra służą jako punkt odniesienia. Projekt wyrósł z mojej pracy dyplomowej (First Class Honours) i kod jest otwarty na GitHubie.",
-        en: "A three-stage algorithmic pipeline written from scratch: K-Means delivery clustering, Ant Colony Optimization (TSP) for visit order, and collision-free Cooperative A* navigation with a space-time reservation table. The 3D scene runs on Three.js (react-three-fiber), with classic A* and Dijkstra as baselines. It grew out of my dissertation (First Class Honours) and the code is open on GitHub.",
+        pl: "Trzyetapowy potok algorytmiczny napisany od zera. K-Means grupuje dostawy przestrzennie, żeby każdy dron dostał spójny rejon zamiast przecinać mapę. Ant Colony Optimization rozwiązuje kolejność wizyt jako problem komiwojażera (15 mrówek, 50 iteracji, selekcja ruletkowa z parowaniem feromonu). Cooperative A* szuka trasy w stanie czasoprzestrzennym (wiersz, kolumna, wysokość, czas) i sprawdza wspólną tablicę rezerwacji zarówno na wierzchołkach, jak i na krawędziach, więc dwa drony nie przenikną przez siebie zamianą pozycji. Koszty ruchu są asymetryczne: lot poziomy 1, wznoszenie 2, opadanie 0,5, dzięki czemu przelot nad budynkiem opłaca się tylko wtedy, gdy jest tańszy od czekania. Klasyczne A* i Dijkstra służą jako punkt odniesienia: dają krótsze trasy pojedynczych dronów, ale rozbijają je o siebie. Scena 3D działa na Three.js (react-three-fiber). Projekt wyrósł z mojej pracy dyplomowej (First Class Honours), kod jest otwarty na GitHubie.",
+        en: "A three-stage algorithmic pipeline written from scratch. K-Means groups deliveries spatially so each drone gets a coherent local area instead of crossing the map. Ant Colony Optimization solves visit order as a Travelling Salesperson problem (15 ants, 50 iterations, roulette-wheel selection with pheromone evaporation). Cooperative A* searches a space-time state of row, column, altitude and time, checking a shared reservation table on both vertices and edges, so two drones cannot pass through each other by swapping positions. Move costs are asymmetric: flat flight 1, climbing 2, descending 0.5, so flying over a building pays off only when it beats waiting. Classic A* and Dijkstra act as the baseline: they find shorter individual paths but crash the drones into each other. The 3D scene runs on Three.js (react-three-fiber). The project grew out of my dissertation (First Class Honours) and the code is open on GitHub.",
       },
       role: {
         pl: "Autor: badania, algorytmy i implementacja.",
         en: "Author: research, algorithms and implementation.",
       },
-      tech: ["React", "Three.js", "Cooperative A*", "ACO", "K-Means", "Dijkstra"],
+      tech: [
+        "React",
+        "Three.js",
+        "Cooperative A*",
+        "Multi-Agent Pathfinding",
+        "ACO",
+        "K-Means",
+        "A*",
+        "Dijkstra",
+      ],
     },
     gradient: "linear-gradient(150deg, #FF9F0A 0%, #FF375F 100%)",
     embed: true,

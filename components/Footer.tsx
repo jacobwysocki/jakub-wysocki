@@ -120,8 +120,7 @@ export default function Footer() {
                 {t(link.label)}
               </FooterLink>
             ))}
-            {/* Strona-wizytówka: jedyny link wewnętrzny do encji. Bez niego
-                /about i /o-mnie byłyby sierotami w strukturze serwisu. */}
+            {/* Jedyny link wewnętrzny do /about i /o-mnie. */}
             <li>
               <Link
                 href={person.entityHome[lang]}
