@@ -19,6 +19,12 @@ export const contactInfo = {
   timezone: "Europe/Warsaw",
   linkedin: "https://www.linkedin.com/in/jakub-wysocki00",
   github: "https://github.com/jacobwysocki",
+  // Profil designerski, dopisany też do sameAs w lib/schema.ts i do widocznych
+  // linków w EntityHome (te dwa miejsca muszą się zgadzać).
+  // Uwaga: pole „Portfolio" na Behance wskazuje dziś na ultrastud.io, nie na tę
+  // domenę, więc obustronnego potwierdzenia z entity home jeszcze NIE ma.
+  // Zacznie działać dopiero, gdy w linkach profilu stanie jakub-wysocki.com.
+  behance: "https://www.behance.net/jakub-wysocki",
   droneRepo: "https://github.com/jacobwysocki/drone-path-optimization",
   droneLive: "https://jacobwysocki.github.io/drone-path-optimization/",
   squizzu: "https://www.squizzu.com",

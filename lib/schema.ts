@@ -30,6 +30,7 @@ export const ID = {
 const sameAs: string[] = [
   contactInfo.linkedin,
   contactInfo.github,
+  contactInfo.behance,
   contactInfo.ultrastudio,
   contactInfo.squizzu,
 ];

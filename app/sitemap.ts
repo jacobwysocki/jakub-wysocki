@@ -9,17 +9,25 @@ import { SITE_URL, person } from "@/data/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
+  /**
+   * Kody regionalne, nie same językowe — dokładnie te same, którymi
+   * `alternates.languages` opisuje strony w <head>. Gdy sitemap mówi "en",
+   * a znacznik w HTML "en-GB", Google widzi dwie różne adnotacje hreflang
+   * dla tej samej pary URL-i i może odrzucić klaster jako niespójny.
+   */
   const entityAlternates = {
     languages: {
-      en: `${SITE_URL}${person.entityHome.en}`,
-      pl: `${SITE_URL}${person.entityHome.pl}`,
+      "en-GB": `${SITE_URL}${person.entityHome.en}`,
+      "pl-PL": `${SITE_URL}${person.entityHome.pl}`,
       "x-default": `${SITE_URL}${person.entityHome.en}`,
     },
   };
 
   return [
     {
-      url: SITE_URL,
+      // Z ukośnikiem — canonical strony głównej to "/", a dla Google
+      // adres z ukośnikiem i bez to dwa różne ciągi znaków.
+      url: `${SITE_URL}/`,
       lastModified,
       changeFrequency: "monthly",
       priority: 1,

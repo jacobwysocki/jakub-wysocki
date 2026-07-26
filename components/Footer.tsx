@@ -173,6 +173,9 @@ export default function Footer() {
             <FooterLink href={contactInfo.github} isExternal>
               GitHub
             </FooterLink>
+            <FooterLink href={contactInfo.behance} isExternal>
+              Behance
+            </FooterLink>
           </Column>
         </div>
 
