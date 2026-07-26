@@ -6,7 +6,7 @@ import type { L10n } from "@/lib/lang-store";
  * w env Vercela (albo podmień fallback).
  */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://jakub-wysocki.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://jakub-wysocki.com";
 
 /**
  * Realne dane kontaktowe i linki — jedno źródło prawdy dla obu trybów
@@ -104,4 +104,44 @@ export const site = {
       en: "Got a project — a brand to build or a product to engineer? Drop me a line.",
     } satisfies L10n,
   },
+} as const;
+
+/**
+ * Kanoniczne fakty o osobie — jedno źródło prawdy dla JSON-LD (lib/schema.ts)
+ * i stron-wizytówek /about oraz /o-mnie.
+ *
+ * WAŻNE: te wartości muszą być identyczne z LinkedInem, GitHubem i Wikidatą.
+ * Google buduje encję z powtarzalności — każda rozbieżność w nazwie, tytule
+ * czy lokalizacji osłabia dopasowanie.
+ */
+export const person = {
+  fullName: "Jakub Wysocki",
+  givenName: "Jakub",
+  familyName: "Wysocki",
+  jobTitle: {
+    pl: "Software Engineer i projektant UX/UI",
+    en: "Software Engineer & UX/UI Designer",
+  } satisfies L10n,
+  nationality: "PL",
+  locality: "Kraków",
+  country: "PL",
+  portrait: "/images/portrait.png",
+  /** Kanoniczna nota biograficzna — ta sama treść co w bio LinkedIna. */
+  bio: {
+    pl: "Jakub Wysocki jest inżynierem oprogramowania i projektantem UX/UI z siedzibą w Krakowie. Współzałożyciel Ultra Studio — studia kreatywnego zajmującego się brandingiem, web designem i custom developmentem — oraz Squizzu, grywalizowanej platformy rekrutacyjnej SaaS. Od 2021 roku pracuje na styku inżynierii i designu w Polsce, Wielkiej Brytanii i Meksyku, budując systemy w .NET i React dla klientów korporacyjnych i produktów wczesnej fazy.",
+    en: "Jakub Wysocki is a software engineer and UX/UI designer based in Kraków, Poland. He is a co-founder of Ultra Studio, a creative studio for branding, web design and custom development, and of Squizzu, a gamified recruitment SaaS platform. Since 2021 he has worked at the intersection of engineering and design across Poland, the United Kingdom and Mexico, building .NET and React systems for enterprise clients and early-stage products.",
+  } satisfies L10n,
+  /** Dziedziny kompetencji — knowsAbout w schema.org/Person. */
+  knowsAbout: [
+    "Software engineering",
+    "UX/UI design",
+    ".NET",
+    "React",
+    "Next.js",
+    "Design systems",
+    "Microsoft Azure",
+    "Brand identity design",
+  ],
+  /** Adresy stron-wizytówek w obu językach — canonical + hreflang. */
+  entityHome: { en: "/about", pl: "/o-mnie" },
 } as const;

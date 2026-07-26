@@ -3,9 +3,11 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import JsonLd from "@/components/JsonLd";
 import { MODE_INIT_SCRIPT } from "@/lib/mode-store";
 import { LANG_INIT_SCRIPT } from "@/lib/lang-store";
-import { SITE_URL } from "@/data/site";
+import { SITE_URL, person } from "@/data/site";
+import { siteGraph } from "@/lib/schema";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,15 +24,32 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  // Nazwa własna zamiast sluga repo — to ona pokazuje się w wynikach
+  // wyszukiwania i podglądach linków.
+  applicationName: person.fullName,
+  authors: [{ name: person.fullName, url: SITE_URL }],
+  creator: person.fullName,
+  publisher: person.fullName,
+  // Bez alternates.languages: strona główna jest jednym dwujęzycznym URL-em,
+  // przełączanym po stronie klienta, a nie tłumaczeniem /about. Wpisanie jej
+  // do klastra hreflang tworzyłoby relację nieodwzajemnioną (/about i /o-mnie
+  // wskazują tylko na siebie), którą Google odrzuca — a w najgorszym razie
+  // uznaje / i /about za duplikaty i konsoliduje do jednego.
+  alternates: {
+    canonical: "/",
+  },
   // Obrazek OG dokleja się sam z app/opengraph-image.tsx
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: SITE_URL,
-    siteName: "jakub-wysocki",
+    siteName: person.fullName,
     locale: "pl_PL",
-    alternateLocale: "en_US",
-    type: "website",
+    // en_GB, nie en_US — zgodnie z hreflang i inLanguage w danych strukturalnych
+    alternateLocale: "en_GB",
+    type: "profile",
+    firstName: person.givenName,
+    lastName: person.familyName,
   },
   twitter: {
     card: "summary_large_image",
@@ -54,6 +73,8 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: MODE_INIT_SCRIPT }} />
         {/* Ustala język (PL/EN) — zapis użytkownika albo navigator.language */}
         <script dangerouslySetInnerHTML={{ __html: LANG_INIT_SCRIPT }} />
+        {/* Encja: osoba + firmy + witryna. Renderowane serwerowo w każdej podstronie. */}
+        <JsonLd data={siteGraph()} />
       </head>
       <body className="font-sans">
         <SmoothScrollProvider>{children}</SmoothScrollProvider>

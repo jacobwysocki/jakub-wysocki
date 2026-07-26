@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AppWindowMac, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { navLinks } from "@/data/links";
-import { site, contactInfo } from "@/data/site";
+import { site, contactInfo, person } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useLang, useT } from "@/lib/lang-store";
 import { useModeStore } from "@/lib/mode-store";
@@ -100,7 +101,9 @@ export default function Footer() {
       <div className="mx-auto max-w-content px-6">
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="col-span-2 md:col-span-1">
-            <p className="text-[17px] font-semibold tracking-tight">{site.name}</p>
+            <p className="text-[17px] font-semibold tracking-tight">
+              {person.fullName}
+            </p>
             <p className="mt-2 max-w-[30ch] text-[13px] leading-relaxed text-white/50">
               {t(site.hero.subline)}
             </p>
@@ -117,6 +120,16 @@ export default function Footer() {
                 {t(link.label)}
               </FooterLink>
             ))}
+            {/* Strona-wizytówka: jedyny link wewnętrzny do encji. Bez niego
+                /about i /o-mnie byłyby sierotami w strukturze serwisu. */}
+            <li>
+              <Link
+                href={person.entityHome[lang]}
+                className="text-[14px] text-white/70 transition-colors duration-300 hover:text-white"
+              >
+                {lang === "pl" ? "Wizytówka" : "Profile"}
+              </Link>
+            </li>
             <li>
               <button
                 type="button"
@@ -166,7 +179,7 @@ export default function Footer() {
         {/* Wiersz statusu systemu */}
         <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-[12px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {site.name}. {t(ui.footer.rights)}
+            © {new Date().getFullYear()} {person.fullName}. {t(ui.footer.rights)}
           </p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <span className="inline-flex items-center gap-1.5">
