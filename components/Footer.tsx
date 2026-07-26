@@ -156,7 +156,7 @@ export default function Footer() {
               Drone Simulation
             </FooterLink>
             <FooterLink href={contactInfo.droneRepo} isExternal>
-              Drone Simulation — GitHub
+              Drone Simulation · GitHub
             </FooterLink>
           </Column>
 

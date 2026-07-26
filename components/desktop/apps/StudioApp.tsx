@@ -80,7 +80,7 @@ function ProjectTab({ project }: { project: StudioProject }) {
         {project.image ? (
           <Image
             src={project.image}
-            alt={`${project.client} — ${t(project.tag)}`}
+            alt={`${project.client}, ${t(project.tag)}`}
             fill
             sizes="960px"
             className="object-cover"
@@ -191,7 +191,7 @@ export default function StudioApp() {
         <div className="relative min-h-0 flex-1 overflow-hidden bg-white">
           <ScaledFrame
             src={studioInfo.url}
-            title="Ultra Studio — live"
+            title="Ultra Studio · live"
             onLoad={() => setLoaded(true)}
           />
           {!loaded && (

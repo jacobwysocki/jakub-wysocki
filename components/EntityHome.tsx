@@ -70,7 +70,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={person.portrait}
-            alt={`${person.fullName} — ${t(person.jobTitle)}`}
+            alt={`${person.fullName}, ${t(person.jobTitle)}`}
             width={112}
             height={112}
             className="h-28 w-28 rounded-full object-cover"
@@ -102,7 +102,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
             <dt className="text-muted">{t(COPY.languages)}</dt>
             <dd>
               {education.languages
-                .map((l) => `${t(l.name)} (${t(l.level).split("—")[0].trim()})`)
+                .map((l) => `${t(l.name)} (${t(l.short)})`)
                 .join(", ")}
             </dd>
           </dl>
@@ -116,7 +116,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
             {allRoles.map((r) => (
               <li key={r.id}>
                 <p className="font-semibold">
-                  {t(r.role)} — {r.company}
+                  {t(r.role)} · {r.company}
                 </p>
                 <p className="text-muted">
                   {t(r.period)} · {t(r.location)}
@@ -134,7 +134,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
           <div className="mt-4 space-y-6">
             <div>
               <p className="font-semibold">
-                {t(education.degree.title)} — {education.degree.school}
+                {t(education.degree.title)} · {education.degree.school}
               </p>
               <p className="text-muted">
                 {t(education.degree.period)} · {t(education.degree.place)}
@@ -143,7 +143,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
             </div>
             <div>
               <p className="font-semibold">
-                {t(education.bootcamp.title)} — {education.bootcamp.school}
+                {t(education.bootcamp.title)} · {education.bootcamp.school}
               </p>
               <p className="text-muted">{t(education.bootcamp.period)}</p>
             </div>

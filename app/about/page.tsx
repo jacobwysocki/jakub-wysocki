@@ -9,7 +9,7 @@ import { profilePageGraph } from "@/lib/schema";
  * wskazuje na siebie, więc obie wersje indeksują się osobno.
  */
 export const metadata: Metadata = {
-  title: `${person.fullName} — ${person.jobTitle.en}`,
+  title: `${person.fullName} | ${person.jobTitle.en}`,
   description: person.bio.en,
   alternates: {
     canonical: person.entityHome.en,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${person.fullName} — ${person.jobTitle.en}`,
+    title: `${person.fullName} | ${person.jobTitle.en}`,
     description: person.bio.en,
     url: person.entityHome.en,
     type: "profile",

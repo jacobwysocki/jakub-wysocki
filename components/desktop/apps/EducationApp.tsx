@@ -148,7 +148,7 @@ export default function EducationApp() {
                 <span className="font-semibold capitalize text-ink">
                   {t(language.name)}
                 </span>
-                <span className="text-muted"> — {t(language.level)}</span>
+                <span className="text-muted">, {t(language.level)}</span>
               </li>
             ))}
           </ul>

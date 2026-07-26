@@ -50,8 +50,8 @@ export default function InfoApp() {
       </dl>
       <p className="mt-5 max-w-[42ch] text-[13px] leading-relaxed text-muted">
         {t({
-          pl: "Interaktywny pulpit zbudowany od zera — bez gotowych szablonów. Okna można przeciągać i zmieniać ich rozmiar, projekty działają na żywo w oknach, a prawy klik w tapetę zmienia tło.",
-          en: "An interactive desktop built from scratch — no ready-made templates. Windows can be dragged and resized, the projects run live inside them, and a right-click on the wallpaper changes the background.",
+          pl: "Interaktywny pulpit zbudowany od zera, bez gotowych szablonów. Okna można przeciągać i zmieniać ich rozmiar, projekty działają na żywo w oknach, a prawy klik w tapetę zmienia tło.",
+          en: "An interactive desktop built from scratch, no ready-made templates. Windows can be dragged and resized, the projects run live inside them, and a right-click on the wallpaper changes the background.",
         })}
       </p>
       <p className="mt-3 max-w-[42ch] text-[13px] leading-relaxed text-muted">

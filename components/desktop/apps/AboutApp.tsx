@@ -41,7 +41,7 @@ export default function AboutApp() {
           />
           <img
             src="/images/portrait.png"
-            alt="Jakub Wysocki — portret"
+            alt="Jakub Wysocki, portret"
             className="h-48 w-[150px] rounded-[18px] object-cover object-top shadow-soft ring-1 ring-line/50"
           />
         </span>

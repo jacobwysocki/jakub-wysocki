@@ -77,7 +77,7 @@ export default function ProjectModal({
           {project.image ? (
             <Image
               src={project.image}
-              alt={`${project.client} — ${t(project.tag)}`}
+              alt={`${project.client}, ${t(project.tag)}`}
               fill
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-cover"

@@ -28,8 +28,8 @@ export const studioProjects: StudioProject[] = [
     client: "Squizzu",
     tag: { pl: "Software + branding", en: "Software + branding" },
     description: {
-      pl: "Grywalizowany SaaS rekrutacyjny dostarczony w pełnym zakresie: core software development oraz kompletny branding i identyfikacja wizualna.",
-      en: "A gamified recruitment SaaS delivered end to end: core software development plus full branding and identity design.",
+      pl: "Grywalizowana platforma do nauki IT dostarczona w pełnym zakresie: core software development oraz kompletny branding i identyfikacja wizualna.",
+      en: "A gamified IT learning platform delivered end to end: core software development plus full branding and identity design.",
     },
     details: [
       {
@@ -58,15 +58,15 @@ export const studioProjects: StudioProject[] = [
     client: "Ultra Studio",
     tag: { pl: "Branding + strona studia", en: "Branding + studio site" },
     description: {
-      pl: "Marka i nowa strona własnego studia — witryna zbudowana we Framerze.",
-      en: "The studio's own brand and new website — built in Framer.",
+      pl: "Marka i nowa strona własnego studia, witryna zbudowana we Framerze.",
+      en: "The studio's own brand and new website, built in Framer.",
     },
     details: [
       {
         title: { pl: "Studio", en: "The studio" },
         text: {
-          pl: "Ultra Studio to kreatywna pracownia zajmująca się brandingiem z wyższej półki, web designem i custom developmentem. Współprowadzę ją jako Co-Founder & Tech Lead.",
-          en: "Ultra Studio is a creative studio handling high-end branding, web design and custom development. I co-run it as Co-Founder & Tech Lead.",
+          pl: "Ultra Studio to kreatywna pracownia zajmująca się brandingiem z wyższej półki, web designem i custom developmentem. Współprowadzę ją jako Co-Founder, Design & Development.",
+          en: "Ultra Studio is a creative studio handling high-end branding, web design and custom development. I co-run it as Co-Founder, Design & Development.",
         },
       },
       {
@@ -154,8 +154,8 @@ export const studioInfo = {
     en: "Brands with character.",
   } satisfies L10n,
   description: {
-    pl: "Ultra Studio to moja kreatywna pracownia — branding z wyższej półki, web design i custom development. Tu mieszka wizualna, kliencka strona mojej pracy: identyfikacje, systemy projektowe i dopracowane front-endy.",
-    en: "Ultra Studio is my creative practice — high-end branding, web design and custom development. This is the visual, client-facing side of my work: identities, design systems and finely-tuned front-ends.",
+    pl: "Ultra Studio to moja kreatywna pracownia: branding z wyższej półki, web design i custom development. Tu mieszka wizualna, kliencka strona mojej pracy: identyfikacje, systemy projektowe i dopracowane front-endy.",
+    en: "Ultra Studio is my creative practice: high-end branding, web design and custom development. This is the visual, client-facing side of my work: identities, design systems and finely-tuned front-ends.",
   } satisfies L10n,
   url: contactInfo.ultrastudio,
 };
@@ -176,8 +176,8 @@ export const featuredProject = {
         en: "The same bar we set for clients.",
       },
       text: {
-        pl: "Markę i stronę studia dopracowaliśmy równie skrupulatnie jak każdy projekt klientowski — to nasza najlepsza wizytówka.",
-        en: "We crafted the studio's own brand and site with the same rigour as any client project — it's our best calling card.",
+        pl: "Markę i stronę studia dopracowaliśmy równie skrupulatnie jak każdy projekt klientowski. To nasza najlepsza wizytówka.",
+        en: "We crafted the studio's own brand and site with the same rigour as any client project. It's our best calling card.",
       },
     },
     {
@@ -196,8 +196,8 @@ export const featuredProject = {
         en: "SEO that runs on autopilot.",
       },
       text: {
-        pl: "Autonomiczny agent AI crawluje strony klientów i sam generuje dane JSON-LD — pozycjonowanie napędzane kodem, nie ręczną robotą.",
-        en: "An autonomous AI agent crawls client sites and generates their JSON-LD on its own — rankings driven by code, not manual busywork.",
+        pl: "Autonomiczny agent AI crawluje strony klientów i sam generuje dane JSON-LD: pozycjonowanie napędzane kodem, nie ręczną robotą.",
+        en: "An autonomous AI agent crawls client sites and generates their JSON-LD on its own: rankings driven by code, not manual busywork.",
       },
     },
   ] as { title: L10n; text: L10n }[],

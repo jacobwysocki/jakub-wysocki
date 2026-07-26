@@ -16,9 +16,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const TITLE = "Jakub Wysocki — Software Engineer & UX/UI Designer";
+const TITLE = "Jakub Wysocki | Software Engineer & UX/UI Designer";
 const DESCRIPTION =
-  "Software engineer & UX/UI designer. Co-founder of Ultra Studio and Squizzu. .NET, React, design systems — Kraków, PL.";
+  "Software engineer & UX/UI designer. Co-founder of Ultra Studio and Squizzu. .NET, React, design systems. Kraków, PL.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

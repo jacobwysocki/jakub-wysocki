@@ -60,7 +60,7 @@ function Portrait() {
       ) : (
         <Image
           src="/images/portrait.png"
-          alt="Jakub Wysocki — portret"
+          alt="Jakub Wysocki, portret"
           fill
           priority
           sizes="(max-width: 768px) 80vw, 520px"

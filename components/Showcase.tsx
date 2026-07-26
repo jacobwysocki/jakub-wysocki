@@ -133,7 +133,7 @@ export default function Showcase() {
 
 /** Obraz wyróżnionego projektu albo gradientowy placeholder */
 function FeaturedImage({ fill = false }: { fill?: boolean }) {
-  const label = `${featuredProject.client} — case study`;
+  const label = `${featuredProject.client}, case study`;
   if (featuredProject.image) {
     return (
       <Image

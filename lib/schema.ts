@@ -55,7 +55,35 @@ const personNode = {
   image: `${SITE_URL}${person.portrait}`,
   description: person.bio.en,
   jobTitle: person.jobTitle.en,
-  email: `mailto:${contactInfo.email}`,
+  // Oba adresy: prywatny i ten podawany klientom (widoczny też na LinkedInie).
+  // Rozbieżność między profilami osłabiałaby dopasowanie encji.
+  email: [`mailto:${contactInfo.email}`, `mailto:${contactInfo.emailAlt}`],
+  /**
+   * jobTitle to jeden, rozpoznawalny tytuł — hasOccupation niesie pełny
+   * zakres, w tym branding, którego „UX/UI Designer" sam nie pokrywa.
+   * occupationalCategory w taksonomii O*NET-SOC daje maszynom punkt
+   * zaczepienia niezależny od brzmienia tytułu.
+   */
+  hasOccupation: [
+    {
+      "@type": "Occupation",
+      name: "Software Engineer",
+      occupationalCategory: "15-1252.00",
+      skills: ".NET, C#, Node.js, React, Next.js, TypeScript, Microsoft Azure",
+    },
+    {
+      "@type": "Occupation",
+      name: "UX/UI Designer",
+      occupationalCategory: "15-1255.00",
+      skills: "User experience design, user interface design, design systems",
+    },
+    {
+      "@type": "Occupation",
+      name: "Brand Identity Designer",
+      occupationalCategory: "27-1024.00",
+      skills: "Brand identity design, visual identity design, art direction",
+    },
+  ],
   nationality: { "@type": "Country", name: "Poland" },
   homeLocation: {
     "@type": "Place",
@@ -105,6 +133,7 @@ const organizationNodes = [
     url: contactInfo.ultrastudio,
     description:
       "Creative studio for high-end branding, web design and custom development, based in Kraków, Poland.",
+    email: `mailto:${contactInfo.emailAlt}`,
     foundingDate: "2024-08",
     founder: { "@id": ID.person },
     address: {
@@ -119,7 +148,7 @@ const organizationNodes = [
     name: "Squizzu",
     url: contactInfo.squizzu,
     description:
-      "Gamified recruitment SaaS platform for skills-based candidate assessment.",
+      "Gamified IT learning and interview-preparation platform.",
     foundingDate: "2024-07",
     founder: { "@id": ID.person },
   },
@@ -165,7 +194,7 @@ export function profilePageGraph(lang: Lang) {
         "@type": "ProfilePage",
         "@id": `${url}#profilepage`,
         url,
-        name: `${person.fullName} — ${person.jobTitle[lang]}`,
+        name: `${person.fullName} | ${person.jobTitle[lang]}`,
         description: person.bio[lang],
         inLanguage: lang === "pl" ? "pl-PL" : "en-GB",
         isPartOf: { "@id": ID.website },

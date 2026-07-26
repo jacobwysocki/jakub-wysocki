@@ -273,7 +273,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
             href={site.repo}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${site.name} — GitHub`}
+            aria-label={`${site.name} · GitHub`}
             title="GitHub"
             className={toolbarBtn}
           >
@@ -302,7 +302,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
         <div className="relative min-h-0 flex-1 overflow-hidden bg-white">
           <ScaledFrame
             src={site.url}
-            title={`${site.name} — live`}
+            title={`${site.name} · live`}
             reloadKey={reloadKey}
             onLoad={() => setLoaded(true)}
           />

@@ -9,7 +9,7 @@ import { profilePageGraph } from "@/lib/schema";
  * język na URL, powiązane przez hreflang.
  */
 export const metadata: Metadata = {
-  title: `${person.fullName} — ${person.jobTitle.pl}`,
+  title: `${person.fullName} | ${person.jobTitle.pl}`,
   description: person.bio.pl,
   alternates: {
     canonical: person.entityHome.pl,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${person.fullName} — ${person.jobTitle.pl}`,
+    title: `${person.fullName} | ${person.jobTitle.pl}`,
     description: person.bio.pl,
     url: person.entityHome.pl,
     type: "profile",

@@ -22,7 +22,7 @@ export default function ProjectCard({
       <motion.button
         type="button"
         onClick={onOpen}
-        aria-label={`${project.client} — ${t(project.tag)}`}
+        aria-label={`${project.client}, ${t(project.tag)}`}
         whileHover={reduced ? undefined : { scale: 1.02, y: -4 }}
         whileTap={reduced ? undefined : { scale: 0.99 }}
         transition={SPRING}
@@ -37,7 +37,7 @@ export default function ProjectCard({
             >
               <Image
                 src={project.image}
-                alt={`${project.client} — ${t(project.tag)}`}
+                alt={`${project.client}, ${t(project.tag)}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"

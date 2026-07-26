@@ -31,8 +31,14 @@ function SidebarRow({
 }) {
   const t = useT();
   const isStudio = role.id === "ultrastudio";
-  const years = t(role.period).replace(/\s/g, "").split("—");
-  const yearLabel = `${years[0]?.slice(-4) ?? ""}–${years[1]?.slice(-2) ?? ""}`;
+  // Kompaktowa etykieta lat w sidebarze, np. "2023-26" albo "2024+".
+  // Rok wyłuskujemy regexem, bo druga część okresu bywa słowem
+  // ("dziś" / "present") i obcinanie znaków dawało wcześniej "2024-iś".
+  const [fromPart = "", toPart = ""] = t(role.period).split("-");
+  const yearOf = (s: string) => s.match(/\d{4}/)?.[0] ?? "";
+  const fromYear = yearOf(fromPart);
+  const toYear = yearOf(toPart);
+  const yearLabel = toYear ? `${fromYear}-${toYear.slice(-2)}` : `${fromYear}+`;
 
   return (
     <button

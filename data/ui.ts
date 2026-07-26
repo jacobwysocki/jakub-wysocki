@@ -23,15 +23,15 @@ export const ui = {
     engineering: { pl: "Doświadczenie", en: "Experience" },
     engineeringTitle: { pl: "Ścieżka inżynierska.", en: "The engineering path." },
     engineeringSub: {
-      pl: "Enterprise'owa logistyka, nagradzany e-commerce, aplikacja dla 40 tysięcy studentów i własny SaaS — pisane w .NET, React i TypeScript.",
-      en: "Enterprise logistics, award-winning e-commerce, an app for 40,000 students and my own SaaS — written in .NET, React and TypeScript.",
+      pl: "Enterprise'owa logistyka, nagradzany e-commerce, aplikacja dla 40 tysięcy studentów i własny SaaS, pisane w .NET, React i TypeScript.",
+      en: "Enterprise logistics, award-winning e-commerce, an app for 40,000 students and my own SaaS, written in .NET, React and TypeScript.",
     },
     educationTitle: { pl: "Edukacja i badania.", en: "Education & research." },
     personalProjectsTitle: { pl: "Projekty osobiste.", en: "Personal projects." },
     studio: { pl: "Ultra Studio", en: "Ultra Studio" },
     studioSub: {
-      pl: "Wizualna, kliencka strona mojej pracy — projekty otwierają się z pełnym opisem.",
-      en: "The visual, client-facing side of my work — open any project for the full story.",
+      pl: "Wizualna, kliencka strona mojej pracy. Projekty otwierają się z pełnym opisem.",
+      en: "The visual, client-facing side of my work. Open any project for the full story.",
     },
     extras: { pl: "Poza kodem", en: "Beyond the code" },
     extrasTitle: { pl: "Certyfikaty, języki i pasje.", en: "Certifications, languages & passions." },
@@ -94,8 +94,8 @@ export const ui = {
     localTime: { pl: "czas lokalny", en: "local time" },
     rights: { pl: "Wszelkie prawa zastrzeżone.", en: "All rights reserved." },
     builtWith: {
-      pl: "Zaprojektowane i zakodowane osobiście — Next.js, Tailwind, Framer Motion.",
-      en: "Designed and coded personally — Next.js, Tailwind, Framer Motion.",
+      pl: "Zaprojektowane i zakodowane osobiście: Next.js, Tailwind, Framer Motion.",
+      en: "Designed and coded personally: Next.js, Tailwind, Framer Motion.",
     },
   },
 } as const;

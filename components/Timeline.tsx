@@ -236,20 +236,20 @@ function PersonalProjects() {
 
   const osHighlights = [
     {
-      pl: "Pełny menedżer okien z przeciąganiem, skalowaniem krawędzi, minimalizacją i maksymalizacją — animowany sprężyną Framer Motion.",
-      en: "Full window manager with drag, edge resize, minimise and maximise — spring-animated by Framer Motion.",
+      pl: "Pełny menedżer okien z przeciąganiem, skalowaniem krawędzi, minimalizacją i maksymalizacją, animowany sprężyną Framer Motion.",
+      en: "Full window manager with drag, edge resize, minimise and maximise, spring-animated by Framer Motion.",
     },
     {
       pl: "Dock z magnifikacją ikon w stylu macOS: fizyczna odległość kursora steruje skalą i unoszeniem każdej ikony.",
       en: "macOS-style dock with icon magnification: cursor distance physically drives the scale and lift of each icon.",
     },
     {
-      pl: "7 wbudowanych aplikacji — od live preview stron w iframe po experience timeline i kontakt — z sidebarami, zakładkami i podglądem na żywo.",
-      en: "7 built-in apps — from live site previews in iframes to an experience timeline and contact — with sidebars, tabs and live previews.",
+      pl: "7 wbudowanych aplikacji, od live preview stron w iframe po experience timeline i kontakt, z sidebarami, zakładkami i podglądem na żywo.",
+      en: "7 built-in apps, from live site previews in iframes to an experience timeline and contact, with sidebars, tabs and live previews.",
     },
     {
-      pl: "Pasek menu z zegarem, menu kontekstowe z wyborem tapety oraz ekran startowy z progress barem — detale, które domykają wrażenie systemu.",
-      en: "Menu bar with a live clock, right-click context menu with wallpaper picker, and a boot screen with a progress bar — details that sell the OS feel.",
+      pl: "Pasek menu z zegarem, menu kontekstowe z wyborem tapety oraz ekran startowy z progress barem: detale, które domykają wrażenie systemu.",
+      en: "Menu bar with a live clock, right-click context menu with wallpaper picker, and a boot screen with a progress bar: details that sell the OS feel.",
     },
   ] as L10n[];
 
@@ -273,8 +273,8 @@ function PersonalProjects() {
             </h4>
             <p className="mt-3 text-[14px] leading-relaxed text-white/65">
               {t({
-                pl: "Webowy system operacyjny jako alternatywny sposób eksploracji mojego portfolio. Okna, dock, pasek menu, tapety, boot screen — kompletne doświadczenie budowane komponent po komponencie w React.",
-                en: "A web-based operating system as an alternative way to explore my portfolio. Windows, dock, menu bar, wallpapers, boot screen — a complete experience built component by component in React.",
+                pl: "Webowy system operacyjny jako alternatywny sposób eksploracji mojego portfolio. Okna, dock, pasek menu, tapety, boot screen: kompletne doświadczenie budowane komponent po komponencie w React.",
+                en: "A web-based operating system as an alternative way to explore my portfolio. Windows, dock, menu bar, wallpapers, boot screen: a complete experience built component by component in React.",
               })}
             </p>
 

@@ -192,7 +192,7 @@ export default function Nav() {
                 <div className="mb-6 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/40">
                   <span>Index</span>
                   <span className="h-px flex-1 bg-white/15" />
-                  <span>01—{String(navLinks.length).padStart(2, "0")}</span>
+                  <span>01/{String(navLinks.length).padStart(2, "0")}</span>
                 </div>
 
                 <ul className="flex flex-1 flex-col justify-center">
