@@ -22,15 +22,24 @@ import { staggerContainer, wordVariants, EASE_APPLE } from "@/lib/motion";
 function Portrait() {
   const [missing, setMissing] = useState(false);
 
-  // Eliptyczna maska rozpuszcza wszystkie cztery krawędzie zdjęcia
-  // w czerni hero — fotografia ma własne ciemne tło, więc wystarczy
-  // zgasić je zanim dojdzie do prostokątnej krawędzi.
-  const mask =
-    "radial-gradient(ellipse 60% 66% at 50% 40%, black 45%, rgba(0,0,0,0.72) 64%, transparent 90%)";
+  // Dwie warstwy maski przecięte zamiast jednej elipsy. Elipsa gasiła
+  // wszystkie cztery krawędzie tak samo mocno, więc góra kadru rozpływała
+  // się razem z bokami. Rozdzielenie osi pozwala dobrać siłę osobno:
+  //  - poziomo: delikatne zejście, ledwie zmiękczające pionowe krawędzie,
+  //  - pionowo: góra zostaje ostra (tam jest twarz, nie ma czego gasić),
+  //    dół rozpuszcza się w tle sekcji.
+  // Bez `mask-composite` warstwy sumowałyby się zamiast przecinać i maska
+  // wyszłaby niemal całkiem krystaliczna, stąd obie własności naraz.
+  const maskLayers = [
+    "linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%)",
+    "linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%)",
+  ].join(", ");
   const maskStyle = {
-    WebkitMaskImage: mask,
-    maskImage: mask,
-  };
+    WebkitMaskImage: maskLayers,
+    maskImage: maskLayers,
+    WebkitMaskComposite: "source-in",
+    maskComposite: "intersect",
+  } as const;
 
   return (
     <div className="relative mx-auto aspect-[4/5] w-full max-w-[220px] md:max-w-[520px]">
@@ -101,7 +110,10 @@ export default function Hero() {
           120px blura na GPU telefonu obciąża pierwszy paint i LCP) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[20%] top-1/3 h-[75vmin] w-[75vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
+        // Tylko od `md`: w układzie dwukolumnowym poświata trzyma lewą stronę
+        // nagłówka. Na mobile lewa strona kadru jest pusta, więc świeciłaby
+        // w nic — tam żyje druga kopia, zakotwiczona przy pasie faktów.
+        className="pointer-events-none absolute left-[20%] top-1/3 hidden h-[75vmin] w-[75vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 md:block"
         style={{
           background: "radial-gradient(circle, rgba(255,106,61,0.55) 0%, transparent 60%)",
         }}
@@ -109,10 +121,23 @@ export default function Hero() {
 
       <motion.div
         style={{ y, opacity }}
-        className="relative mx-auto grid w-full max-w-content grid-cols-1 items-center gap-10 px-6 pb-24 pt-28 md:grid-cols-[1.02fr_0.98fr] md:gap-6 md:pb-16 md:pt-16"
+        // minmax(0, …) zamiast gołych fr: samo `1.02fr` znaczy
+        // `minmax(auto, 1.02fr)`, więc kolumna nie schodziła poniżej swojego
+        // min-content i przyklejała się do najdłuższego słowa nagłówka.
+        // Polskie „oprogramowanie." rozpychało ją do 593px i odbierało tę
+        // szerokość zdjęciu, przez co zdjęcie zmieniało rozmiar przy każdej
+        // zmianie języka. Teraz podział jest czysto proporcjonalny.
+        className="relative mx-auto grid w-full max-w-content grid-cols-1 items-center gap-10 px-6 pb-24 pt-28 md:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] md:gap-6 md:pb-16 md:pt-16"
       >
         <div className="text-center md:text-left">
-          <h1 aria-label={headline} className="mx-auto max-w-[14ch] text-display md:mx-0">
+          {/* overflow-wrap to zabezpieczenie ostatniej szansy: rozmiar
+              nagłówka jest dobrany tak, by długie słowa się mieściły, ale
+              gdyby kiedyś doszło dłuższe, ma złamać wyraz zamiast wejść
+              na zdjęcie. */}
+          <h1
+            aria-label={headline}
+            className="mx-auto max-w-[14ch] text-display [overflow-wrap:break-word] md:mx-0"
+          >
             <StableText l10n={site.hero.headline}>
               {(text) => (
                 <motion.span
@@ -149,21 +174,45 @@ export default function Hero() {
           </motion.p>
 
           {/* Szybkie fakty — cichy dowód zamiast pustego sloganu */}
-          <motion.ul
-            className="mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:justify-start"
-            initial={reduced ? false : { y: 16 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.3 }}
-          >
-            {site.hero.facts.map((fact, i) => (
-              <li
-                key={i}
-                className="rounded-full border border-white/12 bg-white/[0.04] px-3.5 py-1.5 text-[12px] font-medium text-white/70 backdrop-blur-sm"
-              >
-                <StableText l10n={fact} className="whitespace-nowrap text-center" />
-              </li>
-            ))}
-          </motion.ul>
+          <div className="relative mt-9">
+            {/*
+              Poświata mobilna, zakotwiczona do samego pasa faktów, a nie do
+              procentu wysokości sekcji ani stałej odległości od jej środka.
+              Obie te kotwice dryfują, bo wysokość treści zależy od szerokości
+              ekranu: przy węższym kadrze nagłówek łamie się na więcej linii
+              i pille zjeżdżają niżej. Kotwica na elemencie trzyma się ich
+              zawsze. Od `md` gasimy ją, bo tam poświata wraca na lewą stronę.
+
+              Bez ujemnego z-index: wrapper ma samo `relative`, więc nie tworzy
+              kontekstu układania i `-z-10` przebijało się w górę drzewa aż pod
+              czarne tło sekcji, czyli poświata znikała całkowicie. Wystarczy
+              kolejność w DOM — poświata jest przed listą, więc pille malują
+              się na niej.
+            */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[75vmin] w-[75vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 md:hidden"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,106,61,0.55) 0%, transparent 60%)",
+              }}
+            />
+            <motion.ul
+              className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:justify-start"
+              initial={reduced ? false : { y: 16 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.3 }}
+            >
+              {site.hero.facts.map((fact, i) => (
+                <li
+                  key={i}
+                  className="rounded-full border border-white/12 bg-white/[0.04] px-3.5 py-1.5 text-[12px] font-medium text-white/70 backdrop-blur-sm"
+                >
+                  <StableText l10n={fact} className="whitespace-nowrap text-center" />
+                </li>
+              ))}
+            </motion.ul>
+          </div>
         </div>
 
         <motion.div

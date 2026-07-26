@@ -33,8 +33,14 @@ export default function StableText({
 }: StableTextProps) {
   const lang = useLang();
 
+  // `grid` zostaje mimo usunięcia kopii miarowej, bo robi tu drugą robotę:
+  // trzyma element BLOKOWYM. Wszystkie miejsca użycia były układane przeciwko
+  // tej blokowości — po zejściu do gołego, inline'owego <span> dwa sąsiadujące
+  // StableTexty (tytuł i podpis przycisku „Uruchom OS" w Nav) skleiły się
+  // w jedną linię, a marginesy pionowe przestały działać, bo nie działają
+  // na elementach inline.
   return (
-    <span className={className}>
+    <span className={`grid ${className}`}>
       {children ? children(l10n[lang]) : l10n[lang]}
     </span>
   );

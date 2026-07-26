@@ -34,11 +34,17 @@ const config: Config = {
       fontSize: {
         // Skala typograficzna z briefu — clamp() desktop → mobile
         display: [
-          "clamp(40px, 6.5vw, 84px)",
-          // -0.015em zamiast -0.03em: przy -0.03em litery w „I build brands
-          // and software." zlewały się ze sobą. Angielski headline ma więcej
-          // krótkich słów niż polski, więc ciasny tracking bolał tam bardziej.
-          { lineHeight: "1.05", letterSpacing: "-0.015em", fontWeight: "700" },
+          // Rozmiar i tracking są tu związane z układem hero, nie dobrane
+          // swobodnie. Kolumny hero są proporcjonalne (minmax(0, …)), więc
+          // najdłuższe nierozrywalne słowo nagłówka musi się w swojej kolumnie
+          // zmieścić — a jest nim polskie „oprogramowanie.", ponad dwa razy
+          // dłuższe od angielskiego „software.". Zmierzone: przy 72px i zerowym
+          // trackingu ma 524px przy kolumnie 534px. Podnosząc rozmiar albo
+          // rozluźniając tracking, sprawdź ten zapas ponownie.
+          // 6vw zamiast 6.5vw: przy 6.5vw słowo nie mieściło się w zakresie
+          // szerokości 768–1008px, gdzie font rośnie szybciej niż kolumna.
+          "clamp(40px, 6vw, 72px)",
+          { lineHeight: "1.05", letterSpacing: "0em", fontWeight: "700" },
         ],
         h2: [
           "clamp(36px, 5vw, 64px)",
