@@ -25,9 +25,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      // Z ukośnikiem — canonical strony głównej to "/", a dla Google
-      // adres z ukośnikiem i bez to dwa różne ciągi znaków.
-      url: `${SITE_URL}/`,
+      // Bez ukośnika, znak w znak jak renderowany canonical
+      // (`<link rel="canonical" href="https://jakub-wysocki.com"/>`).
+      // Dla samego korzenia pusta ścieżka i "/" są równoważne — RFC 3986
+      // §6.2.3, Google i tak je normalizuje — więc chodzi wyłącznie o to,
+      // żeby oba miejsca mówiły dosłownie to samo i nie było czego porównywać.
+      // Na podstronach równoważność już NIE zachodzi.
+      url: SITE_URL,
       lastModified,
       changeFrequency: "monthly",
       priority: 1,
