@@ -15,6 +15,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   };
 
+  // Portret zgłoszony jawnie: to ten sam plik, co Person.image w JSON-LD.
+  // Bez tego jedyną ścieżką do niego jest zoptymalizowany /_next/image.
+  const portrait = [`${SITE_URL}${person.portrait}`];
+
   return [
     {
       // Bez ukośnika, znak w znak jak renderowany canonical.
@@ -22,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "monthly",
       priority: 1,
+      images: portrait,
     },
     {
       url: `${SITE_URL}${person.entityHome.en}`,
@@ -29,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
       alternates: entityAlternates,
+      images: portrait,
     },
     {
       url: `${SITE_URL}${person.entityHome.pl}`,
@@ -36,6 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
       alternates: entityAlternates,
+      images: portrait,
     },
   ];
 }
