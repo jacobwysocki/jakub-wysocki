@@ -127,7 +127,10 @@ export const person = {
   nationality: "PL",
   locality: "Kraków",
   country: "PL",
-  portrait: "/images/portrait.png",
+  // JPEG, nie PNG: to fotografia, a PNG jest bezstratny i dawał 1,7 MB.
+  // Person.image w lib/schema.ts wskazuje wprost na ten plik, więc musi to
+  // być zwykły URL, nie adres optymalizatora Next (/_next/image?...).
+  portrait: "/images/portrait.jpg",
   /** Kanoniczna nota biograficzna — ta sama treść co w bio LinkedIna. */
   bio: {
     pl: "Jakub Wysocki jest inżynierem oprogramowania i projektantem UX/UI z siedzibą w Krakowie. Współzałożyciel Ultra Studio (studio kreatywne zajmujące się brandingiem, web designem i custom developmentem) oraz Squizzu, grywalizowanej platformy do nauki IT i przygotowania do rozmów rekrutacyjnych. Od 2021 roku pracuje na styku inżynierii i designu w Wielkiej Brytanii, Polsce i Meksyku, budując systemy w .NET i React dla klientów korporacyjnych i produktów wczesnej fazy.",

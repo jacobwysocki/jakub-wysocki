@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Lang } from "@/lib/lang-store";
 import { SITE_URL, contactInfo, person } from "@/data/site";
 import { allRoles } from "@/data/experience";
@@ -67,13 +68,21 @@ export default function EntityHome({ lang }: { lang: Lang }) {
         </nav>
 
         <header className="mt-12">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/*
+            next/image nie łamie zasady „zero JS-u" na tej stronie: w
+            komponencie serwerowym renderuje zwykły <img> ze srcset, a plik
+            optymalizuje host. Surowy <img> podawał 272 KB na kadr 112 px.
+            priority, bo obrazek jest nad zgięciem i nie ma go co leniwie
+            ładować. object-top, bo kwadratowy kadr z pionowego portretu
+            ucina inaczej niż koło i twarz musi zostać w polu widzenia.
+          */}
+          <Image
             src={person.portrait}
             alt={`${person.fullName}, ${t(person.jobTitle)}`}
             width={112}
             height={112}
-            className="h-28 w-28 rounded-full object-cover"
+            priority
+            className="h-28 w-28 rounded-card object-cover object-top"
           />
           <h1 className="mt-8 text-h2">{person.fullName}</h1>
           <p className="mt-3 text-h3 font-normal text-muted">

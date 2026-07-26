@@ -8,15 +8,16 @@ import {
   useTransform,
   useReducedMotion,
 } from "framer-motion";
-import { site } from "@/data/site";
+import { person, site } from "@/data/site";
 import { useT } from "@/lib/lang-store";
 import StableText from "@/components/StableText";
 import { staggerContainer, wordVariants, EASE_APPLE } from "@/lib/motion";
 
 /**
- * Slot na portret: /public/portrait.png (retusz AI wg promptu z briefu).
- * Dopóki pliku nie ma, renderuje elegancki placeholder — duotone'owa
- * poświata + monogram. Obie wersje wtapiają się w czarne tło maską.
+ * Slot na portret: ścieżka z person.portrait (data/site.ts), jedno źródło
+ * prawdy wspólne z wizytówkami i Person.image w danych strukturalnych.
+ * Gdy pliku nie ma, onError przełącza na placeholder: duotone'owa poświata
+ * plus monogram. Obie wersje wtapiają się w czarne tło maską.
  */
 function Portrait() {
   const [missing, setMissing] = useState(false);
@@ -59,8 +60,8 @@ function Portrait() {
         </div>
       ) : (
         <Image
-          src="/images/portrait.png"
-          alt="Jakub Wysocki, portret"
+          src={person.portrait}
+          alt={`${person.fullName}, portret`}
           fill
           priority
           sizes="(max-width: 768px) 80vw, 520px"

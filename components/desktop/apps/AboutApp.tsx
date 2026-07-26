@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { Earth, Footprints, Mountain, Trophy, Waves, Zap } from "lucide-react";
-import { site } from "@/data/site";
+import { person, site } from "@/data/site";
 import { hobbies } from "@/data/education";
 import { ui } from "@/data/ui";
 import { isWordSuffix, useLang, useT } from "@/lib/lang-store";
@@ -39,9 +40,13 @@ export default function AboutApp() {
             aria-hidden
             className="absolute inset-0 -z-10 scale-110 rounded-[22px] bg-accent/25 blur-xl"
           />
-          <img
-            src="/images/portrait.png"
-            alt="Jakub Wysocki, portret"
+          {/* Bez priority: okno otwiera się na żądanie, więc leniwe
+              ładowanie jest tu pożądane, a nie kosztowne. */}
+          <Image
+            src={person.portrait}
+            alt={`${person.fullName}, portret`}
+            width={150}
+            height={192}
             className="h-48 w-[150px] rounded-[18px] object-cover object-top shadow-soft ring-1 ring-line/50"
           />
         </span>

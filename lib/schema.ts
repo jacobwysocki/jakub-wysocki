@@ -132,15 +132,34 @@ const organizationNodes = [
     name: "Ultra Studio",
     url: contactInfo.ultrastudio,
     description:
-      "Creative studio for high-end branding, web design and custom development, based in Kraków, Poland.",
+      "Creative studio for high-end branding, web design and custom development, working remotely from Kraków and Warsaw, Poland.",
     email: `mailto:${contactInfo.emailAlt}`,
     foundingDate: "2024-08",
     founder: { "@id": ID.person },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: person.locality,
-      addressCountry: person.country,
-    },
+    /**
+     * Dwa `location` zamiast jednego `address`. Studio nie jest zarejestrowane
+     * i pracuje rozproszone (Kraków i Warszawa), więc pojedynczy PostalAddress
+     * twierdziłby siedzibę, której nie ma, i kłóciłby się z LinkedInem.
+     * `Person.homeLocation` zostaje Krakowem, bo to fakt o osobie.
+     */
+    location: [
+      {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: person.locality,
+          addressCountry: person.country,
+        },
+      },
+      {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Warsaw",
+          addressCountry: "PL",
+        },
+      },
+    ],
   },
   {
     "@type": "Organization",
