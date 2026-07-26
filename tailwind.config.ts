@@ -35,7 +35,10 @@ const config: Config = {
         // Skala typograficzna z briefu — clamp() desktop → mobile
         display: [
           "clamp(40px, 6.5vw, 84px)",
-          { lineHeight: "1.05", letterSpacing: "-0.03em", fontWeight: "700" },
+          // -0.015em zamiast -0.03em: przy -0.03em litery w „I build brands
+          // and software." zlewały się ze sobą. Angielski headline ma więcej
+          // krótkich słów niż polski, więc ciasny tracking bolał tam bardziej.
+          { lineHeight: "1.05", letterSpacing: "-0.015em", fontWeight: "700" },
         ],
         h2: [
           "clamp(36px, 5vw, 64px)",

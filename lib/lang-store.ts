@@ -1,56 +1,45 @@
-import { create } from "zustand";
+"use client";
 
-export type Lang = "pl" | "en";
-
-/** Para tłumaczeń — każdy tekst widoczny dla użytkownika ma obie wersje. */
-export type L10n = { pl: string; en: string };
-
-export const LANG_STORAGE_KEY = "jw-lang";
-
-/** Suffixes spelled out as words ("years", "lat") vs. symbols ("+", "k+", "h"). */
-export function isWordSuffix(suffix: string) {
-  return /^[a-zA-Z]+$/.test(suffix.trim()) && suffix.trim().length > 1;
-}
+import { createContext, useContext } from "react";
+import type { Lang, L10n } from "@/lib/lang";
 
 /**
- * Skrypt blokujący w <head> — ustala język PRZED hydratacją
- * (zapis użytkownika albo heurystyka navigator.language) i zapisuje
- * go w atrybutach <html>: lang + data-lang.
+ * Kliencka warstwa języka: context i hooki.
+ *
+ * Typy i stałe re-eksportujemy z lib/lang, żeby ~30 komponentów mogło dalej
+ * importować wszystko z jednego miejsca. Serwer musi sięgać po lib/lang
+ * bezpośrednio — ten moduł jest kliencki i jego funkcji nie da się wywołać
+ * z komponentu serwerowego.
  */
-export const LANG_INIT_SCRIPT = `(function(){try{var l=localStorage.getItem("${LANG_STORAGE_KEY}");if(l!=="pl"&&l!=="en"){l=(navigator.language||"").toLowerCase().indexOf("pl")===0?"pl":"en"}document.documentElement.lang=l;document.documentElement.dataset.lang=l}catch(e){document.documentElement.lang="pl";document.documentElement.dataset.lang="pl"}})()`;
+export type { Lang, L10n } from "@/lib/lang";
+export {
+  LANG_COOKIE,
+  LANG_COOKIE_MAX_AGE,
+  isWordSuffix,
+  normalizeLang,
+} from "@/lib/lang";
 
-type LangState = {
-  /** null = jeszcze nie odczytany (SSR / przed hydratacją) */
-  lang: Lang | null;
-  hydrate: () => void;
+type LangContextValue = {
+  lang: Lang;
   setLang: (lang: Lang) => void;
 };
 
-export const useLangStore = create<LangState>((set) => ({
-  lang: null,
-  hydrate: () => {
-    const attr = document.documentElement.dataset.lang;
-    set({ lang: attr === "en" ? "en" : "pl" });
-  },
-  setLang: (lang) => {
-    try {
-      localStorage.setItem(LANG_STORAGE_KEY, lang);
-    } catch {
-      /* tryb prywatny — wybór nie przetrwa sesji */
-    }
-    document.documentElement.lang = lang;
-    document.documentElement.dataset.lang = lang;
-    set({ lang });
-  },
-}));
-
 /**
- * Aktualny język z fallbackiem na "pl" — pierwsza klientowa klatka
- * renderuje się identycznie z SSR (pl), a hydrate() dociąga wybór
- * użytkownika tuż po starcie Reacta.
+ * Context, nie store modułowy. Store zustanda jest singletonem na moduł,
+ * więc zasianie go wartością z żądania wyciekałoby między równoległymi
+ * renderami na serwerze i dwóch użytkowników mogłoby dostać cudzy język.
  */
+export const LangContext = createContext<LangContextValue>({
+  lang: "pl",
+  setLang: () => {},
+});
+
 export function useLang(): Lang {
-  return useLangStore((s) => s.lang) ?? "pl";
+  return useContext(LangContext).lang;
+}
+
+export function useSetLang() {
+  return useContext(LangContext).setLang;
 }
 
 /** Skrót: t(l10n) zwraca tekst w aktualnym języku. */

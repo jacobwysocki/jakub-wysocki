@@ -5,7 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import JsonLd from "@/components/JsonLd";
 import { MODE_INIT_SCRIPT } from "@/lib/mode-store";
-import { LANG_INIT_SCRIPT } from "@/lib/lang-store";
 import { SITE_URL, person } from "@/data/site";
 import { siteGraph } from "@/lib/schema";
 import "./globals.css";
@@ -71,8 +70,9 @@ export default function RootLayout({
       <head>
         {/* Ustala tryb widoku (prosty/pulpit) przed pierwszym paintem — bez migania */}
         <script dangerouslySetInnerHTML={{ __html: MODE_INIT_SCRIPT }} />
-        {/* Ustala język (PL/EN) — zapis użytkownika albo navigator.language */}
-        <script dangerouslySetInnerHTML={{ __html: LANG_INIT_SCRIPT }} />
+        {/* Języka nie ustala już skrypt: rozstrzyga go serwer w app/page.tsx
+            (ciastko albo Accept-Language) i wysyła gotowy HTML. Druga
+            heurystyka po stronie klienta mogłaby tylko odpowiedzieć inaczej. */}
         {/* Encja: osoba + firmy + witryna. Renderowane serwerowo w każdej podstronie. */}
         <JsonLd data={siteGraph()} />
       </head>

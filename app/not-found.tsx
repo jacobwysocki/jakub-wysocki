@@ -1,18 +1,26 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { ui } from "@/data/ui";
-import { useLangStore, useT } from "@/lib/lang-store";
+import { useT } from "@/lib/lang-store";
+import LangProvider from "@/components/LangProvider";
 
+/**
+ * 404 celowo nie czyta ciastka na serwerze: to jedyna trasa, która ma
+ * zostać statyczna mimo dwujęzyczności, a chwilowe miganie na stronie
+ * błędu nie ma znaczenia. LangProvider bez initialLang ustala język
+ * po stronie klienta.
+ */
 export default function NotFound() {
-  const hydrateLang = useLangStore((s) => s.hydrate);
-  const t = useT();
+  return (
+    <LangProvider>
+      <NotFoundContent />
+    </LangProvider>
+  );
+}
 
-  // ModeGate nie renderuje się na 404 — język dociągamy tutaj
-  useEffect(() => {
-    hydrateLang();
-  }, [hydrateLang]);
+function NotFoundContent() {
+  const t = useT();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-surface px-6 text-center">

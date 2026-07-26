@@ -1,6 +1,6 @@
 "use client";
 
-import { useLang, useLangStore, type Lang } from "@/lib/lang-store";
+import { useLang, useSetLang, type Lang } from "@/lib/lang-store";
 
 const LANGS: Lang[] = ["pl", "en"];
 
@@ -17,7 +17,7 @@ export default function LangSwitch({
   tone?: "light" | "dark";
 }) {
   const lang = useLang();
-  const setLang = useLangStore((s) => s.setLang);
+  const setLang = useSetLang();
 
   const shell =
     tone === "dark" ? "border-white/20 bg-white/10" : "border-ink/15 bg-ink/5";

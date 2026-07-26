@@ -6,7 +6,7 @@ import { BatteryFull, ChevronDown, Search, Wifi } from "lucide-react";
 import { site, contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useWindowStore } from "@/lib/window-store";
-import { useLang, useLangStore, useT } from "@/lib/lang-store";
+import { useLang, useSetLang, useT } from "@/lib/lang-store";
 import { EASE_APPLE } from "@/lib/motion";
 import { useDesktop } from "./DesktopContext";
 import { getApp } from "./registry";
@@ -114,7 +114,7 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
 /** Przełącznik PL/EN w pasku menu */
 function MenuLangSwitch() {
   const lang = useLang();
-  const setLang = useLangStore((s) => s.setLang);
+  const setLang = useSetLang();
   return (
     <button
       type="button"

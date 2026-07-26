@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useModeStore } from "@/lib/mode-store";
-import { useLangStore } from "@/lib/lang-store";
 import { EASE_APPLE } from "@/lib/motion";
 
 // Pulpit ładuje się tylko na klencie i tylko, gdy jest potrzebny —
@@ -22,15 +21,15 @@ const Desktop = dynamic(() => import("@/components/desktop/Desktop"), {
 export default function ModeGate({ simple }: { simple: React.ReactNode }) {
   const mode = useModeStore((s) => s.mode);
   const hydrate = useModeStore((s) => s.hydrate);
-  const hydrateLang = useLangStore((s) => s.hydrate);
   const reduced = useReducedMotion();
   const prevMode = useRef<typeof mode>(null);
 
+  // Język nie jest już tu dociągany — dostarcza go LangProvider wartością
+  // ustaloną na serwerze, więc nie ma nic do nadrobienia po hydratacji.
   useEffect(() => {
     hydrate();
-    hydrateLang();
     document.documentElement.setAttribute("data-hydrated", "");
-  }, [hydrate, hydrateLang]);
+  }, [hydrate]);
 
   // Pierwsza zmiana null -> tryb: bez animacji (to nie jest przełączenie)
   const instant = prevMode.current === null;
