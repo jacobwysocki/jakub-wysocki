@@ -2,7 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Linkedin, Github, Mail, Phone } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { BehanceIcon, StackOverflowIcon } from "@/components/logos";
+import type { SocialIcon } from "@/data/links";
 import { site, contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
@@ -21,7 +22,7 @@ type Row = {
   label: string;
   detail: string;
   href: string;
-  icon: LucideIcon;
+  icon: SocialIcon;
   external: boolean;
   onClick?: (e: React.MouseEvent) => void;
 };
@@ -71,6 +72,20 @@ export default function ContactApp() {
       detail: hostLabel(contactInfo.github),
       href: contactInfo.github,
       icon: Github,
+      external: true,
+    },
+    {
+      label: "Behance",
+      detail: hostLabel(contactInfo.behance),
+      href: contactInfo.behance,
+      icon: BehanceIcon,
+      external: true,
+    },
+    {
+      label: "Stack Overflow",
+      detail: hostLabel(contactInfo.stackoverflow),
+      href: contactInfo.stackoverflow,
+      icon: StackOverflowIcon,
       external: true,
     },
   ];

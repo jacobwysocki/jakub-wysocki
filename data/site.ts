@@ -25,6 +25,9 @@ export const contactInfo = {
   // domenę, więc obustronnego potwierdzenia z entity home jeszcze NIE ma.
   // Zacznie działać dopiero, gdy w linkach profilu stanie jakub-wysocki.com.
   behance: "https://www.behance.net/jakub-wysocki",
+  // Profil inżynierski o wysokim autorytecie domeny. Wpięty też w „Social
+  // accounts" na GitHubie, więc tworzy trójkąt: strona → SO, GitHub → SO.
+  stackoverflow: "https://stackoverflow.com/users/14391216/jakub-wysocki",
   droneRepo: "https://github.com/jacobwysocki/drone-path-optimization",
   droneLive: "https://jacobwysocki.github.io/drone-path-optimization/",
   squizzu: "https://www.squizzu.com",

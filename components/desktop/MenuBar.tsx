@@ -82,6 +82,26 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
         >
           GitHub
         </a>
+        <a
+          role="menuitem"
+          className={item}
+          href={contactInfo.behance}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
+        >
+          Behance
+        </a>
+        <a
+          role="menuitem"
+          className={item}
+          href={contactInfo.stackoverflow}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
+        >
+          Stack Overflow
+        </a>
         <div aria-hidden className="mx-2 my-1.5 h-px bg-black/10" />
         <button type="button" role="menuitem" className={item} onClick={run(switchToSimple)}>
           {t(ui.mode.switchToSimple)}

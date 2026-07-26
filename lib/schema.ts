@@ -31,6 +31,7 @@ const sameAs: string[] = [
   contactInfo.linkedin,
   contactInfo.github,
   contactInfo.behance,
+  contactInfo.stackoverflow,
   contactInfo.ultrastudio,
   contactInfo.squizzu,
 ];

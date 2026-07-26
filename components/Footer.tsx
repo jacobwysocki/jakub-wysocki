@@ -176,6 +176,9 @@ export default function Footer() {
             <FooterLink href={contactInfo.behance} isExternal>
               Behance
             </FooterLink>
+            <FooterLink href={contactInfo.stackoverflow} isExternal>
+              Stack Overflow
+            </FooterLink>
           </Column>
         </div>
 

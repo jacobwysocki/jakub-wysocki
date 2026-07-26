@@ -42,6 +42,7 @@ export default function EntityHome({ lang }: { lang: Lang }) {
     { label: "LinkedIn", href: contactInfo.linkedin },
     { label: "GitHub", href: contactInfo.github },
     { label: "Behance", href: contactInfo.behance },
+    { label: "Stack Overflow", href: contactInfo.stackoverflow },
     { label: "Ultra Studio", href: contactInfo.ultrastudio },
     { label: "Squizzu", href: contactInfo.squizzu },
   ];
