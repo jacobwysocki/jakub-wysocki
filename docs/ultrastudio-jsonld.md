@@ -182,12 +182,51 @@ w URL-u. `{{Title | json}}` stoi **bez** cudzysłowów, bo filtr `json` dodaje
 je sam i escapuje znaki specjalne. Wpisanie `"{{Title | json}}"` da podwójne
 cudzysłowy i zepsuje parsowanie.
 
-### Weryfikacja
+### Weryfikacja — przeszła (27.07.2026)
 
 Otwórz dwa różne case studies i porównaj źródło. `name` musi się różnić.
 Jeśli w obu widnieje dosłownie `{{Title | json}}`, zmienne się nie podstawiły
 i cały ten punkt trzeba odpuścić — nie jest wart obchodzenia problemu
 skryptem po stronie klienta.
+
+Sprawdzone: `{{` w HTML zero razy, `name` różne (Printly / Alumed), JSON
+parsuje się czysto mimo polskich znaków, `datePublished` już nie występuje.
+Gotowy skrypt w `ENTITY.md` §6.
+
+### Znana usterka: `&amp;` w polu `image`
+
+Wartość wychodzi tak:
+
+```
+"image": "…qfoVYYJNOgOMwVfcc77zVNkPE.jpg?width=895&amp;height=1279"
+```
+
+Wewnątrz `<script type="application/ld+json">` treść **nie jest dekodowana
+jako HTML**, więc parser widzi encję dosłownie. URL rozpada się na
+`width=895` i `amp;height=1279`, przez co parametr wysokości przepada.
+
+Skutek jest niewielki — obrazek nadal się pobiera, tylko w domyślnych
+wymiarach. To jednak jedyne pole w całym grafie ze zniekształconą wartością,
+a `image` bierze udział w wynikach rozszerzonych.
+
+Do sprawdzenia: czy pole używa `"{{Image}}"` w cudzysłowach (wtedy Framer
+escapuje HTML-owo — spróbuj `{{Image | json}}` bez cudzysłowów, jak przy
+`Title`), czy `| json` już tam jest. W tym drugim przypadku to ograniczenie
+Framera i zostaje jak jest: obchodzenie tego skryptem po stronie klienta
+kosztuje więcej, niż warta jest usterka.
+
+### Rozbudowa `about`
+
+Dziś `about` niesie gołą nazwę klienta:
+
+```json
+"about": { "@type": "Organization", "name": "Alumed" }
+```
+
+Dopięcie `"sameAs": "https://alumed.mx/"` zamienia string w byt, który da się
+rozpoznać, i podpina case study pod encję klienta. Działa w obie strony:
+Wasza realizacja zyskuje kontekst, a klient — wzmiankę z domeny opisującej,
+kto to zrobił. Wymaga pola z adresem klienta w kolekcji CMS.
 
 ## 2c. Pozostałe podstrony
 
@@ -354,6 +393,88 @@ liczbę wyrwaną z kontekstu.
 
 `/polityka-prywatnosci` i `/404` zostaw puste. Nie ma tam czego opisywać,
 a strona błędu i tak powinna być wyłączona z indeksowania.
+
+## 2d. FAQPage na /oferta
+
+Wdrożone 27.07.2026, po naprawieniu akordeonu. Warunek konieczny: treść
+odpowiedzi musi być w serwerowym HTML — inaczej dane strukturalne opisują
+coś, czego na stronie nie ma. Historia usterki w `ENTITY.md` §5.
+
+Framer → strona **oferta** → **Settings → Custom Code → End of `<head>` tag**.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://ultrastud.io/oferta#faq",
+  "url": "https://ultrastud.io/oferta",
+  "inLanguage": "pl-PL",
+  "isPartOf": { "@id": "https://ultrastud.io/#website" },
+  "about": { "@id": "https://ultrastud.io/#organization" },
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Jak wygląda proces współpracy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Zaczynamy od krótkiej rozmowy zapoznawczej, na której poznajemy Twój biznes, cele i oczekiwania. Na tej podstawie przygotowujemy ofertę z zakresem, harmonogramem i wyceną. Po akceptacji pracujemy etapami — każdy kończy się Twoją akceptacją, zanim przechodzimy dalej."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ile trwa realizacja projektu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Zależy od zakresu. Identyfikacja wizualna to zwykle 4–6 tygodni, strona internetowa 3–5 tygodni, a kompleksowy pakiet start 6–8 tygodni. Konkretny harmonogram ustalamy przed startem i trzymamy się go."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ile kosztują Wasze usługi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Każdy projekt wyceniamy indywidualnie po rozmowie i ustaleniu zakresu. Nie mamy sztywnego cennika — zależy nam na dopasowaniu oferty do realnych potrzeb, nie na sprzedawaniu rzeczy, których nie potrzebujesz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy mogę zamówić tylko logo lub tylko stronę?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak. Nie musisz zamawiać pełnego pakietu — realizujemy też pojedyncze usługi. Jeśli natomiast potrzebujesz kilku rzeczy, pakiet będzie korzystniejszy cenowo i spójniejszy wizualnie."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Co dostanę na koniec projektu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wszystkie pliki źródłowe, gotowe do użycia materiały i dokumentację. W przypadku brandingu — brandbook z wytycznymi. W przypadku strony — działającą witrynę z dostępem do CMS. Niczego nie trzymamy u siebie."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy pomagacie też po zakończeniu projektu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak. Oferujemy stałą opiekę — od aktualizacji strony i drobnych zmian graficznych, po prowadzenie social media i kampanie reklamowe. Możesz wrócić też z pojedynczym zleceniem w dowolnym momencie."
+      }
+    }
+  ]
+}
+</script>
+```
+
+**Treść musi być identyczna z widoczną na stronie.** Przy każdej edycji FAQ
+w Framerze trzeba zaktualizować także ten snippet — to jedyne miejsce
+w całym zestawie, gdzie ta sama treść żyje w dwóch kopiach. Framer nie
+pozwala wstrzyknąć jej z komponentu, więc rozjazd jest tu realnym ryzykiem.
+
+Odpowiedź na pytanie o ceny celowo nie zawiera widełek. Wpisanie liczby
+tylko po to, żeby pole nie było puste, kończy się tym, że Google i modele
+pokazują kwotę wyrwaną z kontekstu — ta sama zasada co przy `Offer` bez
+`price` w sekcji /oferta.
 
 ## 3. Zmiany w treści, bez kodu
 
