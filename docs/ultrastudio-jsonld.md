@@ -476,6 +476,133 @@ tylko po to, żeby pole nie było puste, kończy się tym, że Google i modele
 pokazują kwotę wyrwaną z kontekstu — ta sama zasada co przy `Offer` bez
 `price` w sekcji /oferta.
 
+## 2e. Blog
+
+Plan Basic ma od czerwca 2026 dwie kolekcje CMS. Portfolio zajmuje jedną,
+blog wchodzi w drugą bez zmiany planu.
+
+Pola kolekcji, do których odwołują się poniższe snippety: `Title`, `Slug`,
+`Excerpt`, `Cover`, `Published`, `Updated`.
+
+### Strona listy /blog
+
+Framer → strona **blog** → **Settings → Custom Code → End of `<head>` tag**.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "https://ultrastud.io/blog#blog",
+  "url": "https://ultrastud.io/blog",
+  "name": "Blog | Ultra Studio",
+  "inLanguage": "pl-PL",
+  "isPartOf": { "@id": "https://ultrastud.io/#website" },
+  "publisher": { "@id": "https://ultrastud.io/#organization" }
+}
+</script>
+```
+
+### Szablon wpisu /blog/:slug
+
+Ta sama mechanika co przy case studies: `{{Slug}}` **wewnątrz** cudzysłowów,
+bo sklejamy z niego adres; `{{Pole | json}}` **bez** cudzysłowów, bo filtr
+dokłada je sam.
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://ultrastud.io/blog/{{Slug}}#post",
+      "url": "https://ultrastud.io/blog/{{Slug}}",
+      "mainEntityOfPage": "https://ultrastud.io/blog/{{Slug}}",
+      "headline": {{Title | json}},
+      "description": {{Excerpt | json}},
+      "image": {{Cover | json}},
+      "inLanguage": "pl-PL",
+      "author": { "@id": "https://jakub-wysocki.com/#person" },
+      "publisher": { "@id": "https://ultrastud.io/#organization" },
+      "isPartOf": { "@id": "https://ultrastud.io/blog#blog" },
+      "datePublished": {{Published | json}},
+      "dateModified": {{Updated | json}}
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://ultrastud.io/blog/{{Slug}}#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ultrastud.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ultrastud.io/blog" },
+        { "@type": "ListItem", "position": 3, "name": {{Title | json}} }
+      ]
+    }
+  ]
+}
+</script>
+```
+
+### Dlaczego `author` wskazuje na drugą domenę
+
+`"author": { "@id": "https://jakub-wysocki.com/#person" }` to ten sam
+identyfikator, którym posługuje się graf na domenie osobistej. Dzięki temu
+każdy artykuł robi dwie rzeczy naraz: buduje autorytet tematyczny studia
+i dokłada osobie udokumentowane autorstwo w konkretnej dziedzinie.
+
+Gdyby zamiast tego wstawić rozpisany węzeł `Person` z imieniem i nazwiskiem,
+crawler dostałby drugi byt o tym samym nazwisku, opisany innym zestawem
+faktów — dokładnie to, przed czym ostrzega `ENTITY.md` §1.
+
+Jeśli artykuł napisze Filip, podmień na
+`{ "@id": "https://ultrastud.io/#filip-mazur" }`. Ten węzeł jest już
+zdefiniowany w grafie site-wide, więc nie trzeba go powtarzać.
+
+### `datePublished` — nie powtarzać błędu z case studies
+
+Pole `Published` w kolekcji musi być **ręcznie ustawianą datą publikacji**,
+a nie automatyczną datą utworzenia rekordu w CMS. Przy case studies właśnie
+ta pomyłka kazała usunąć `datePublished` w całości: data utworzenia rekordu
+wypadała wcześniej niż `dateCreated` projektu.
+
+Przy blogu `datePublished` jest potrzebne — Google używa go w wynikach
+i przy ocenie świeżości treści — więc pole musi być poprawne od początku.
+
+### Uwagi
+
+**`headline` do 110 znaków.** Powyżej Google ucina i może zignorować całe
+dane strukturalne. Jeśli tytuły bywają dłuższe, dodaj w kolekcji osobne
+pole `Headline` i podłącz je tutaj, zostawiając `Title` do wyświetlania.
+
+**`image`** odziedziczy usterkę z `&amp;` opisaną przy case studies. Ten sam
+kompromis: obrazek się pobierze, zgubi tylko parametr wymiarów.
+
+**Ostatni element `BreadcrumbList` nie ma `item`.** To poprawny wzorzec —
+ostatni okruszek jest stroną bieżącą, więc nie linkuje sam do siebie.
+
+### BreadcrumbList dla case studies
+
+Ten sam wzorzec warto dołożyć do istniejącego szablonu `/portfolio/:slug`
+jako drugi węzeł w tamtejszym grafie — dziś nie ma go nigdzie w serwisie.
+
+```json
+{
+  "@type": "BreadcrumbList",
+  "@id": "https://ultrastud.io/portfolio/{{Slug}}#breadcrumb",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ultrastud.io/" },
+    { "@type": "ListItem", "position": 2, "name": "Portfolio", "item": "https://ultrastud.io/portfolio" },
+    { "@type": "ListItem", "position": 3, "name": {{Title | json}} }
+  ]
+}
+```
+
+### Linkowanie, poza kodem
+
+Każdy artykuł kończy się odesłaniem do konkretnego case study, a case study
+linkuje do artykułu. To jednocześnie domyka lukę z sekcją `## Navigation`
+w markdownie i daje modelom ścieżkę przez serwis zamiast ślepego zaułka.
+
 ## 3. Zmiany w treści, bez kodu
 
 **Link zwrotny.** W biogramie przy „Jakub Wysocki, web designer & co-founder"

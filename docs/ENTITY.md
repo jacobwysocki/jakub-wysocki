@@ -182,6 +182,20 @@ Wyłączenie: Overview → *Manage your robots.txt* → **Disable robots.txt
 configuration**. Zostaje wtedy plik generowany przez Framera, który domyślnie
 wpuszcza wszystkie crawlery.
 
+**Treść lokalna dopiero wtedy, gdy jest z czego ją zbudować.** Rozważany był
+artykuł „nowe studio brandingowe w Krakowie". Odrzucony: zapytanie o zerowym
+wolumenie (klient szuka „studio brandingowe Kraków", nie nowin), ogłoszenie
+zamiast zasobu, treść starzejąca się z definicji, a przy dwóch latach na rynku
+ogłaszanie się jako „nowe" zaniża doświadczenie.
+
+Strona usługowa `/studio-brandingowe-krakow` ma sens, ale nie teraz — przy
+dwóch case studies i zerze opinii wyszłaby cienka, a cienka strona lokalna
+powtarzająca `/oferta` z podmienionym miastem to doorway page. Kolejność:
+case studies i opinie, potem strona lokalna.
+
+Widoczność lokalną przesuwają opinie z nazwą miasta, lokalizacja pinu w GBP
+i wzmianki z lokalnych źródeł — nie treść o samym sobie.
+
 **Stan serwisu sprawdzaj `curl`em i Search Console, nigdy przez pośrednika.**
 Lipiec 2026: narzędzie do pobierania stron zwracało dla czterech adresów
 (`/portfolio`, `/portfolio/printly`, `/portfolio/squizzu`,
@@ -245,6 +259,18 @@ adresu URL → Testuj URL na żywo, oraz tytuły w samym SERP-ie.
   `foundingDate`, `founder`. Bez `sameAs`, bez `logo`, bez węzła `WebSite`.
   Sama domena `squizzu.com` nie jest objęta żadnym dokumentem, mimo że to
   najmocniejsze aktywo pod notoryjność z sekcji 7
+- **blog na `ultrastud.io` nie istnieje.** Studio sprzedaje „tworzenie treści
+  i artykuły SEO" jako usługę, nie mając ani jednego własnego artykułu — brak
+  wiarygodności, brak strony mogącej rankować na cokolwiek poza nazwą marki
+  i brak materiału, który modele językowe mogłyby zacytować przy pytaniu
+  „jak wybrać studio brandingowe".
+  Plan Basic ma od czerwca 2026 dwie kolekcje CMS, portfolio zajmuje jedną —
+  blog wchodzi w drugą bez zmiany planu. Wzorce `Blog`, `BlogPosting`
+  i `BreadcrumbList` gotowe w `ultrastudio-jsonld.md` §2e, niezweryfikowane
+  na żywo. Pierwsze cztery tematy wprost z FAQ: koszt brandingu, logo kontra
+  identyfikacja, proces projektowania marki, kiedy rebranding
+- `BreadcrumbList` nie występuje nigdzie w serwisie — wzorzec dla
+  `/portfolio/:slug` czeka w `ultrastudio-jsonld.md` §2e
 - sekcja `## Navigation` w markdownie `ultrastud.io` zawiera wyłącznie mail
   i telefony, bez linków do podstron — agent kończy lekturę w ślepym zaułku
 - nagłówki na `ultrastud.io` używane jako styl, nie struktura: całe akapity
