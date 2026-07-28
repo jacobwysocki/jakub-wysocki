@@ -66,7 +66,7 @@ wymaga ręcznej aktualizacji.
 | Stack Overflow | Display name, Title, About me, Website link, Location |
 | Behance | pole Portfolio → `https://jakub-wysocki.com` (link zwrotny, działa) |
 | ultrastud.io → `/o-nas` | biogram, rola, link zwrotny do domeny osobistej |
-| ultrastud.io → JSON-LD | snippety w `docs/ultrastudio-jsonld.md` |
+| ultrastud.io → JSON-LD | snippety w prywatnym repo `ultrastudio-ops`, plik `jsonld.md` |
 | Instagram `@ultrastud.io` | bio studia, powinno zgadzać się z `description` organizacji |
 | Wikidata | jeszcze nie istnieje, patrz sekcja 5 |
 
@@ -143,59 +143,6 @@ case study. Framer nie pozwala celować custom code w pojedynczy element
 kolekcji CMS, a przynależność Squizzu do encji to fakt o świecie, nie o jednej
 podstronie.
 
-**Framer podstawia zmienne CMS składnią `{{Pole}}`.** Filtr `{{Pole | json}}`
-sam dokłada cudzysłowy i escapuje znaki, więc **nie wolno** go otaczać
-cudzysłowami. `{{Slug}}` bez filtra wstawia się wewnątrz cudzysłowów, bo
-sklejamy z niego adres.
-
-**`Visible: No` w Framerze usuwa warstwę z DOM.** Odpowiedzi w akordeonie FAQ
-na `/oferta` nie istniały w serwerowym HTML, bo warstwa `Answer` miała
-w wariantach zamkniętych `Visible: No` — czyli `display: none`, nie ukrycie
-wizualne. Poprawny wzorzec: `Visible: Yes`, `Height: 0`, `Opacity: 0`
-w wariancie zamkniętym; `Height: Fit`, `Opacity: 1` w otwartym, przy
-`Overflow: Hidden` na rodzicu. Framer opisuje to w artykule o indeksowaniu
-akordeonów.
-
-Pułapka towarzysząca: komponent miał **osiem wariantów** (XL/S × Primary/
-Secondary × Opened/Closed). Poprawka na jednym daje efekt połowiczny — Framer
-renderuje breakpointy jako osobne drzewa DOM. Ta sama mechanika stała za
-niespójną rolą w biogramie `/o-nas`.
-
-**Framer sam serwuje markdown agentom AI — nie kupuj tego drugi raz.**
-Każda zoptymalizowana strona ma wersję markdown pod tym samym adresem,
-dostępną przez nagłówek `Accept: text/markdown` albo parametr `?md`.
-Cloudflare oferuje to samo jako „Markdown for Agents" na planie Pro; przy
-Framerze byłoby to płacenie za funkcję, którą się już ma.
-
-Praktyczna konsekwencja: `curl -H "Accept: text/markdown" <url>` jest
-najwierniejszym audytem tego, co widzą modele. Markdown deduplikuje warianty
-responsywne Framera, więc problem potrójnie renderowanej treści dotyczy
-wyłącznie HTML-a i Googlebota. Za to wszystko, czego nie ma w DOM — jak
-odpowiedzi w akordeonach — nie pojawia się także tam.
-
-**Blokada w `robots.txt` to sygnał, nie zapora.** Cloudflare rozdziela dwie
-rzeczy: managed `robots.txt` (deklaracja, którą boty mogą uszanować lub nie)
-i „Block AI training bots" (egzekwowanie regułą). Przy `ultrastud.io`
-włączony był tylko pierwszy, przy drugim ustawionym na „only on pages with
-ads", czyli na niczym — stąd 69 przepuszczonych żądań mimo `Disallow: /`.
-Wyłączenie: Overview → *Manage your robots.txt* → **Disable robots.txt
-configuration**. Zostaje wtedy plik generowany przez Framera, który domyślnie
-wpuszcza wszystkie crawlery.
-
-**Treść lokalna dopiero wtedy, gdy jest z czego ją zbudować.** Rozważany był
-artykuł „nowe studio brandingowe w Krakowie". Odrzucony: zapytanie o zerowym
-wolumenie (klient szuka „studio brandingowe Kraków", nie nowin), ogłoszenie
-zamiast zasobu, treść starzejąca się z definicji, a przy dwóch latach na rynku
-ogłaszanie się jako „nowe" zaniża doświadczenie.
-
-Strona usługowa `/studio-brandingowe-krakow` ma sens, ale nie teraz — przy
-dwóch case studies i zerze opinii wyszłaby cienka, a cienka strona lokalna
-powtarzająca `/oferta` z podmienionym miastem to doorway page. Kolejność:
-case studies i opinie, potem strona lokalna.
-
-Widoczność lokalną przesuwają opinie z nazwą miasta, lokalizacja pinu w GBP
-i wzmianki z lokalnych źródeł — nie treść o samym sobie.
-
 **Stan serwisu sprawdzaj `curl`em i Search Console, nigdy przez pośrednika.**
 Lipiec 2026: narzędzie do pobierania stron zwracało dla czterech adresów
 (`/portfolio`, `/portfolio/printly`, `/portfolio/squizzu`,
@@ -225,58 +172,19 @@ adresu URL → Testuj URL na żywo, oraz tytuły w samym SERP-ie.
 - Sitemap z alternatywami językowymi i portretem
 - Search Console: Domain property, sitemapa zgłoszona, indeksowanie zamówione
 - Profile GitHub, Stack Overflow, Behance i README profilowe ujednolicone
-- `ultrastud.io`: graf site-wide, `AboutPage`, `ContactPage`, `CollectionPage`,
-  `Service` ×3, `CreativeWork` na każdym case study, link zwrotny, hierarchia H1
-- `datePublished` usunięte z case studies; `dateCreated` niesie prawidłowe daty
-- `ultrastud.io` zweryfikowane `curl`em (27.07.2026): wszystkie podstrony `200`,
-  `ld+json` obecne wszędzie, podstawianie `{{Pole}}` w szablonie CMS działa,
-  `name` różne między case studies, JSON parsuje się czysto mimo polskich znaków
-- przekierowania starych adresów: `/services/`, `/about-us/`, `/contact/` dają
-  `301`, warianty ze slashem `308` — Framer normalizuje sam, nic do dodania
-- link zwrotny do `jakub-wysocki.com` w biogramie na `/o-nas`
-- odpowiedzi FAQ w serwerowym HTML (`Visible: Yes` + `Height: 0` we wszystkich
-  czterech wariantach zamkniętych) oraz `FAQPage` na `/oferta` jako drugi blok
-  `ld+json`. Treść potwierdzona w markdownie, `/oferta` zwraca `ld+json: 3`
-- rola w biogramie `/o-nas` ujednolicona we wszystkich wariantach
-  responsywnych: `co-founder, design & development`
-- crawlery AI odblokowane na `ultrastud.io` (27.07.2026): Cloudflare →
-  Overview → *Manage your robots.txt* → **Disable robots.txt configuration**.
-  Został plik Framera: `User-agent: *`, `Allow: /`, `Sitemap:`, zero
-  `Disallow`. `jakub-wysocki.com` nigdy nie był blokowany — Vercel generuje
-  własny `robots.txt`, bez managed robots.txt Cloudflare
+- `ultrastud.io` potwierdza encję: graf site-wide z `Organization`, `Person`
+  i Squizzu, `CreativeWork` na każdym case study, link zwrotny w biogramie
+  `/o-nas`, rola ujednolicona jako `co-founder, design & development`
 
 ### Otwarte
 
-- `logo` w węźle `Organization` na `ultrastud.io`
-- `image` na case studies zawiera `&amp;` zamiast `&` w query stringu. Wewnątrz
-  `ld+json` treść nie jest dekodowana jako HTML, więc parser widzi encję
-  dosłownie i gubi parametr `height`. Patrz `ultrastudio-jsonld.md` §2b
-- `about` na case studies to goła nazwa klienta bez `sameAs` — dopięcie adresu
-  klienta zamienia string w byt rozpoznawalny i linkuje encje w obie strony
-- rozważyć usunięcie `ultrastud.io` i `squizzu.com` z `Person.sameAs`
+- rozważyć usunięcie `ultrastud.io` i `squizzu.com` z `Person.sameAs` —
+  relację niesie już `worksFor` i `founder`
 - `public/images/portrait.jpg` — osierocony po zmianie nazwy pliku
 - **węzeł `Squizzu` jest zaślepką**: `name`, `url`, `description`,
   `foundingDate`, `founder`. Bez `sameAs`, bez `logo`, bez węzła `WebSite`.
   Sama domena `squizzu.com` nie jest objęta żadnym dokumentem, mimo że to
   najmocniejsze aktywo pod notoryjność z sekcji 7
-- **blog na `ultrastud.io` nie istnieje.** Studio sprzedaje „tworzenie treści
-  i artykuły SEO" jako usługę, nie mając ani jednego własnego artykułu — brak
-  wiarygodności, brak strony mogącej rankować na cokolwiek poza nazwą marki
-  i brak materiału, który modele językowe mogłyby zacytować przy pytaniu
-  „jak wybrać studio brandingowe".
-  Plan Basic ma od czerwca 2026 dwie kolekcje CMS, portfolio zajmuje jedną —
-  blog wchodzi w drugą bez zmiany planu. Wzorce `Blog`, `BlogPosting`
-  i `BreadcrumbList` gotowe w `ultrastudio-jsonld.md` §2e, niezweryfikowane
-  na żywo. Pierwsze cztery tematy wprost z FAQ: koszt brandingu, logo kontra
-  identyfikacja, proces projektowania marki, kiedy rebranding
-- `BreadcrumbList` nie występuje nigdzie w serwisie — wzorzec dla
-  `/portfolio/:slug` czeka w `ultrastudio-jsonld.md` §2e
-- sekcja `## Navigation` w markdownie `ultrastud.io` zawiera wyłącznie mail
-  i telefony, bez linków do podstron — agent kończy lekturę w ślepym zaułku
-- nagłówki na `ultrastud.io` używane jako styl, nie struktura: całe akapity
-  oznaczone `H2`/`H4`, listy usług jako zwykłe akapity
-- `tel:` w stopce `ultrastud.io` zawiera spacje i nawiasy, niedozwolone w URI
-  (3 wystąpienia, stan 27.07.2026)
 - Wikidata — dopiero gdy będą niezależne źródła
 
 ---
