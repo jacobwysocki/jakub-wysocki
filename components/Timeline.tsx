@@ -254,7 +254,9 @@ function PersonalProjects() {
   ] as L10n[];
 
   return (
-    <div id="personal-projects" className="mx-auto mt-16 max-w-4xl md:mt-32">
+    // scroll-mt-24 — zapas na przyklejony pasek przy natywnym skoku po
+    // kotwicy (dotyk, gdzie Lenis nie działa)
+    <div id="personal-projects" className="mx-auto mt-16 max-w-4xl scroll-mt-24 md:mt-32">
       <Reveal className="text-center">
         <h3 className="text-h3 text-ink">{t(ui.sections.personalProjectsTitle)}</h3>
       </Reveal>
@@ -383,7 +385,9 @@ export default function Timeline() {
     <section
       id="engineering"
       aria-label={t(ui.sections.engineering)}
-      className="bg-white py-16 md:py-32"
+      // scroll-mt-24 — zapas na przyklejony pasek przy natywnym skoku po
+      // kotwicy (dotyk, gdzie Lenis nie działa)
+      className="scroll-mt-24 bg-white py-16 md:py-32"
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">

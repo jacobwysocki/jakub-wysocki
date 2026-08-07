@@ -143,7 +143,14 @@ export default function About() {
   ];
 
   return (
-    <section id="about" aria-label={t(ui.sections.about)} className="bg-surface py-16 md:py-32">
+    // scroll-mt-24: na dotyku Lenis jest wyłączony i skok po kotwicy robi
+    // przeglądarka, która nie wie o przyklejonym pasku. Bez tego marginesu
+    // początek sekcji ląduje pod paskiem.
+    <section
+      id="about"
+      aria-label={t(ui.sections.about)}
+      className="scroll-mt-24 bg-surface py-16 md:py-32"
+    >
       <div className="mx-auto max-w-content px-6">
         <Reveal>
           <p className="text-caption uppercase text-muted">{t(ui.sections.about)}</p>
