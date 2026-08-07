@@ -25,7 +25,7 @@ export default async function Home() {
         simple={
           <>
             <Nav />
-            <main>
+            <main id="main" tabIndex={-1} className="focus:outline-none">
               <Hero />
               <About />
               <Timeline />

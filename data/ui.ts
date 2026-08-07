@@ -54,6 +54,10 @@ export const ui = {
     openDroneSim: { pl: "Uruchom symulację", en: "Launch the simulation" },
     openDesktop: { pl: "Uruchom OS", en: "Launch OS" },
     visitStudio: { pl: "Zobacz ultrastud.io", en: "Visit ultrastud.io" },
+    viewWork: { pl: "Zobacz projekty", en: "View work" },
+  },
+  a11y: {
+    skipToContent: { pl: "Przejdź do treści", en: "Skip to content" },
   },
   desktop: {
     desktop: { pl: "Pulpit", en: "Desktop" },

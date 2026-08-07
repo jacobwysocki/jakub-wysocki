@@ -9,10 +9,10 @@ import {
   useReducedMotion,
   type MotionValue,
 } from "framer-motion";
-import { featuredProject } from "@/data/projects";
 import { useT } from "@/lib/lang-store";
 import { useMediaQuerySafe } from "@/lib/useMediaQuery";
 import Reveal from "@/components/Reveal";
+import type { FeaturedCase } from "@/data/cases";
 
 /**
  * Pojedynczy krok narracji: wjeżdża i wyjeżdża w swoim oknie postępu
@@ -54,19 +54,23 @@ function Step({
 }
 
 /**
- * Pinned showcase: obraz projektu
- * przypięty na środku ekranu (position: sticky), nad nim scrub-owane
- * kolejne detale case study. Bez GSAP — sticky + useScroll dają ten sam
- * mechanizm i bezproblemowo współpracują z Lenisem.
+ * Pinned showcase: obraz projektu przypięty na środku ekranu
+ * (position: sticky), nad nim scrub-owane kolejne detale case study.
+ * Bez GSAP: sticky + useScroll dają ten sam mechanizm i bezproblemowo
+ * współpracują z Lenisem.
+ *
+ * Jedyna różnica względem wersji live: case jest parametrem, nie importem.
+ * Sekcja Studio pokazuje tu dwa projekty, więc mechanizm musiał przestać
+ * wiedzieć, o którym z nich opowiada.
  */
-export default function Showcase() {
+export default function CaseShowcase({ project }: { project: FeaturedCase }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   // Pinned scrub = useScroll + ~9 useTransform + warstwa sticky na klatkę.
   // Na dotyku dajemy prostą, ułożoną wersję (jak przy reduced motion).
   const coarse = useMediaQuerySafe("(pointer: coarse)");
   const t = useT();
-  const steps = featuredProject.steps.map((step) => ({
+  const steps = project.steps.map((step) => ({
     title: t(step.title),
     text: t(step.text),
   }));
@@ -81,7 +85,7 @@ export default function Showcase() {
   if (reduced || coarse) {
     return (
       <div className="mx-auto mt-16 max-w-content px-6 md:mt-24">
-        <FeaturedImage />
+        <CaseImage project={project} />
         <div className="mt-10 space-y-10 text-center">
           {steps.map((step) => (
             <Reveal key={step.title}>
@@ -99,11 +103,18 @@ export default function Showcase() {
   return (
     // Wysokość kontenera wyznacza długość scrub-a: ~1 ekran na krok.
     // Na mobile mniej (120vh/krok byłoby męczące przy czytaniu).
-    <div ref={ref} className="relative mt-16 md:mt-32" style={{ height: `${(steps.length + 1) * 80}vh` }}>
+    <div
+      ref={ref}
+      className="relative mt-16 md:mt-32"
+      style={{ height: `${(steps.length + 1) * 80}vh` }}
+    >
       <div className="sticky top-0 flex h-screen items-center justify-center px-6">
         <div className="relative aspect-[4/5] w-full max-w-content overflow-hidden rounded-card shadow-lift sm:aspect-[16/10]">
-          <motion.div style={{ scale: imageScale }} className="h-full w-full will-change-transform">
-            <FeaturedImage fill />
+          <motion.div
+            style={{ scale: imageScale }}
+            className="h-full w-full will-change-transform"
+          >
+            <CaseImage project={project} fill />
           </motion.div>
           {/* Gradient dociążający dół, żeby tekst kroków był czytelny */}
           <div
@@ -112,9 +123,9 @@ export default function Showcase() {
           />
           <div className="absolute left-8 top-8 md:left-16 md:top-12">
             <p className="text-caption uppercase text-white/50">
-              {t(featuredProject.tag)}
+              {t(project.tag)}
             </p>
-            <p className="mt-1 text-h3 text-white">{featuredProject.client}</p>
+            <p className="mt-1 text-h3 text-white">{project.client}</p>
           </div>
           {steps.map((step, i) => (
             <Step
@@ -131,22 +142,43 @@ export default function Showcase() {
   );
 }
 
-/** Obraz wyróżnionego projektu albo gradientowy placeholder */
-function FeaturedImage({ fill = false }: { fill?: boolean }) {
-  const label = `${featuredProject.client}, case study`;
-  if (featuredProject.image) {
+/**
+ * Obraz wyróżnionego case'a albo gradientowy placeholder.
+ *
+ * `sizes` i kadrowanie są parametrami, bo ten sam kadr trafia raz w szeroką
+ * ramę na pełną szerokość treści, a raz w wąską kolumnę układu split:
+ * przy stałym `sizes` ta druga pobierałaby dwa razy za duży plik.
+ *
+ * Opis alternatywny bierzemy z danych case'a, gdy tam jest. Etykieta z nazwy
+ * klienta zostaje jako awaryjna: mówi, co to za projekt, ale nie mówi, co
+ * widać na zdjęciu.
+ */
+export function CaseImage({
+  project,
+  fill = false,
+  sizes = "(max-width: 1120px) 100vw, 1120px",
+  // Kadr przypięty wyżej: mockup siedzi nad strefą tekstu kroków
+  objectClass = "object-bottom",
+}: {
+  project: FeaturedCase;
+  fill?: boolean;
+  sizes?: string;
+  objectClass?: string;
+}) {
+  const t = useT();
+  const label = project.alt ? t(project.alt) : `${project.client}, case study`;
+  if (project.image) {
     return (
       <Image
-        src={featuredProject.image}
+        src={project.image}
         alt={label}
         fill={fill}
         width={fill ? undefined : 1600}
         height={fill ? undefined : 1000}
-        sizes="(max-width: 1120px) 100vw, 1120px"
-        // Kadr przypięty wyżej — mockup siedzi nad strefą tekstu kroków
+        sizes={sizes}
         className={
           fill
-            ? "object-cover object-bottom"
+            ? `object-cover ${objectClass}`
             : "w-full rounded-card object-cover"
         }
       />
@@ -157,11 +189,9 @@ function FeaturedImage({ fill = false }: { fill?: boolean }) {
       role="img"
       aria-label={label}
       className={
-        fill
-          ? "h-full w-full"
-          : "aspect-[16/10] w-full rounded-card shadow-lift"
+        fill ? "h-full w-full" : "aspect-[16/10] w-full rounded-card shadow-lift"
       }
-      style={{ background: featuredProject.gradient }}
+      style={{ background: project.gradient }}
     />
   );
 }
