@@ -11,6 +11,28 @@ export function useLenis() {
 }
 
 /**
+ * Nawigacja po kotwicach z przeniesieniem fokusa na cel: Lenis z
+ * preventDefault przewija tylko widok, a fokus klawiatury zostawał
+ * w miejscu kliknięcia — kolejny Tab kontynuował z paska zamiast
+ * z sekcji, do której użytkownik właśnie przeszedł.
+ */
+export function useAnchorNav() {
+  const lenis = useLenis();
+
+  return (e: React.MouseEvent, href: string) => {
+    const target = document.querySelector<HTMLElement>(href);
+    if (target) {
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    }
+    // Bez Lenisa (reduced motion / dotyk) działa natywna nawigacja po hash
+    if (!lenis) return;
+    e.preventDefault();
+    lenis.scrollTo(href, { offset: -72 });
+  };
+}
+
+/**
  * Globalny płynny scroll. Przy prefers-reduced-motion Lenis nie startuje —
  * strona używa natywnego scrolla.
  */

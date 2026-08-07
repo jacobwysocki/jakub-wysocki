@@ -10,9 +10,22 @@ import { UltraStudioLogo } from "@/components/logos";
 import Reveal from "@/components/Reveal";
 import ProjectCard from "@/components/ProjectCard";
 import ProjectModal from "@/components/ProjectModal";
-import Showcase from "@/components/Showcase";
 import { staggerContainer } from "@/lib/motion";
+import CaseShowcase from "./CaseShowcase";
+import CaseSplit from "./CaseSplit";
+import { caseBridge, squizzuCase, ultraCase } from "@/data/cases";
 
+/**
+ * Sekcja Studio.
+ *
+ * Opowiada cztery takty: opis studia → siatka projektów → dowód pierwszy
+ * (Ultra Studio) → dowód drugi (Squizzu).
+ *
+ * Dwa dowody z rzędu tym samym mechanizmem byłyby powtórką, więc pierwszy
+ * zostaje przy przypiętym scrubie (wyśrodkowany, scroll przejęty), a drugi
+ * dostaje układ split z osią kroków (CaseSplit): do lewej, scroll
+ * u użytkownika, ta sama gramatyka.
+ */
 export default function UltraStudio() {
   const t = useT();
   const [openProject, setOpenProject] = useState<StudioProject | null>(null);
@@ -62,8 +75,13 @@ export default function UltraStudio() {
         </motion.div>
       </div>
 
-      {/* Wyróżnione case study — pinned showcase (Printly) */}
-      <Showcase />
+      {/* Dowód pierwszy: przypięty showcase (Ultra Studio) */}
+      <CaseShowcase project={ultraCase} />
+
+      {/* Dowód drugi: Squizzu. Zdanie otwierające jest częścią tego
+          komponentu, żeby cały rozdział miał jeden rytm i żeby nazwa
+          projektu padała raz, a nie dwa razy z rzędu. */}
+      <CaseSplit project={squizzuCase} lead={caseBridge.line} />
 
       <AnimatePresence>
         {openProject && (
