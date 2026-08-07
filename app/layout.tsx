@@ -58,8 +58,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // Pasek przeglądarki mobilnej w kolorze ciemnego hero/pulpitu
-  themeColor: "#0A0A0C",
+  // Pasek przeglądarki mobilnej w kolorze jasnego prostego widoku — to on
+  // jest pierwszą klatką każdej wizyty. Pulpit jest przełącznikiem po
+  // stronie klienta, więc nie ma jak wpłynąć na meta w dokumencie i nie
+  // ma sensu, żeby to on dyktował kolor paska.
+  themeColor: "#FBFBFD",
 };
 
 export default function RootLayout({

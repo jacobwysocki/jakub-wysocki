@@ -81,10 +81,15 @@ export default function Nav() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [...EASE_APPLE], delay: 0.2 }}
       >
+        {/* Rozmycie działa na KAŻDEJ szerokości. Wcześniej wisiało za `md:`,
+            więc na telefonie pasek był tylko półprzezroczysty i nagłówki
+            sekcji przechodziły przez niego jak przez szybę. Bez
+            backdrop-filter podkład jest pełnokryjący — półprzezroczystość
+            bez rozmycia to najgorszy z trzech wariantów. */}
         <div
           className={`relative transition-all duration-500 ease-apple ${
             scrolled
-              ? "border-b border-line/60 bg-surface/90 supports-[backdrop-filter]:md:bg-surface/70 supports-[backdrop-filter]:md:backdrop-blur-xl"
+              ? "border-b border-line/60 bg-surface supports-[backdrop-filter]:bg-surface/70 supports-[backdrop-filter]:backdrop-blur-xl"
               : "border-b border-transparent bg-transparent"
           }`}
         >
@@ -118,22 +123,32 @@ export default function Nav() {
               <div className="flex items-center gap-3 sm:gap-6">
                 <LangSwitch tone="light" />
 
-                {/* Kapsuła trybu pulpitu — celowo najmocniejszy element paska */}
+                {/* Kapsuła trybu pulpitu — celowo najmocniejszy element paska.
+                    Pseudoelement `before` to niewidzialne pole dotyku o stałej
+                    wysokości 44 px: sama kapsuła zostaje wizualnie lekka,
+                    a palec dostaje pełny cel. Rozszerzamy tylko w pionie —
+                    w poziomie kapsuła i tak jest szersza niż 44 px, a wyjście
+                    w bok weszłoby w sąsiadów. */}
                 <button
                   type="button"
                   onClick={() => setMode("desktop")}
                   title={t(ui.mode.toDesktopHint)}
-                  className="group relative flex items-center gap-1.5 overflow-hidden rounded-full p-2 text-[12px] font-semibold text-white shadow-[0_4px_16px_rgba(194,65,12,0.35)] transition-shadow duration-300 hover:shadow-[0_6px_22px_rgba(194,65,12,0.5)] sm:py-1.5 sm:pl-3 sm:pr-3.5 sm:text-[13px]"
+                  className="group relative flex items-center gap-1.5 rounded-full p-2.5 text-[12px] font-semibold text-white shadow-[0_4px_16px_rgba(194,65,12,0.35)] transition-shadow duration-300 before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[''] hover:shadow-[0_6px_22px_rgba(194,65,12,0.5)] sm:py-1.5 sm:pl-3 sm:pr-3.5 sm:text-[13px]"
                   style={{
                     background:
                       "linear-gradient(135deg, #FF6A3D 0%, #C2410C 55%, #9A3412 100%)",
                   }}
                 >
-                  {/* Połysk przesuwający się po hoverze */}
+                  {/* Połysk przesuwający się po hoverze. Przycięcie siedzi na
+                      osobnej warstwie, nie na przycisku: przycisk musi mieć
+                      widoczny overflow, żeby pole dotyku mogło wyjść poza
+                      jego pudełko. */}
                   <span
                     aria-hidden
-                    className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
-                  />
+                    className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+                  >
+                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                  </span>
                   <AppWindowMac
                     size={14}
                     strokeWidth={2}
@@ -152,7 +167,10 @@ export default function Nav() {
                   aria-expanded={menuOpen}
                   aria-controls={menuId}
                   onClick={() => setMenuOpen((open) => !open)}
-                  className="group flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-full border border-ink/15 bg-ink text-white transition-colors duration-300 lg:hidden"
+                  // 44 px, bo to jedyny sposób wejścia w menu na dotyku:
+                  // przycisk pokazuje się wyłącznie poniżej lg, więc pasek
+                  // na dużym ekranie tego nie widzi.
+                  className="group flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-ink/15 bg-ink text-white transition-colors duration-300 lg:hidden"
                 >
                   <motion.span
                     aria-hidden

@@ -34,7 +34,9 @@ export default function UltraStudio() {
     <section
       id="studio"
       aria-label="Ultra Studio"
-      className="bg-surface py-16 md:py-32"
+      // scroll-mt-24 — zapas na przyklejony pasek przy natywnym skoku po
+      // kotwicy (dotyk, gdzie Lenis nie działa)
+      className="scroll-mt-24 bg-surface py-16 md:py-32"
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">

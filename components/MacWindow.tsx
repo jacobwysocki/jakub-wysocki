@@ -80,13 +80,19 @@ export default function MacWindow({
 
             Fokus zostawiam globalnemu :focus-visible z globals.css: pigułka
             to jedyna kontrolka okna i ma świecić dokładnie tak samo, jak
-            każdy inny link na stronie. */}
+            każdy inny link na stronie.
+
+            Pole dotyku rozciąga pseudoelement na CAŁĄ wysokość paska (40px),
+            a nie padding: padding urósłby razem z widoczną pigułką, a ta ma
+            zostać dokładnie taka, jaka jest. Wyżej niż 40px nie idziemy —
+            pasek jest przycięty od góry przez ramkę okna, a od dołu zaczyna
+            się treść i nadmiar zjadałby jej kliknięcia. */}
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${t(ui.actions.openInNewTab)}: ${label}`}
-          className="group absolute left-1/2 top-1/2 flex max-w-[calc(100%-160px)] -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[12px] font-medium leading-[18px] text-ink/70 ring-1 ring-ink/10 transition-colors hover:text-ink hover:ring-ink/25"
+          className="group absolute left-1/2 top-1/2 flex max-w-[calc(100%-160px)] -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[12px] font-medium leading-[18px] text-ink/70 ring-1 ring-ink/10 transition-colors before:absolute before:inset-x-0 before:top-1/2 before:h-10 before:-translate-y-1/2 before:content-[''] hover:text-ink hover:ring-ink/25"
         >
           <Lock size={11} aria-hidden className="shrink-0 text-muted" />
           <span className="truncate">{label}</span>

@@ -222,9 +222,13 @@ export default function Hero() {
    * — wypełnienie wjeżdża od lewej, strzałka przesuwa się o cztery piksele,
    * a geometria przycisku stoi w miejscu. Ten sam gest dostaje `:hover`
    * i `:focus-visible`, więc klawiatura widzi dokładnie to samo co mysz.
+   *
+   * Poniżej `sm` oba przyciski idą na pełną szerokość, jeden pod drugim.
+   * Przy polskich podpisach zawijały się w dwie postrzępione pigułki
+   * (196 i 193 px w kolumnie 342 px); przy okazji rośnie pole dotyku.
    */
   const pill =
-    "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-[16px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
+    "group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3 text-center text-[16px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:w-auto sm:py-3.5 sm:text-left";
 
   /** Warstwa wypełnienia: skalowanie od lewej krawędzi, przycięte do pigułki. */
   const sweep =
@@ -239,7 +243,9 @@ export default function Hero() {
       // samym tonie (bg-surface), a produkcyjna naprzemienność surface/white
       // zaczyna się dopiero od niej. Gdyby hero było białe albo About
       // przeszło na biel, rytm rozjechałby się o jedną sekcję dalej.
-      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden border-b border-line/60 bg-surface pb-16 pt-24 text-ink md:pb-28 md:pt-32"
+      // pt-16 to podłoga, nie wybór stylistyczny: pasek nawigacji ma
+      // dokładnie 64 px i wiersz stanu ma się zaczynać pod nim, nie za nim.
+      className="relative flex min-h-[100svh] scroll-mt-24 flex-col justify-center overflow-hidden border-b border-line/60 bg-surface pb-12 pt-16 text-ink md:pb-28 md:pt-32"
     >
       <DotField target={stage} />
 
@@ -266,11 +272,11 @@ export default function Hero() {
           )}
         </motion.div>
 
-        <div className="mt-7 md:mt-9">
+        <div className="mt-6 md:mt-9">
           <Headline />
         </div>
 
-        <motion.p className="mt-6 max-w-prose text-body text-ink/70" {...rise(0.24)}>
+        <motion.p className="mt-5 max-w-prose text-body text-ink/70 md:mt-6" {...rise(0.24)}>
           <StableText l10n={site.hero.subline} />
         </motion.p>
 
@@ -283,13 +289,13 @@ export default function Hero() {
             literami. Bez backdrop-filter zostaje samo półkryjące tło. */}
         <motion.ul
           aria-label={t(listLabels.facts)}
-          className="mt-9 grid border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] sm:grid-cols-3 md:mt-10"
+          className="mt-7 grid border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] sm:grid-cols-3 md:mt-10"
           {...rise(0.32)}
         >
           {site.hero.facts.map((fact, i) => (
             <li
               key={i}
-              className="flex items-baseline gap-3 border-b border-line/70 py-3 last:border-b-0 sm:border-b-0 sm:border-l sm:pl-5 sm:first:border-l-0 sm:first:pl-0 md:py-3.5"
+              className="flex items-baseline gap-3 border-b border-line/70 py-2.5 last:border-b-0 sm:border-b-0 sm:border-l sm:pl-5 sm:first:border-l-0 sm:first:pl-0 md:py-3.5"
             >
               <span
                 aria-hidden
@@ -303,7 +309,12 @@ export default function Hero() {
           ))}
         </motion.ul>
 
-        <div className="mt-12 grid gap-10 md:mt-14 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] md:items-end md:gap-14">
+        {/* Wszystkie odstępy w tym hero mają wersję telefonową ciaśniejszą od
+            docelowej. Powód jest mierzalny: przy 390x664 (iPhone z paskami
+            przeglądarki) rozstrzelony układ spychał oba przyciski pod
+            krawędź ekranu. Wartości `md:` to układ zatwierdzony na dużym
+            ekranie i one się nie ruszają. */}
+        <div className="mt-7 grid gap-6 md:mt-14 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] md:items-end md:gap-14">
           {/* Dyscypliny — numerowane wiersze na kreskach. To jest hierarchia
               sekcji, nie etykieta nad nagłówkiem, dlatego ma własną skalę
               i własną siatkę, a nie wersaliki 13 px. */}
@@ -315,7 +326,7 @@ export default function Hero() {
             {disciplines.map((discipline, i) => (
               <li
                 key={i}
-                className="flex items-baseline gap-4 border-b border-line/70 py-3.5 md:py-4"
+                className="flex items-baseline gap-4 border-b border-line/70 py-3 md:py-4"
               >
                 <span
                   aria-hidden

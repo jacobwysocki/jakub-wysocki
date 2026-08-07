@@ -18,7 +18,9 @@ export default function Contact() {
     <section
       id="contact"
       aria-label={t(ui.sections.contact)}
-      className="bg-black py-16 text-white md:py-32"
+      // scroll-mt-24 — zapas na przyklejony pasek przy natywnym skoku po
+      // kotwicy (dotyk, gdzie Lenis nie działa)
+      className="scroll-mt-24 bg-black py-16 text-white md:py-32"
     >
       <div className="mx-auto max-w-content px-6 text-center">
         <Reveal>
