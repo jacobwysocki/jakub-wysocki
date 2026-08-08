@@ -5,17 +5,17 @@ Personal portfolio of Jakub Wysocki — software engineer & UX/UI designer, co-f
 The site ships in two switchable presentations of the same public portfolio facts:
 
 - **Simple Mode** — a linear portfolio with an introduction, experience, case studies, projects, and contact paths.
-- **Desktop Mode** — an OS-inspired portfolio with a typed App Catalog, dock, draggable windows, mobile sheets, and a provider-free Spotlight search.
+- **Desktop Mode** — an OS-inspired portfolio with a typed App Catalog, dock, draggable windows and widgets, mobile sheets, and a provider-free Spotlight search.
 
 Content is bilingual (Polish / English). The home page resolves the saved language cookie or the browser's `Accept-Language` on the server so the first render already uses the selected language.
 
 ## Release-candidate status
 
-This working tree contains the Desktop v2 quality baseline, typed navigation, curated Portfolio Knowledge, desktop resilience work, the provider-free Spotlight experience, and the complete Ask Jakub experience with an optional server-only Groq Adapter.
+This working tree contains the Desktop v2 quality baseline, typed navigation, curated Portfolio Knowledge, desktop resilience work, the provider-free Spotlight experience, and the complete Ask Jakub experience—including a compact desktop quick-chat widget—with an optional server-only Groq Adapter.
 
-Ask Jakub is a grounded portfolio guide, not an impersonation of Jakub or a general web assistant. Its bilingual Desktop App and mobile sheet are integrated, including session retention and canonical evidence navigation. The owned API route remains provider-disabled by default. When explicitly configured, a direct server-only HTTPS Adapter uses Groq's `openai/gpt-oss-20b` model with strict structured output; no provider SDK or credential is shipped to the browser.
+Ask Jakub is a grounded portfolio guide, not an impersonation of Jakub or a general web assistant. Its bilingual quick-chat widget, Desktop App, and mobile sheet share one ephemeral session, including cancellation, retry, session retention, and canonical evidence navigation. The owned API route remains provider-disabled by default. When explicitly configured, a direct server-only HTTPS Adapter uses Groq's `openai/gpt-oss-20b` model with strict structured output; no provider SDK or credential is shipped to the browser.
 
-The implementation and documentation changes are not evidence of a deployment by themselves. The [dated local verification report](./docs/desktop-v2/VERIFICATION-2026-08-08.md) separates completed automated checks from browser, assistive-technology, staging, and deployment work that still requires an external release environment.
+The implementation and documentation changes are not evidence of a deployment by themselves. The [dated local verification report](./docs/desktop-v2/VERIFICATION-2026-08-09.md) separates completed automated checks from browser, assistive-technology, staging, and deployment work that still requires an external release environment.
 
 ## Tech stack
 
@@ -81,7 +81,7 @@ The GitHub Actions workflow runs these checks for pull requests and pushes to `m
 
 ## Accessibility
 
-Desktop Mode includes keyboard-operable menus and launchers, focus return after windows and mobile sheets close, modal background isolation on mobile, a `Command/Ctrl + K` Spotlight shortcut, visible focus states, and reduced-motion paths. These are implementation requirements, not a claim of completed WCAG conformance. Cross-browser and assistive-technology release verification remains pending.
+Desktop Mode includes keyboard-operable menus and launchers, focus return after windows and mobile sheets close, a single active Ask composer surface, modal background isolation on mobile, a `Command/Ctrl + K` Spotlight shortcut, visible focus states, and reduced-motion paths. These are implementation requirements, not a claim of completed WCAG conformance. Cross-browser and assistive-technology release verification remains pending.
 
 ## Project structure
 
