@@ -269,6 +269,9 @@ describe("Ask Jakub Desktop Mode lifecycle", () => {
     fireEvent.click(within(widget).getByRole("button", { name: "Ask" }));
 
     await waitFor(() => expect(widget).toHaveTextContent(ANSWER));
+    const latestAnswer = within(widget).getByText(ANSWER);
+    expect(latestAnswer).not.toHaveClass("line-clamp-3");
+    expect(latestAnswer).toHaveClass("overflow-y-auto");
     expect(fetchSpy).toHaveBeenCalledTimes(1);
 
     fireEvent.click(
