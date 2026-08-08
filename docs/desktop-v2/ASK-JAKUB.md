@@ -88,10 +88,10 @@ The copy is localized and stored with other UI copy. Suggested Questions are cur
 
 Suggested Question families:
 
-- “Which project best demonstrates applied AI?”
-- “What was Jakub's role at Squizzu?”
-- “Show me his strongest React and product-design work.”
-- “How does his engineering background influence UX decisions?”
+- “What is Jakub currently working on?”
+- “What is Venor?”
+- “What is Squizzu?”
+- “What does Ultra Studio offer?”
 - “What should I look at if I am hiring for a full-stack role?”
 
 ### Asking
@@ -583,8 +583,9 @@ The lists below are release acceptance criteria. Knowledge, route, session, and 
 
 ### Knowledge tests
 
-- Every current role, education item, showcase project, personal project, and public contact surface has expected coverage.
+- Every current role, education item, showcase project, personal project, public passion, and public contact surface has expected coverage.
 - Polish and English retrieval fixtures reach the same semantic facts.
+- Every curated Suggested Question retrieves at least one of its mapped facts in both languages.
 - Aliases cover brand names, technologies, employer names, and common diacritic-free Polish input.
 - Contradictory facts and volatile counts fail verification.
 - Hidden phone/environment data cannot be serialized into knowledge.

@@ -1,4 +1,4 @@
-import { education } from "@/data/education";
+import { education, hobbies } from "@/data/education";
 import { allRoles, type Role } from "@/data/experience";
 import { personalProjects, type PersonalProject } from "@/data/personal";
 import { studioProjects, type StudioProject } from "@/data/projects";
@@ -387,6 +387,14 @@ const educationEntries: readonly KnowledgeEntry[] = [
   })),
 ];
 
+const currentWorkRoles = ["ultrastudio", "squizzu"].map((roleId) => {
+  const role = allRoles.find((candidate) => candidate.id === roleId);
+  if (!role) {
+    throw new Error(`Missing current-work role: ${roleId}`);
+  }
+  return role;
+});
+
 const studioDetailKeys = {
   squizzu: ["product", "brand"],
   "ultrastudio-site": ["studio", "seo-agent"],
@@ -620,6 +628,65 @@ export const knowledgeEntries: readonly KnowledgeEntry[] = [
     },
     evidence: ["evidence:about"],
   },
+  {
+    id: "knowledge:profile:current-work",
+    topics: ["profile", "experience", "projects", "engineering", "design"],
+    keywords: keywords(
+      currentWorkRoles.flatMap((role) => [role.company, role.role.en]),
+      [
+        "obecnie",
+        "aktualnie",
+        "teraz",
+        "czym zajmuje się Jakub",
+        "nad czym pracuje Jakub",
+        "bieżąca praca",
+      ],
+      ["currently", "current work", "what is Jakub working on", "active roles"],
+    ),
+    fact: {
+      pl: `Obecnie Jakub pracuje w dwóch równoległych rolach. ${currentWorkRoles
+        .map((role) => `${role.role.pl} w ${role.company}: ${role.summary.pl}`)
+        .join(" ")}`,
+      en: `Jakub currently works across two concurrent roles. ${currentWorkRoles
+        .map((role) => `${role.role.en} at ${role.company}: ${role.summary.en}`)
+        .join(" ")}`,
+    },
+    evidence: [
+      "evidence:experience:ultrastudio",
+      "evidence:experience:squizzu",
+    ],
+  },
+  {
+    id: "knowledge:profile:passions",
+    topics: ["profile"],
+    keywords: keywords(
+      hobbies.map((hobby) => hobby.id),
+      [
+        "pasje",
+        "pasja",
+        "hobby",
+        "zainteresowania",
+        ...hobbies.map((hobby) => hobby.title.pl),
+      ],
+      [
+        "passions",
+        "passion",
+        "hobbies",
+        "hobby",
+        "interests",
+        ...hobbies.map((hobby) => hobby.title.en),
+      ],
+    ),
+    fact: {
+      pl: `Pasje Jakuba: ${hobbies
+        .map((hobby) => `${hobby.title.pl} — ${hobby.text.pl}`)
+        .join(" ")}`,
+      en: `Jakub's passions: ${hobbies
+        .map((hobby) => `${hobby.title.en} — ${hobby.text.en}`)
+        .join(" ")}`,
+    },
+    evidence: ["evidence:about"],
+  },
   ...allRoles.flatMap(roleEntries),
   ...educationEntries,
   ...studioProjects.flatMap(studioEntries),
@@ -647,54 +714,45 @@ export const knowledgeEntries: readonly KnowledgeEntry[] = [
 
 export const suggestedQuestions: readonly SuggestedQuestion[] = [
   {
-    id: "suggestion:applied-ai",
+    id: "suggestion:current-work",
     question: {
-      pl: "Który projekt najlepiej pokazuje zastosowanie AI?",
-      en: "Which project best demonstrates applied AI?",
+      pl: "Czym obecnie zajmuje się Jakub?",
+      en: "What is Jakub currently working on?",
     },
-    topics: ["ai", "projects"],
-    knowledge: [
-      "knowledge:role:bunzl:highlight:text-to-sql",
-      "knowledge:role:squizzu:highlight:gpt-agents",
-      "knowledge:role:ultrastudio:highlight:seo-agent",
-    ],
+    topics: ["profile", "experience", "projects"],
+    knowledge: ["knowledge:profile:current-work"],
   },
   {
-    id: "suggestion:squizzu-role",
+    id: "suggestion:venor",
     question: {
-      pl: "Jaka jest rola Jakuba w Squizzu?",
-      en: "What is Jakub's role at Squizzu?",
+      pl: "Czym jest Venor?",
+      en: "What is Venor?",
     },
-    topics: ["experience", "projects"],
+    topics: ["projects", "engineering", "design"],
+    knowledge: ["knowledge:personal-project:venor:summary"],
+  },
+  {
+    id: "suggestion:squizzu",
+    question: {
+      pl: "Czym jest Squizzu?",
+      en: "What is Squizzu?",
+    },
+    topics: ["projects", "experience", "engineering", "design"],
     knowledge: [
+      "knowledge:showcase:squizzu:what",
       "knowledge:role:squizzu:summary",
-      "knowledge:showcase:squizzu:role",
     ],
   },
   {
-    id: "suggestion:react-design",
+    id: "suggestion:ultra-studio",
     question: {
-      pl: "Pokaż najmocniejsze prace z Reacta i product designu.",
-      en: "Show me the strongest React and product-design work.",
+      pl: "Co oferuje Ultra Studio?",
+      en: "What does Ultra Studio offer?",
     },
-    topics: ["engineering", "design", "projects"],
+    topics: ["projects", "experience", "engineering", "design"],
     knowledge: [
-      "knowledge:role:squizzu:highlight:frontend",
-      "knowledge:role:squizzu:highlight:design-system",
-      "knowledge:showcase:squizzu:how",
-    ],
-  },
-  {
-    id: "suggestion:engineering-design",
-    question: {
-      pl: "Jak doświadczenie inżynierskie Jakuba wpływa na decyzje UX?",
-      en: "How does Jakub's engineering background influence UX decisions?",
-    },
-    topics: ["engineering", "design", "experience"],
-    knowledge: [
-      "knowledge:profile:bio",
-      "knowledge:role:mandata:highlight:maps",
-      "knowledge:role:northumbria:highlight:nu-connect",
+      "knowledge:role:ultrastudio:summary",
+      "knowledge:role:ultrastudio:highlight:selected-work",
     ],
   },
   {

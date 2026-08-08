@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { hobbies } from "@/data/education";
 import { allRoles } from "@/data/experience";
 import { personalProjects } from "@/data/personal";
 import { studioProjects } from "@/data/projects";
@@ -103,6 +104,52 @@ describe("Portfolio Knowledge catalog", () => {
     expect(entry?.fact.en).toContain("grounded portfolio guide");
     expect(entry?.fact.pl).toContain("przewodnik po portfolio");
     expect(entry?.evidence).toContain("evidence:ask-jakub");
+  });
+
+  it("prioritizes the four questions visitors most need first", () => {
+    expect(portfolioKnowledge.suggestions).toHaveLength(5);
+    expect(
+      portfolioKnowledge.suggestions.slice(0, 4).map((suggestion) => ({
+        id: suggestion.id,
+        pl: suggestion.question.pl,
+        en: suggestion.question.en,
+      })),
+    ).toEqual([
+      {
+        id: "suggestion:current-work",
+        pl: "Czym obecnie zajmuje się Jakub?",
+        en: "What is Jakub currently working on?",
+      },
+      {
+        id: "suggestion:venor",
+        pl: "Czym jest Venor?",
+        en: "What is Venor?",
+      },
+      {
+        id: "suggestion:squizzu",
+        pl: "Czym jest Squizzu?",
+        en: "What is Squizzu?",
+      },
+      {
+        id: "suggestion:ultra-studio",
+        pl: "Co oferuje Ultra Studio?",
+        en: "What does Ultra Studio offer?",
+      },
+    ]);
+  });
+
+  it("derives Jakub's public passions from canonical profile data", () => {
+    const entry = portfolioKnowledge.entries.find(
+      (candidate) => candidate.id === "knowledge:profile:passions",
+    );
+
+    for (const hobby of hobbies) {
+      expect(entry?.fact.pl).toContain(hobby.title.pl);
+      expect(entry?.fact.pl).toContain(hobby.text.pl);
+      expect(entry?.fact.en).toContain(hobby.title.en);
+      expect(entry?.fact.en).toContain(hobby.text.en);
+    }
+    expect(entry?.evidence).toEqual(["evidence:about"]);
   });
 
   it("fails closed for unknown generated IDs", () => {

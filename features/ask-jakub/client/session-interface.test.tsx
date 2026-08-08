@@ -253,7 +253,7 @@ describe("Ask Jakub session Interface", () => {
           kind: "answered",
           text: "Squizzu łączy rozwój produktu, React i zastosowania AI.",
           evidenceIds: ["evidence:experience:squizzu"],
-          suggestionIds: ["suggestion:react-design"],
+          suggestionIds: ["suggestion:squizzu"],
         };
       },
     ]);
@@ -290,7 +290,7 @@ describe("Ask Jakub session Interface", () => {
       ],
     });
     expect(result.current.suggestions.map(({ id }) => id)).toEqual([
-      "suggestion:react-design",
+      "suggestion:squizzu",
     ]);
   });
 
@@ -567,7 +567,7 @@ describe("Ask Jakub session Interface", () => {
     expect(result.current.transcript).toEqual([]);
     expect(result.current.problem).toBeNull();
     expect(result.current.suggestions[0]?.question.en).toBe(
-      "Which project best demonstrates applied AI?",
+      "What is Jakub currently working on?",
     );
 
     await act(async () => {
@@ -919,7 +919,7 @@ describe("Ask Jakub session Interface", () => {
           kind: "answered",
           text: "Answer with an invalid suggestion",
           evidenceIds: ["evidence:about"],
-          suggestionIds: ["suggestion:react-design", "suggestion:not-owned"],
+          suggestionIds: ["suggestion:squizzu", "suggestion:not-owned"],
         } as const;
       },
     },
@@ -1025,11 +1025,11 @@ describe("Ask Jakub session Interface", () => {
             "evidence:education:degree",
           ],
           suggestionIds: [
-            "suggestion:applied-ai",
-            "suggestion:applied-ai",
-            "suggestion:squizzu-role",
-            "suggestion:react-design",
-            "suggestion:engineering-design",
+            "suggestion:current-work",
+            "suggestion:current-work",
+            "suggestion:venor",
+            "suggestion:squizzu",
+            "suggestion:ultra-studio",
           ],
         };
       },
@@ -1057,9 +1057,9 @@ describe("Ask Jakub session Interface", () => {
       "evidence:experience:squizzu",
     ]);
     expect(result.current.suggestions.map(({ id }) => id)).toEqual([
-      "suggestion:applied-ai",
-      "suggestion:squizzu-role",
-      "suggestion:react-design",
+      "suggestion:current-work",
+      "suggestion:venor",
+      "suggestion:squizzu",
     ]);
   });
 

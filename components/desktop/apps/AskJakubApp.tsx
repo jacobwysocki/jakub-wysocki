@@ -255,7 +255,7 @@ export default function AskJakubApp() {
                   {copy("suggestionsLabel")}
                 </p>
                 <div className="grid gap-2">
-                  {session.suggestions.slice(0, 3).map((suggestion, index) => (
+                  {session.suggestions.slice(0, 4).map((suggestion, index) => (
                     <button
                       key={suggestion.id}
                       type="button"
