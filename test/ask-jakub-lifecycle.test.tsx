@@ -55,6 +55,39 @@ function successfulAskResponse(init?: RequestInit): Response {
   );
 }
 
+function unavailableAskResponse(init?: RequestInit): Response {
+  if (typeof init?.body !== "string") {
+    throw new Error("Expected the Ask Jakub request to have a JSON body.");
+  }
+
+  const request = JSON.parse(init.body) as { requestId: string };
+  const events = [
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "request.accepted",
+    },
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "answer.failed",
+      problem: {
+        code: "unavailable",
+        message: "Provider unavailable.",
+        retryable: true,
+      },
+    },
+  ];
+
+  return new Response(
+    `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
+    {
+      status: 503,
+      headers: { "content-type": "application/x-ndjson" },
+    },
+  );
+}
+
 function installSuccessfulAskRoute() {
   const fetchSpy = vi.fn(
     async (_input: RequestInfo | URL, init?: RequestInit) =>
@@ -168,6 +201,168 @@ describe("Ask Jakub Desktop Mode lifecycle", () => {
       configurable: true,
       value: ORIGINAL_INNER_WIDTH,
     });
+  });
+
+  it("offers a compact desktop chat without starting a model request", () => {
+    const fetchSpy = installSuccessfulAskRoute();
+    const view = renderInEnglish(<Desktop />);
+
+    const widget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+
+    expect(
+      within(widget).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(widget).getByRole("button", { name: "Open full chat" }),
+    ).toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("yields to the full App and returns focus when its window closes", async () => {
+    installSuccessfulAskRoute();
+    const view = renderInEnglish(<Desktop />);
+    const widget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+    const openFullChat = within(widget).getByRole("button", {
+      name: "Open full chat",
+    });
+
+    openFullChat.focus();
+    fireEvent.click(openFullChat);
+    const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+
+    expect(
+      view.queryByRole("complementary", { name: "Ask Jakub quick chat" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Close window" }),
+    );
+
+    const returnedWidget = await view.findByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+    await waitFor(() =>
+      expect(
+        within(returnedWidget).getByRole("button", {
+          name: "Open full chat",
+        }),
+      ).toHaveFocus(),
+    );
+  });
+
+  it("shares a widget answer with the full Ask Jakub Desktop App", async () => {
+    const fetchSpy = installSuccessfulAskRoute();
+    const view = renderInEnglish(<Desktop />);
+    const widget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+    const composer = within(widget).getByRole("textbox", {
+      name: "Question about Jakub's work",
+    });
+
+    fireEvent.change(composer, { target: { value: QUESTION } });
+    fireEvent.click(within(widget).getByRole("button", { name: "Ask" }));
+
+    await waitFor(() => expect(widget).toHaveTextContent(ANSWER));
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(
+      within(widget).getByRole("button", { name: "Open full chat" }),
+    );
+    const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+    expect(
+      within(dialog).getByRole("log", { name: "Conversation" }),
+    ).toHaveTextContent(ANSWER);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("recovers a failed widget turn without duplicating the question", async () => {
+    const fetchSpy = vi
+      .fn()
+      .mockImplementationOnce(
+        async (_input: RequestInfo | URL, init?: RequestInit) =>
+          unavailableAskResponse(init),
+      )
+      .mockImplementation(
+        async (_input: RequestInfo | URL, init?: RequestInit) =>
+          successfulAskResponse(init),
+      );
+    vi.stubGlobal("fetch", fetchSpy);
+    const view = renderInEnglish(<Desktop />);
+    const widget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+
+    fireEvent.change(
+      within(widget).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      }),
+      { target: { value: QUESTION } },
+    );
+    fireEvent.click(within(widget).getByRole("button", { name: "Ask" }));
+
+    await waitFor(() =>
+      expect(widget).toHaveTextContent(
+        "Ask Jakub is currently unavailable. Explore the suggested portfolio questions instead.",
+      ),
+    );
+    fireEvent.click(within(widget).getByRole("button", { name: "Retry" }));
+
+    await waitFor(() => expect(widget).toHaveTextContent(ANSWER));
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+
+    fireEvent.click(
+      within(widget).getByRole("button", { name: "Open full chat" }),
+    );
+    const transcript = within(
+      await view.findByRole("dialog", { name: "Ask Jakub" }),
+    ).getByRole("log", { name: "Conversation" });
+    expect(within(transcript).getAllByText(QUESTION)).toHaveLength(1);
+  });
+
+  it("cancels an active question from the widget", async () => {
+    let requestSignal: AbortSignal | undefined;
+    const fetchSpy = vi.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          requestSignal = init?.signal ?? undefined;
+          requestSignal?.addEventListener(
+            "abort",
+            () => reject(new DOMException("Aborted", "AbortError")),
+            { once: true },
+          );
+        }),
+    );
+    vi.stubGlobal("fetch", fetchSpy);
+    const view = renderInEnglish(<Desktop />);
+    const widget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+
+    fireEvent.change(
+      within(widget).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      }),
+      { target: { value: QUESTION } },
+    );
+    fireEvent.click(within(widget).getByRole("button", { name: "Ask" }));
+
+    const cancel = await within(widget).findByRole("button", {
+      name: "Cancel answer",
+    });
+    fireEvent.click(cancel);
+
+    expect(requestSignal).toBeDefined();
+    expect(requestSignal?.aborted).toBe(true);
+    expect(widget).toHaveTextContent("Request cancelled.");
+    expect(
+      within(widget).getByRole("button", { name: "Retry" }),
+    ).toBeInTheDocument();
   });
 
   it("retains a completed conversation after minimise, restore, close, and reopen", async () => {
