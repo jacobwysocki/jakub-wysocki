@@ -8,14 +8,20 @@
 /out/
 /build
 /dist
+/coverage/
 next-env.d.ts
 
 # typescript
 *.tsbuildinfo
 
+# test runners
+/playwright-report/
+/test-results/
+
 # env
-.env
-.env*.local
+.env*
+!.env.example
+/.vercel/
 
 # logs
 npm-debug.log*

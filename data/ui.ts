@@ -12,7 +12,10 @@ export const ui = {
       en: "Explore this portfolio as an interactive desktop",
     },
     toSimple: { pl: "Prosty widok", en: "Simple view" },
-    switchToSimple: { pl: "Przełącz na prosty widok", en: "Switch to simple view" },
+    switchToSimple: {
+      pl: "Przełącz na prosty widok",
+      en: "Switch to simple view",
+    },
   },
   sections: {
     about: { pl: "O mnie", en: "About me" },
@@ -21,20 +24,29 @@ export const ui = {
       en: "Two worlds, one craft.",
     },
     engineering: { pl: "Doświadczenie", en: "Experience" },
-    engineeringTitle: { pl: "Ścieżka inżynierska.", en: "The engineering path." },
+    engineeringTitle: {
+      pl: "Ścieżka inżynierska.",
+      en: "The engineering path.",
+    },
     engineeringSub: {
       pl: "Enterprise'owa logistyka, nagradzany e-commerce, aplikacja dla 40 tysięcy studentów i własny SaaS, pisane w .NET, React i TypeScript.",
       en: "Enterprise logistics, award-winning e-commerce, an app for 40,000 students and my own SaaS, written in .NET, React and TypeScript.",
     },
     educationTitle: { pl: "Edukacja i badania.", en: "Education & research." },
-    personalProjectsTitle: { pl: "Projekty osobiste.", en: "Personal projects." },
+    personalProjectsTitle: {
+      pl: "Projekty osobiste.",
+      en: "Personal projects.",
+    },
     studio: { pl: "Ultra Studio", en: "Ultra Studio" },
     studioSub: {
       pl: "Wizualna, kliencka strona mojej pracy. Projekty otwierają się z pełnym opisem.",
       en: "The visual, client-facing side of my work. Open any project for the full story.",
     },
     extras: { pl: "Poza kodem", en: "Beyond the code" },
-    extrasTitle: { pl: "Certyfikaty, języki i pasje.", en: "Certifications, languages & passions." },
+    extrasTitle: {
+      pl: "Certyfikaty, języki i pasje.",
+      en: "Certifications, languages & passions.",
+    },
     certifications: { pl: "Certyfikaty", en: "Certifications" },
     languages: { pl: "Języki", en: "Languages" },
     hobbies: { pl: "Pasje", en: "Passions" },
@@ -65,7 +77,10 @@ export const ui = {
     aboutPortfolio: { pl: "O tym portfolio", en: "About this portfolio" },
     wallpaper: { pl: "Zmień tapetę", en: "Change wallpaper" },
     openApp: { pl: "Otwórz", en: "Open" },
-    openWindowHint: { pl: "otwórz kliknięciem lub Enterem", en: "open with a click or Enter" },
+    openWindowHint: {
+      pl: "otwórz kliknięciem lub Enterem",
+      en: "open with a click or Enter",
+    },
     closeWindow: { pl: "Zamknij okno", en: "Close window" },
     minimizeWindow: { pl: "Minimalizuj okno", en: "Minimise window" },
     maximizeWindow: { pl: "Maksymalizuj okno", en: "Maximise window" },
@@ -78,7 +93,10 @@ export const ui = {
     techStack: { pl: "Technologie", en: "Tech stack" },
     filterByTech: { pl: "Filtruj po technologii", en: "Filter by tech" },
     roles: { pl: "Stanowiska", en: "Roles" },
-    creativeVenture: { pl: "Przedsięwzięcie kreatywne", en: "Creative venture" },
+    creativeVenture: {
+      pl: "Przedsięwzięcie kreatywne",
+      en: "Creative venture",
+    },
     windowOpen: { pl: "otwarte", en: "open" },
   },
   notFound: {

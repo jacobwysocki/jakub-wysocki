@@ -22,7 +22,7 @@ function useLocalTime(lang: string) {
           hour: "2-digit",
           minute: "2-digit",
           timeZone: contactInfo.timezone,
-        }).format(new Date())
+        }).format(new Date()),
       );
     format();
     const id = setInterval(format, 30_000);
@@ -184,7 +184,8 @@ export default function Footer() {
         {/* Wiersz statusu systemu */}
         <div className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-[12px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {person.fullName}. {t(ui.footer.rights)}
+            © {new Date().getFullYear()} {person.fullName}.{" "}
+            {t(ui.footer.rights)}
           </p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <span className="inline-flex items-center gap-1.5">
@@ -205,7 +206,9 @@ export default function Footer() {
             </span>
           </div>
         </div>
-        <p className="mt-3 text-[12px] text-white/25">{t(ui.footer.builtWith)}</p>
+        <p className="mt-3 text-[12px] text-white/25">
+          {t(ui.footer.builtWith)}
+        </p>
       </div>
     </footer>
   );

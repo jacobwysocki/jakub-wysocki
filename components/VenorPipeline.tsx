@@ -145,7 +145,10 @@ function MapNode({
         {t(node.label)}
       </p>
       {node.items.map((line) => (
-        <p key={line} className="mt-[3px] text-[12.5px] leading-snug text-white/80">
+        <p
+          key={line}
+          className="mt-[3px] text-[12.5px] leading-snug text-white/80"
+        >
           {line}
         </p>
       ))}
@@ -170,7 +173,9 @@ export default function VenorPipeline() {
   const [stage, setStage] = useState(0);
   const geom = useRef({ width: 1, dots: [] as number[] });
 
-  const railScale = useTransform(progress, [0, RAIL_END], [0, 1], { clamp: true });
+  const railScale = useTransform(progress, [0, RAIL_END], [0, 1], {
+    clamp: true,
+  });
 
   /** Nośnik ma szerokość szyny, więc przy `x = (fill - 1) * 100%` jego prawa
    *  krawędź leży dokładnie na czole sygnału i poświata nie potrzebuje
@@ -180,12 +185,17 @@ export default function VenorPipeline() {
     progress,
     [0, 0.04, RAIL_END, RAIL_END + 0.06],
     [0, 1, 1, 0],
-    { clamp: true }
+    { clamp: true },
   );
 
-  const seamColor = useTransform(progress, [SEAM_IN, SEAM_LIT], [SEAM_COLD, HOT], {
-    clamp: true,
-  });
+  const seamColor = useTransform(
+    progress,
+    [SEAM_IN, SEAM_LIT],
+    [SEAM_COLD, HOT],
+    {
+      clamp: true,
+    },
+  );
   const seamX = useTransform(progress, [SEAM_IN, SEAM_LIT], [-6, 0], {
     clamp: true,
   });
@@ -195,7 +205,7 @@ export default function VenorPipeline() {
     progress,
     [SEAM_IN, SEAM_IN + 0.05, SEAM_LIT + 0.06],
     [0, 1, 0],
-    { clamp: true }
+    { clamp: true },
   );
 
   /**
@@ -236,7 +246,7 @@ export default function VenorPipeline() {
         width: Math.max(el.offsetWidth, 1),
         // kropka: left-0, w-2 → środek na +4
         dots: Array.from(el.querySelectorAll<HTMLElement>("[data-node]")).map(
-          (c) => c.offsetLeft + 4
+          (c) => c.offsetLeft + 4,
         ),
       };
       sync(progress.get());

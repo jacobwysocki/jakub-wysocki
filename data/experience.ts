@@ -100,14 +100,24 @@ export const engineeringRoles: Role[] = [
         en: "Direct client contact: gathered requirements from haulage customers and handled support escalations.",
       },
     ],
-    tech: ["Delphi", "C# / .NET", "SQL Server", "REST / SOAP", "Docker", "HERE Maps"],
+    tech: [
+      "Delphi",
+      "C# / .NET",
+      "SQL Server",
+      "REST / SOAP",
+      "Docker",
+      "HERE Maps",
+    ],
   },
   {
     id: "bunzl",
     company: "Bunzl plc",
     role: { pl: "Software Developer", en: "Software Developer" },
     period: { pl: "sie 2023 - gru 2024", en: "Aug 2023 - Dec 2024" },
-    location: { pl: "Monterrey, Meksyk (zdalnie)", en: "Monterrey, Mexico (remote)" },
+    location: {
+      pl: "Monterrey, Meksyk (zdalnie)",
+      en: "Monterrey, Mexico (remote)",
+    },
     summary: {
       pl: "Front-end i full-stack dla dwóch serwisów e-commerce w Bunzlu, grupie dystrybucyjnej z indeksu FTSE 100. Praca zdalna dla zespołu w Meksyku.",
       en: "Frontend and full-stack engineering for two e-commerce properties at Bunzl, a FTSE 100 distribution group. Delivered remotely to a Mexico-based team.",
@@ -126,7 +136,14 @@ export const engineeringRoles: Role[] = [
         en: "Maintained and extended the Magento 2 storefront for espomega.mx.",
       },
     ],
-    tech: ["React", "TypeScript", "VTEX", "Node.js", "Magento 2", "Text-to-SQL / AI"],
+    tech: [
+      "React",
+      "TypeScript",
+      "VTEX",
+      "Node.js",
+      "Magento 2",
+      "Text-to-SQL / AI",
+    ],
   },
   {
     id: "northumbria",
@@ -211,7 +228,14 @@ export const studioNote: Role = {
       en: "This is the design side of my profile. The full creative portfolio lives in the Ultra Studio window.",
     },
   ],
-  tech: ["Next.js", "Node.js", "Framer", "WordPress", "AI agents", "JSON-LD / SEO"],
+  tech: [
+    "Next.js",
+    "Node.js",
+    "Framer",
+    "WordPress",
+    "AI agents",
+    "JSON-LD / SEO",
+  ],
 };
 
 /** Wszystkie pozycje dla widoków, które pokazują też notkę o studiu.

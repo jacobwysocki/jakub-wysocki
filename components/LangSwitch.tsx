@@ -22,7 +22,9 @@ export default function LangSwitch({
   const shell =
     tone === "dark" ? "border-white/20 bg-white/10" : "border-ink/15 bg-ink/5";
   const active =
-    tone === "dark" ? "bg-white text-ink shadow-sm" : "bg-ink text-white shadow-sm";
+    tone === "dark"
+      ? "bg-white text-ink shadow-sm"
+      : "bg-ink text-white shadow-sm";
   const idle =
     tone === "dark"
       ? "text-white/60 hover:text-white"
@@ -48,7 +50,9 @@ export default function LangSwitch({
           aria-pressed={lang === code}
           onClick={() => setLang(code)}
           className={`relative rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide transition-all duration-300 before:absolute before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[''] ${
-            i === 0 ? "before:-left-2.5 before:right-0" : "before:left-0 before:-right-2.5"
+            i === 0
+              ? "before:-left-2.5 before:right-0"
+              : "before:left-0 before:-right-2.5"
           } ${lang === code ? active : idle}`}
         >
           {code}

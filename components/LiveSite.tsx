@@ -127,7 +127,7 @@ export default function LiveSite({
         setNear(true);
         observer.disconnect();
       },
-      { rootMargin: NEAR_MARGIN }
+      { rootMargin: NEAR_MARGIN },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -140,7 +140,9 @@ export default function LiveSite({
     const observer = new ResizeObserver(([entry]) => {
       const w = Math.round(entry.contentRect.width);
       const h = Math.round(entry.contentRect.height);
-      setBox((prev) => (prev && prev.w === w && prev.h === h ? prev : { w, h }));
+      setBox((prev) =>
+        prev && prev.w === w && prev.h === h ? prev : { w, h },
+      );
     });
     observer.observe(el);
     return () => observer.disconnect();

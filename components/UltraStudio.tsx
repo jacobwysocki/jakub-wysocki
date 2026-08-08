@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { studioProjects, studioInfo, type StudioProject } from "@/data/projects";
+import {
+  studioProjects,
+  studioInfo,
+  type StudioProject,
+} from "@/data/projects";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
 import { UltraStudioLogo } from "@/components/logos";
@@ -47,8 +51,12 @@ export default function UltraStudio() {
             {t(ui.sections.studio)}
           </p>
           <h2 className="mt-4 text-h2">{t(studioInfo.heading)}</h2>
-          <p className="mt-6 text-body text-muted">{t(studioInfo.description)}</p>
-          <p className="mt-3 text-[14px] text-muted">{t(ui.sections.studioSub)}</p>
+          <p className="mt-6 text-body text-muted">
+            {t(studioInfo.description)}
+          </p>
+          <p className="mt-3 text-[14px] text-muted">
+            {t(ui.sections.studioSub)}
+          </p>
           <a
             href={studioInfo.url}
             target="_blank"
