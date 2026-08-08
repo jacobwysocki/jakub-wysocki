@@ -1,3 +1,7 @@
+# Archived handoff — SEO entity work
+
+> This is a historical session handoff, not the current task list. Some status statements and code references are intentionally preserved as a record of that session. For current entity decisions use [ENTITY.md](./ENTITY.md); for the current desktop and Ask Jakub plan use [desktop-v2/README.md](./desktop-v2/README.md).
+
 # Prompt przekazania — Claude Code
 
 Skopiuj wszystko poniżej linii i wklej jako pierwszą wiadomość w Claude Code
@@ -106,7 +110,7 @@ Zweryfikowano natomiast:
 
 ## Konwencje repo (trzymaj się ich)
 
-- Komentarze w kodzie po polsku, wyjaśniają *dlaczego*, nie *co*.
+- Komentarze w kodzie po polsku, wyjaśniają _dlaczego_, nie _co_.
 - Wszystkie treści widoczne dla użytkownika są dwujęzyczne: typ
   `L10n = { pl: string; en: string }` z `lib/lang-store.ts`.
 - Treść i dane mieszkają w `data/`, nigdy na sztywno w komponentach.

@@ -1,5 +1,11 @@
 # Encja „Jakub Wysocki" — rejestr i decyzje
 
+Status: bieżący rejestr techniczny
+
+Ostatnia synchronizacja z kodem: 2026-08-08
+
+Stany usług zewnętrznych, profili i Search Console są zapisem operacyjnym z dnia ostatniej ręcznej weryfikacji, a nie czymś, co da się potwierdzić samym kodem repozytorium.
+
 Cel: doprowadzić do tego, żeby Google rozpoznało Jakuba Wysockiego jako
 odrębny byt w Knowledge Graphie, docelowo z Knowledge Panelem. Panelu nie da
 się założyć. Google generuje go sam, gdy ma dość spójnych i niezależnych
@@ -21,15 +27,15 @@ skleja informacje z różnych stron i różnych domen w jedną encję. Zmiana
 któregokolwiek z nich jest równoznaczna z powiedzeniem „to ktoś inny" i
 kasuje dotychczasową historię dopasowania.
 
-| Identyfikator | Co opisuje | Deklarowany w |
-|---|---|---|
-| `https://jakub-wysocki.com/#person` | osoba | `lib/schema.ts`, `ultrastud.io` (site-wide) |
-| `https://jakub-wysocki.com/#website` | witryna osobista | `lib/schema.ts` |
-| `https://jakub-wysocki.com/about#profilepage` | strona-wizytówka | `lib/schema.ts` |
-| `https://ultrastud.io/#organization` | Ultra Studio | `lib/schema.ts`, `ultrastud.io` |
-| `https://ultrastud.io/#website` | witryna studia | `ultrastud.io` |
-| `https://ultrastud.io/#filip-mazur` | drugi współzałożyciel | `ultrastud.io` |
-| `https://www.squizzu.com/#organization` | Squizzu | `lib/schema.ts`, `ultrastud.io` |
+| Identyfikator                                 | Co opisuje            | Deklarowany w                               |
+| --------------------------------------------- | --------------------- | ------------------------------------------- |
+| `https://jakub-wysocki.com/#person`           | osoba                 | `lib/schema.ts`, `ultrastud.io` (site-wide) |
+| `https://jakub-wysocki.com/#website`          | witryna osobista      | `lib/schema.ts`                             |
+| `https://jakub-wysocki.com/about#profilepage` | strona-wizytówka      | `lib/schema.ts`                             |
+| `https://ultrastud.io/#organization`          | Ultra Studio          | `lib/schema.ts`, `ultrastud.io`             |
+| `https://ultrastud.io/#website`               | witryna studia        | `ultrastud.io`                              |
+| `https://ultrastud.io/#filip-mazur`           | drugi współzałożyciel | `ultrastud.io`                              |
+| `https://www.squizzu.com/#organization`       | Squizzu               | `lib/schema.ts`, `ultrastud.io`             |
 
 Dwie domeny używają tych samych identyfikatorów celowo. Dzięki temu
 `ultrastud.io` nie opisuje „jakiegoś Jakuba Wysockiego", tylko potwierdza
@@ -44,47 +50,48 @@ Kolumna „źródło" mówi, skąd wziąć wartość.
 
 ### jakub-wysocki.com
 
-| Element | Źródło | Uwaga |
-|---|---|---|
-| `Person`, `WebSite`, `Organization` ×2 | `lib/schema.ts` | render w `app/layout.tsx`, na każdej podstronie |
-| `ProfilePage` | `lib/schema.ts` | tylko `/about` i `/o-mnie` |
-| tytuły, opisy, canonical, hreflang | `app/*/page.tsx` | budowane z `person` |
-| treść wizytówek | `components/EntityHome.tsx` | z `data/`, bez drugiego źródła |
-| portret | `person.portrait` | zwykły URL, nie `/_next/image` |
-| sitemap z `<image:image>` | `app/sitemap.ts` | |
+| Element                                | Źródło                      | Uwaga                                           |
+| -------------------------------------- | --------------------------- | ----------------------------------------------- |
+| `Person`, `WebSite`, `Organization` ×2 | `lib/schema.ts`             | render w `app/layout.tsx`, na każdej podstronie |
+| `ProfilePage`                          | `lib/schema.ts`             | tylko `/about` i `/o-mnie`                      |
+| tytuły, opisy, canonical, hreflang     | `app/*/page.tsx`            | budowane z `person`                             |
+| treść wizytówek                        | `components/EntityHome.tsx` | z `data/`, bez drugiego źródła                  |
+| portret                                | `person.portrait`           | zwykły URL, nie `/_next/image`                  |
+| sitemap z `<image:image>`              | `app/sitemap.ts`            |                                                 |
 
 Zmiana w `data/site.ts` propaguje się tu automatycznie. Reszta tabeli
 wymaga ręcznej aktualizacji.
 
 ### Profile
 
-| Powierzchnia | Pola do pilnowania |
-|---|---|
-| GitHub → Settings → Public profile | Name, Bio, URL (`https://jakub-wysocki.com`), Company, Location, Social accounts ×4 |
-| GitHub → repo `jacobwysocki/jacobwysocki` | README profilowe, treść w `docs/github-profile-README.md` |
-| LinkedIn | nagłówek = `person.jobTitle`, sekcja O mnie = `person.bio`, zdjęcie = `person.portrait`, stanowiska = role z `data/experience.ts` |
-| Stack Overflow | Display name, Title, About me, Website link, Location |
-| Behance | pole Portfolio → `https://jakub-wysocki.com` (link zwrotny, działa) |
-| ultrastud.io → `/o-nas` | biogram, rola, link zwrotny do domeny osobistej |
-| ultrastud.io → JSON-LD | snippety w prywatnym repo `ultrastudio-ops`, plik `jsonld.md` |
-| Instagram `@ultrastud.io` | bio studia, powinno zgadzać się z `description` organizacji |
-| Wikidata | jeszcze nie istnieje, patrz sekcja 5 |
+| Powierzchnia                              | Pola do pilnowania                                                                                                                |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| GitHub → Settings → Public profile        | Name, Bio, URL (`https://jakub-wysocki.com`), Company, Location, Social accounts ×4                                               |
+| GitHub → repo `jacobwysocki/jacobwysocki` | README profilowe, treść w `docs/github-profile-README.md`                                                                         |
+| LinkedIn                                  | nagłówek = `person.jobTitle`, sekcja O mnie = `person.bio`, zdjęcie = `person.portrait`, stanowiska = role z `data/experience.ts` |
+| Stack Overflow                            | Display name, Title, About me, Website link, Location                                                                             |
+| Behance                                   | pole Portfolio → `https://jakub-wysocki.com` (link zwrotny, działa)                                                               |
+| ultrastud.io → `/o-nas`                   | biogram, rola, link zwrotny do domeny osobistej                                                                                   |
+| ultrastud.io → JSON-LD                    | snippety w prywatnym repo `ultrastudio-ops`, plik `jsonld.md`                                                                     |
+| Instagram `@ultrastud.io`                 | bio studia, powinno zgadzać się z `description` organizacji                                                                       |
+| Wikidata                                  | jeszcze nie istnieje, patrz sekcja 5                                                                                              |
 
 ### `sameAs` — lista profili uznawanych za tę samą osobę
 
-Zdefiniowana w `lib/schema.ts`. Każdy nowy zweryfikowany profil dopisuj
-w **trzech** miejscach naraz, inaczej powstaje rozjazd:
+Kanoniczną listą jest `entityProfiles` w `data/site.ts`. `lib/schema.ts` wyprowadza z niej `sameAs`, a `components/EntityHome.tsx` renderuje tę samą kolekcję, więc tych dwóch powierzchni nie aktualizuje się osobno.
 
-1. `sameAs` w `lib/schema.ts`
-2. widoczna lista linków w `components/EntityHome.tsx`
-3. stopka, `components/Footer.tsx`
+Przy dodawaniu zweryfikowanego profilu:
+
+1. dodaj go do `entityProfiles` w `data/site.ts`;
+2. zdecyduj świadomie, czy ma także wejść do ręcznie ułożonej stopki w `components/Footer.tsx`;
+3. zaktualizuj odpowiadające profile zewnętrzne i przeprowadź procedurę weryfikacji.
 
 ---
 
 ## 3. Procedura przy zmianie faktu
 
 1. Zmień w `data/site.ts`, nigdzie indziej.
-2. `npm run build`, commit, push.
+2. Uruchom pełny kontrakt jakości z `README.md`, w tym testy schematu i build.
 3. Przejdź rejestr z sekcji 2 i zaktualizuj powierzchnie ręczne.
 4. [Rich Results Test](https://search.google.com/test/rich-results) na `/`, `/about`, `/o-mnie`.
 5. Search Console → Sprawdzanie adresu URL → Poproś o zindeksowanie.
@@ -164,6 +171,8 @@ adresu URL → Testuj URL na żywo, oraz tytuły w samym SERP-ie.
 
 ## 5. Stan
 
+Poniższy stan powierzchni zewnętrznych wymaga datowanej ręcznej weryfikacji przed każdą publiczną aktualizacją; repozytorium potwierdza wyłącznie implementację lokalną.
+
 ### Zrobione
 
 - Domena, przekierowania i canonical skonsolidowane na apeksie
@@ -191,12 +200,12 @@ adresu URL → Testuj URL na żywo, oraz tytuły w samym SERP-ie.
 
 ## 6. Weryfikacja
 
-| Narzędzie | Co sprawdza |
-|---|---|
+| Narzędzie                                                        | Co sprawdza                            |
+| ---------------------------------------------------------------- | -------------------------------------- |
 | [Rich Results Test](https://search.google.com/test/rich-results) | czy Google parsuje dane i widzi stronę |
-| [Walidator Schema.org](https://validator.schema.org/) | poprawność typów i odwołań `@id` |
-| Search Console → Strony | które adresy są w indeksie |
-| Search Console → Sprawdzanie URL | kanoniczny adres wybrany przez Google |
+| [Walidator Schema.org](https://validator.schema.org/)            | poprawność typów i odwołań `@id`       |
+| Search Console → Strony                                          | które adresy są w indeksie             |
+| Search Console → Sprawdzanie URL                                 | kanoniczny adres wybrany przez Google  |
 
 Wpisy „Strona z przekierowaniem" dla `www` i `.vercel.app` są poprawne i
 oczekiwane.
@@ -255,12 +264,12 @@ parsowania.
 
 ## 7. Wąskie gardło
 
-Warstwa techniczna jest skończona i sama panelu nie wywoła.
+Warstwa techniczna opisana w tym rejestrze nie wystarczy sama do uzyskania panelu.
 
-Warunkiem jest notoryjność: niezależne, wiarygodne źródła piszące o tej
-osobie. Realny próg to kilkanaście istotnych wzmianek w rozpoznawalnych
-publikacjach w ciągu 6–12 miesięcy. Komunikaty prasowe i płatne publikacje
-liczą się niewiele.
+Strategia zakłada budowanie rozpoznawalności przez niezależne, wiarygodne
+źródła piszące o tej osobie. Nie ma w repozytorium dowodu na konkretny próg
+liczby publikacji ani gwarantowany termin; takie wartości należy traktować
+jako hipotezę operacyjną, a nie fakt techniczny.
 
 Najmocniejsze punkty zaczepienia: Ultra Studio, Squizzu, aplikacja uczelniana
 z 40 tys. użytkowników oraz nagroda Premios eCommerce MX 2024 dla
