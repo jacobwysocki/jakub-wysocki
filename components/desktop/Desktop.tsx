@@ -31,6 +31,7 @@ import BootScreen from "./BootScreen";
 import ContextMenu from "./ContextMenu";
 import MobileDesktop from "./MobileDesktop";
 import NowWidget from "./NowWidget";
+import AskJakubWidget from "./AskJakubWidget";
 
 function DesktopFull({
   wallpaperId,
@@ -48,6 +49,9 @@ function DesktopFull({
   const [ctxMenu, setCtxMenu] = useState<Point | null>(null);
   const [selections, setSelections] = useState<AppLaunchSelections>(
     () => new Map(),
+  );
+  const askJakubWindowVisible = windows.some(
+    (win) => win.id === "ask-jakub" && !win.minimized,
   );
 
   const launchApp = useCallback(
@@ -165,6 +169,7 @@ function DesktopFull({
           >
             <DesktopIcons areaRef={areaRef} />
             <NowWidget areaRef={areaRef} />
+            <AskJakubWidget areaRef={areaRef} hidden={askJakubWindowVisible} />
           </div>
 
           <AnimatePresence>

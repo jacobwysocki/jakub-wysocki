@@ -26,12 +26,12 @@ This table describes the release-candidate working tree, not a deployed release.
 | WP-30   | Complete           | Window reconciliation, focus recovery, mobile modal isolation, scroll contracts, keyboard menus, and app-owned motion-warning fixes are implemented.                                                                                                              |
 | WP-40   | Complete           | The bounded server answer operation, versioned route contract, provider port, validation, deadlines, and deterministic/disabled Adapters exist without a paid provider.                                                                                           |
 | WP-50   | Complete           | The React session facade and HTTP/in-memory transport Adapters implement submit, cancel, retry, clear, language reset, stale-event rejection, and evidence navigation.                                                                                            |
-| WP-60   | Complete           | The bilingual Ask Jakub Desktop App/mobile sheet, App Catalog placement, lifecycle retention, composer, evidence, and UI state matrix are integrated.                                                                                                             |
+| WP-60   | Complete           | The bilingual Ask Jakub quick-chat widget, Desktop App/mobile sheet, App Catalog placement, lifecycle retention, composer, evidence, and UI state matrix are integrated.                                                                                          |
 | WP-70   | Complete           | Spotlight searches the App Catalog and Portfolio Knowledge locally and navigates through Portfolio Locations on desktop and mobile.                                                                                                                               |
 | WP-80   | Partially complete | A server-only Groq Adapter, explicit environment composition, provider-response bounds, public disclosure, and free-tier setup/rollback wizard exist. App-owned distributed abuse limiting, operational telemetry, live-key evaluation, and staging proof remain. |
 | WP-90   | Partially complete | Local automated, security, privacy-data-flow, and documentation checks are recorded; fresh browser, assistive-technology, performance, staging, and deployment checks remain external release gates.                                                              |
 
-The complete local quality contract and its limits are recorded in the [2026-08-08 verification report](./VERIFICATION-2026-08-08.md). That report is not evidence of a deployment or of the external checks it marks pending.
+The complete local quality contract and its limits are recorded in the [2026-08-09 verification report](./VERIFICATION-2026-08-09.md). That report is not evidence of a deployment or of the external checks it marks pending.
 
 ## Outcome
 
@@ -88,7 +88,10 @@ App Catalog ──► client visual registry ──► Desktop windows / mobile 
       │                                         │
       └──────── Portfolio Navigator ◄───────────┘
 
-Ask Desktop App ──► AskJakubProvider/useAskJakubSession
+Ask desktop widget / Desktop App / mobile sheet
+                              │
+                              ▼
+              AskJakubProvider/useAskJakubSession
                               │
                   bounded HTTP transport
                               │
@@ -110,7 +113,7 @@ The route and protocol fail closed to the localized provider-unavailable state b
 | Ask server          | internal answer operation and `AnswerModelPort`                       | Request validation, bounded retrieval/prompt input, deadline, structured provider-result validation, evidence resolution, and normalized failures.                                              |
 | Owned route         | `POST /api/ask-jakub`                                                 | Versioned newline-delimited JSON lifecycle contract with bounded bodies/responses and no-store responses. The current implementation buffers the validated lifecycle array before returning it. |
 
-State ownership remains local to its behavior: Zustand owns mode/window state; the desktop shell owns semantic selections; Spotlight owns its dialog state; Ask Jakub owns its session through a provider above the app window/sheet; the server remains stateless.
+State ownership remains local to its behavior: Zustand owns mode/window state; the desktop shell owns semantic selections; Spotlight owns its dialog state; Ask Jakub owns its session through a provider above the widget/app window/sheet; the server remains stateless. The quick-chat widget is another presentation of that session, not another Desktop App or App Catalog entry.
 
 ## Feature roadmap
 
@@ -124,7 +127,7 @@ State ownership remains local to its behavior: Zustand owns mode/window state; t
 ### Signature discovery — implemented with optional model configuration
 
 - Spotlight is implemented without a provider or second search index.
-- Ask server, client session, and Desktop App/mobile presentation are implemented against scripted, provider-disabled, and optional Groq Adapters.
+- Ask server, client session, and desktop widget/Desktop App/mobile presentations are implemented against scripted, provider-disabled, and optional Groq Adapters.
 - Ask evidence links use typed semantic destinations shared with Spotlight and Simple Mode fallbacks.
 - A focused, printable CV view remains a future feature.
 

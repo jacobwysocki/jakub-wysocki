@@ -1,19 +1,19 @@
-# Desktop v2 verification — 2026-08-08
+# Desktop v2 verification — 2026-08-09
 
 Status: provider-disabled-by-default local release candidate with a mock-tested optional Groq path; not a deployment approval
 
-This report records the final local integration review against commit `880c2496b47d` plus the uncommitted working-tree changes. It separates checks proven in this workspace from checks that need a fresh browser, assistive technology, CI, staging, or a production host.
+This report records the local integration review for `feat/desktop-chat-widget`, which adds the compact Ask Jakub widget after the six grouped Desktop v2 commits were merged to `main`. It separates checks proven in this workspace from checks that still need assistive technology, CI, staging, or a production host.
 
 ## Environment
 
-- Repository branch: `main`
+- Repository branch: `feat/desktop-chat-widget`
 - Host: Darwin 25.6.0, arm64
 - Supported runtime target: Node.js 24.18.1 or newer on the Node 24 line
 - Current Groq-addendum runner: Node.js 24.17.0, npm 11.13.0; this is below the declared engine floor and requires a supported-runtime CI/Preview rerun
 - Framework: Next.js 16.3.0, React 19.2.8
-- Model mode: provider disabled in this workspace; optional direct Groq Adapter present, with no provider SDK or real credential
+- Model mode: optional direct Groq Adapter configured locally; automated and browser checks in this report use fakes or no-submit flows and do not invoke the live provider
 
-The working tree is intentionally uncommitted. It also includes a one-time formatter baseline across existing implementation files; isolate that mechanical change when preparing commits so feature review remains readable.
+The original Desktop v2 work is grouped into six reviewable commits and is present on `main`. The compact widget is isolated on a fresh follow-up branch based on that production tree.
 
 ## Automated verification
 
@@ -21,16 +21,17 @@ The working tree is intentionally uncommitted. It also includes a one-time forma
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `npm run format:check`                | Pass                                                                                                                 |
 | `npm run lint`                        | Pass with zero warnings                                                                                              |
-| `npm test`                            | Pass: 30 files, 270 tests                                                                                            |
+| `npm test`                            | Pass: 30 files, 275 tests                                                                                            |
 | `npm run typecheck`                   | Pass, including `next typegen`                                                                                       |
 | `next build --webpack`                | Pass on the current Node 24.17.0 runner; all application and API routes compiled; supported-runtime rerun pending    |
 | `npm run audit:prod`                  | Pass: zero production vulnerabilities reported by npm                                                                |
+| Vercel Preview                        | Pass for commit `15e85dc`; the default Turbopack deployment completed successfully                                   |
 | `git diff --check`                    | Pass                                                                                                                 |
 | Focused working-tree secret scan      | No private-key, common cloud-key, Groq-key, OpenAI-key, or Anthropic-key pattern found                               |
 | Git-history secret-pattern scan       | No matching committed history found                                                                                  |
 | Generated client-bundle boundary scan | No server model port, Groq endpoint/model/environment marker, hidden phone variable, or testing Adapter marker found |
 
-The exact default `npm run build` path uses Turbopack. Its final rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. CI or staging must still run the repository's exact Turbopack command on an unrestricted supported Node runtime; this report does not relabel the runner limitation as a passing Turbopack result.
+The exact default `npm run build` path uses Turbopack. Its final local widget-branch rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. Vercel then completed the fresh widget Preview for commit `15e85dc` through the repository's default Turbopack build on its unrestricted runner. The deployment is protected by Vercel sign-in, so authenticated browser and live-provider smoke tests remain separate gates.
 
 The compiled route set includes `/`, `/about`, `/o-mnie`, `/api/ask-jakub`, `/api/phone`, icons, Open Graph image, robots, and sitemap routes.
 
@@ -42,6 +43,7 @@ The compiled route set includes `/`, `/about`, `/o-mnie`, `/api/ask-jakub`, `/ap
 - Nominated source checks cover the Squizzu role, drone-research algorithm narrative, Studio case narrative, and the derived Desktop App count.
 - Minimized windows are both `aria-hidden` and natively `inert`; focus recovery remains covered.
 - Ask Jakub covers local input, retrieval/composition, answer/clarification/not-covered, cancellation, retry, clear, evidence navigation, invalid output, offline, timeout, rate-limit, unavailable, and budget-disabled paths.
+- The roomy-desktop quick-chat widget makes no request on mount, shares the same session with the full Ask Desktop App, previews the latest answer, exposes cancel/retry, yields while the full window is visible, and returns focus after close/minimise.
 - The Ask session survives close, minimise/reopen, mobile evidence navigation and Back, and desktop/mobile breakpoint changes while Desktop Mode remains mounted.
 - One absolute server deadline covers bounded body reading, parsing, generation, and the single repair attempt.
 - The Groq Adapter sends bounded input through `AnswerModelPort`, uses strict structured output, caps provider responses, propagates abort, normalizes trusted `Retry-After`, requires exact JSON `200`, and never relays provider bodies.
@@ -88,9 +90,11 @@ Resolved findings:
 
 ## Browser and accessibility limits
 
-Real-shell Testing Library/JSDOM regressions cover keyboard launchers, focus return, menus, Spotlight, mobile modal isolation, window geometry, Ask lifecycle retention, Evidence Links, and reduced-motion branches. Earlier desktop-resilience work also exercised representative desktop and 390 px mobile layouts.
+Real-shell Testing Library/JSDOM regressions cover keyboard launchers, focus return, menus, Spotlight, mobile modal isolation, window geometry, Ask lifecycle retention, Evidence Links, the compact widget, and reduced-motion branches. Earlier desktop-resilience work also exercised representative desktop and 390 px mobile layouts.
 
-A fresh in-app browser connection was unavailable during this final pass, so the final Ask/Studio visual state was not re-verified in a clean live browser. The following remain external release gates:
+A fresh Chrome browser pass verified the compact widget at 1440 px and its 900 px roomy-desktop threshold, confirmed it is absent below that threshold, and exercised widget → full App → close/minimise/restore focus handoffs without submitting a live provider question. The full App was the only Ask composer exposed while its window was visible. No application-origin warning or error was observed; captured warnings came from an unrelated installed browser extension.
+
+The following remain external release gates:
 
 - current Chrome, Safari/WebKit, and Firefox;
 - VoiceOver or another screen reader;
@@ -99,7 +103,7 @@ A fresh in-app browser connection was unavailable during this final pass, so the
 - runtime reduced-motion switching and animation visual quality;
 - fresh screenshots of the new Squizzu Studio tab and Ask states;
 - Lighthouse/Core Web Vitals and the existing public-media budget;
-- preview/staging smoke tests, including the exact Turbopack build command.
+- authenticated Preview UI and live-provider smoke tests; the exact Turbopack build itself has passed on the fresh widget Preview.
 
 ## Gates that still block an unqualified model-enabled release
 

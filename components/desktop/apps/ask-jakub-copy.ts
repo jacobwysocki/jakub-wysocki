@@ -2,6 +2,16 @@ import type { L10n } from "@/lib/lang";
 
 export const askJakubCopy = {
   title: { pl: "Zapytaj o Jakuba", en: "Ask Jakub" },
+  widgetLabel: {
+    pl: "Szybki czat Ask Jakub",
+    en: "Ask Jakub quick chat",
+  },
+  widgetIntroduction: {
+    pl: "Zadaj krótkie pytanie o moją pracę albo otwórz pełną rozmowę.",
+    en: "Ask a quick question about my work or open the full conversation.",
+  },
+  latestAnswer: { pl: "Ostatnia odpowiedź", en: "Latest answer" },
+  openFullChat: { pl: "Otwórz pełny czat", en: "Open full chat" },
   identity: {
     pl: "Przewodnik portfolio · nie Jakub",
     en: "Portfolio guide · not Jakub",

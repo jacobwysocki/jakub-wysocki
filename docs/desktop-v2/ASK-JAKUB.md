@@ -15,7 +15,7 @@ This specification is both a normative contract and a design record. Current wor
 - Portfolio Knowledge, Evidence Links, Suggested Questions, deterministic retrieval, and semantic navigation are implemented.
 - The bounded server answer operation, versioned owned route, validation, deadline, scripted model Adapter, and provider-disabled Adapter are implemented.
 - `AskJakubProvider` and `useAskJakubSession` implement the ephemeral client session and HTTP/in-memory transport seam.
-- The bilingual Desktop App and mobile presentation are integrated, including all specified UI states, session retention, evidence navigation, input bounds, reduced motion, and responsive lifecycle behavior.
+- The bilingual desktop quick-chat widget, Desktop App, and mobile presentation are integrated, including all specified UI states, session retention, evidence navigation, input bounds, reduced motion, and responsive lifecycle behavior.
 - The public route fails closed to the provider-disabled Adapter unless `ASK_JAKUB_PROVIDER=groq` and a server-only key are configured. A direct Groq `openai/gpt-oss-20b` Adapter exists without a provider SDK; an app-owned distributed rate limiter, AI operational telemetry, live-key evaluation, and staging proof do not.
 - Final browser, assistive-technology, privacy, security, and release verification remains WP-90 work.
 
@@ -34,12 +34,15 @@ The sections below describe the intended launch contract unless a paragraph expl
 
 ### Launch scope
 
-The launch surface is a Desktop App and mobile sheet. Its Conversation Session survives closing/reopening the app and desktop/mobile breakpoint changes while its Desktop Mode presentation remains mounted, but disappears on refresh, language change, or when leaving Desktop Mode. Real-shell component tests verify that behavior; fresh-browser and assistive-technology release checks remain WP-90 work.
+The launch surface is a compact quick-chat widget on roomy desktops, a full Desktop App, and a mobile sheet. All three use one Conversation Session. It survives closing/reopening the app and desktop/mobile breakpoint changes while its Desktop Mode presentation remains mounted, but disappears on refresh, language change, or when leaving Desktop Mode. Real-shell component tests verify that behavior; fresh-browser and assistive-technology release checks remain WP-90 work.
+
+The widget is a presentation of Ask Jakub, not another Desktop App: it has no App Catalog entry and does not change the public Desktop App count. It appears only when at least 900 CSS pixels are available, yields to the full Ask window while that window is visible, and returns with the same session when the window is minimized or closed.
 
 The first release includes:
 
 - Polish and English sessions that follow the active portfolio language.
 - A local welcome message and three to five Suggested Questions with no model call.
+- A compact desktop composer with latest-answer preview, cancel, retry, privacy disclosure, and expansion into the full transcript.
 - One active question at a time.
 - Visible “searching portfolio” and “composing answer” phases.
 - Cancel, retry, clear session, and copy-answer controls.
@@ -126,6 +129,8 @@ A language change cancels active work and starts a fresh localized Conversation 
 ### Closing and returning
 
 Closing or minimizing the Desktop App does not discard the current session. Leaving Desktop Mode or refreshing does. A visible “Clear conversation” action resets it earlier.
+
+When the full Desktop App is visible, the compact widget is hidden and inert so only one Ask composer is exposed. Minimizing or closing the App reveals the widget again and returns focus to the invoking widget control when appropriate.
 
 No implicit persistence is introduced for convenience.
 
@@ -549,6 +554,7 @@ Retries never run automatically in the browser; hidden retry storms are unaccept
 ## Accessibility requirements
 
 - The transcript is a named log/region; individual questions and answers have semantic grouping.
+- The compact widget is a named complementary region and yields from the accessibility tree while the full Desktop App is visible.
 - Lifecycle status uses a restrained live region. Progressive visual reveal does not announce every character.
 - Composer has a persistent label, description, character count near the limit, and keyboard submit behavior that does not trap multiline input.
 - Sending moves neither focus nor scroll unexpectedly. New answers scroll only when the visitor was already near the transcript end.
@@ -595,6 +601,8 @@ The lists below are release acceptance criteria. Knowledge, route, session, and 
 
 ### Browser tests
 
+- Desktop widget mount makes no request; submit/result, failure/retry, cancellation, expansion, and focus return share the full App session.
+- The widget remains clear of Desktop widgets/icons at representative widths and is absent below its 900 px roomy-desktop threshold.
 - Desktop window open/minimize/close/reopen retains session.
 - Mobile sheet opens, composer remains visible with keyboard, evidence pushes destination, Back returns to chat.
 - Focus restoration, background inertness, keyboard-only completion, reduced motion, language reset, zoom, and narrow/wide layouts.
