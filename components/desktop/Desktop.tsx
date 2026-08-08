@@ -2,6 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { AskJakubProvider } from "@/features/ask-jakub";
+import {
+  PortfolioNavigator,
+  type AppId,
+  type AppLaunchPayload,
+  type PortfolioNavigator as PortfolioNavigatorPort,
+} from "@/features/portfolio-navigation";
+import {
+  reduceLaunchSelections,
+  type AppLaunchSelections,
+} from "@/features/portfolio-navigation/launch-selection";
 import { useModeStore } from "@/lib/mode-store";
 import { useWindowStore, type Point } from "@/lib/window-store";
 import { useMediaQuery } from "@/lib/useMediaQuery";
@@ -24,23 +35,34 @@ import NowWidget from "./NowWidget";
 function DesktopFull({
   wallpaperId,
   onSelectWallpaper,
+  onNavigatorReady,
 }: {
   wallpaperId: string;
   onSelectWallpaper: (id: string) => void;
+  onNavigatorReady: (navigator: PortfolioNavigatorPort) => void;
 }) {
   const areaRef = useRef<HTMLDivElement | null>(null);
   const windows = useWindowStore((s) => s.windows);
   const open = useWindowStore((s) => s.open);
   const setMode = useModeStore((s) => s.setMode);
   const [ctxMenu, setCtxMenu] = useState<Point | null>(null);
+  const [selections, setSelections] = useState<AppLaunchSelections>(
+    () => new Map(),
+  );
 
-  const openApp = useCallback(
-    (id: string, origin?: Point) => {
+  const launchApp = useCallback(
+    (payload: AppLaunchPayload, origin?: Point) => {
       const area = areaRef.current;
       if (!area) return;
       const bounds = area.getBoundingClientRect();
-      const app = getApp(id);
-      open(id, {
+      const app = getApp(payload.appId);
+      const appAlreadyOpen = useWindowStore
+        .getState()
+        .windows.some((win) => win.id === payload.appId);
+      setSelections((current) =>
+        reduceLaunchSelections(current, payload, appAlreadyOpen),
+      );
+      open(payload.appId, {
         size: app.size,
         area: { w: bounds.width, h: bounds.height },
         origin: origin
@@ -48,12 +70,57 @@ function DesktopFull({
           : undefined,
       });
     },
-    [open]
+    [open],
+  );
+
+  const focusWindow = useCallback((appId: AppId) => {
+    const area = areaRef.current;
+    if (!area) return;
+    window.requestAnimationFrame(() => {
+      const destination = Array.from(
+        area.querySelectorAll<HTMLElement>("[data-window-id]"),
+      ).find((element) => element.dataset.windowId === appId);
+      destination?.focus({ preventScroll: true });
+    });
+  }, []);
+
+  const openApp = useCallback(
+    (appId: AppId, origin?: Point) => launchApp({ appId }, origin),
+    [launchApp],
+  );
+  useEffect(() => {
+    onNavigatorReady(
+      PortfolioNavigator.desktop((payload) => launchApp(payload)),
+    );
+  }, [launchApp, onNavigatorReady]);
+
+  const openLocation = useCallback<DesktopApi["openLocation"]>(
+    (location) => {
+      const outcome = PortfolioNavigator.desktop((payload) =>
+        launchApp(payload),
+      ).open(location);
+      if (outcome.opened) focusWindow(outcome.target.launch.appId);
+      return outcome;
+    },
+    [focusWindow, launchApp],
+  );
+
+  const selectionFor = useCallback(
+    (appId: AppId) =>
+      windows.some((win) => win.id === appId)
+        ? selections.get(appId)
+        : undefined,
+    [selections, windows],
   );
 
   const api = useMemo<DesktopApi>(
-    () => ({ openApp, switchToSimple: () => setMode("simple") }),
-    [openApp, setMode]
+    () => ({
+      openApp,
+      openLocation,
+      selectionFor,
+      switchToSimple: () => setMode("simple"),
+    }),
+    [openApp, openLocation, selectionFor, setMode],
   );
 
   // Esc: najpierw zamyka menu kontekstowe, potem aktywne okno
@@ -84,7 +151,10 @@ function DesktopFull({
         <MenuBar />
 
         {/* Obszar roboczy: poniżej paska menu, powyżej docka */}
-        <div ref={areaRef} className="absolute inset-x-0 bottom-[104px] top-[68px]">
+        <div
+          ref={areaRef}
+          className="absolute inset-x-0 bottom-[104px] top-[68px]"
+        >
           {/* Tapeta jako warstwa zdarzeń: prawy klik = menu, ikony pulpitu */}
           <div
             className="absolute inset-0"
@@ -128,16 +198,39 @@ function DesktopFull({
 export default function Desktop() {
   const isSmall = useMediaQuery("(max-width: 767px)");
   const [wallpaperId, setWallpaperId] = useState(loadWallpaperId);
+  const activeNavigatorRef = useRef<PortfolioNavigatorPort | null>(null);
+  const [sessionNavigator] = useState<PortfolioNavigatorPort>(() => ({
+    open(location) {
+      const activeNavigator = activeNavigatorRef.current;
+      return activeNavigator
+        ? activeNavigator.open(location)
+        : { opened: false, reason: "invalid-location" };
+    },
+  }));
+
+  const registerNavigator = useCallback((navigator: PortfolioNavigatorPort) => {
+    activeNavigatorRef.current = navigator;
+  }, []);
 
   const selectWallpaper = useCallback((id: string) => {
     setWallpaperId(id);
     saveWallpaperId(id);
   }, []);
 
-  if (isSmall) {
-    return <MobileDesktop wallpaperId={wallpaperId} />;
-  }
   return (
-    <DesktopFull wallpaperId={wallpaperId} onSelectWallpaper={selectWallpaper} />
+    <AskJakubProvider navigator={sessionNavigator}>
+      {isSmall ? (
+        <MobileDesktop
+          wallpaperId={wallpaperId}
+          onNavigatorReady={registerNavigator}
+        />
+      ) : (
+        <DesktopFull
+          wallpaperId={wallpaperId}
+          onSelectWallpaper={selectWallpaper}
+          onNavigatorReady={registerNavigator}
+        />
+      )}
+    </AskJakubProvider>
   );
 }

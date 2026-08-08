@@ -15,7 +15,7 @@ import { useWindowStore } from "@/lib/window-store";
 import { useT } from "@/lib/lang-store";
 import { ui } from "@/data/ui";
 import { useDesktop } from "./DesktopContext";
-import { APPS, AppTile, type AppConfig } from "./registry";
+import { AppTile, getAppsFor, type AppConfig } from "./registry";
 
 /**
  * Dock o stałych wymiarach: sloty ikon mają zawsze BASE×BASE, a powiększenie
@@ -32,7 +32,7 @@ const RANGE = 80;
 /** Magnifikacja: odległość kursora od środka ikony → skala + lift (sprężyna). */
 function useDockScale(
   mouseX: MotionValue<number>,
-  ref: React.RefObject<HTMLButtonElement | null>
+  ref: React.RefObject<HTMLButtonElement | null>,
 ) {
   const distance = useTransform(mouseX, (mx: number) => {
     const bounds = ref.current?.getBoundingClientRect();
@@ -62,7 +62,7 @@ function DockItem({
   const { openApp } = useDesktop();
   const isOpen = useWindowStore((s) => s.windows.some((w) => w.id === app.id));
   const isMinimized = useWindowStore(
-    (s) => s.windows.find((w) => w.id === app.id)?.minimized ?? false
+    (s) => s.windows.find((w) => w.id === app.id)?.minimized ?? false,
   );
   const restore = useWindowStore((s) => s.restore);
   const focus = useWindowStore((s) => s.focus);
@@ -95,10 +95,11 @@ function DockItem({
     <button
       ref={ref}
       type="button"
+      data-app-launcher={app.id}
       onClick={onClick}
       aria-label={isOpen ? `${title} (${t(ui.desktop.windowOpen)})` : title}
       style={{ width: BASE, height: BASE }}
-      className="group relative shrink-0 outline-none"
+      className="group relative shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
     >
       <span className={tooltipClass} aria-hidden>
         {title}
@@ -149,7 +150,9 @@ function DockModeSwitch({ mouseX }: { mouseX: MotionValue<number> }) {
         <span
           aria-hidden
           className="absolute inset-0 rounded-[24%]"
-          style={{ background: "linear-gradient(145deg, #FF6A3D 0%, #C2410C 100%)" }}
+          style={{
+            background: "linear-gradient(145deg, #FF6A3D 0%, #C2410C 100%)",
+          }}
         />
         <AppWindowMac
           strokeWidth={1.5}
@@ -166,7 +169,7 @@ function DockModeSwitch({ mouseX }: { mouseX: MotionValue<number> }) {
 export default function Dock() {
   const mouseX = useMotionValue(Infinity);
   const reduced = useReducedMotion();
-  const dockApps = APPS.filter((app) => app.dock);
+  const dockApps = getAppsFor("desktopDock");
 
   return (
     <nav

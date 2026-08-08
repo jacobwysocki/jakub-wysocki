@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { motion, useDragControls } from "framer-motion";
+import type { AppId } from "@/features/portfolio-navigation";
 import type { Point } from "@/lib/window-store";
 import { useT } from "@/lib/lang-store";
 import { ui } from "@/data/ui";
 import { useDesktop } from "./DesktopContext";
-import { APPS, AppTile, type AppConfig } from "./registry";
+import { AppTile, getAppsFor, type AppConfig } from "./registry";
 
 function DesktopIcon({
   app,
@@ -21,11 +22,12 @@ function DesktopIcon({
   return (
     <button
       type="button"
+      data-app-launcher={app.id}
       // Klik w ikonę nie może "przeciec" do tła (menu kontekstowe/odznaczanie)
       onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => onOpen({ x: e.clientX, y: e.clientY })}
       aria-label={`${t(app.title)}, ${t(ui.desktop.openWindowHint)}`}
-      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl p-2 outline-none transition-colors duration-200 ${
+      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl p-2 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
         active ? "bg-white/20 ring-1 ring-white/30" : "hover:bg-white/10"
       }`}
     >
@@ -51,8 +53,8 @@ export default function DesktopIcons({
   const t = useT();
   const dragControls = useDragControls();
   // Krótkie podświetlenie klikniętej ikony — feedback zaznaczenia
-  const [active, setActive] = useState<string | null>(null);
-  const iconApps = APPS.filter((app) => app.desktopIcon);
+  const [active, setActive] = useState<AppId | null>(null);
+  const iconApps = getAppsFor("desktopIcon");
 
   return (
     <motion.div

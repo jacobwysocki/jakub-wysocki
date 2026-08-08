@@ -77,19 +77,25 @@ export default function NowWidget({
 
       <div className="mt-5 grid grid-cols-3 border-y border-white/10 py-3">
         <div>
-          <strong className="block text-[17px] font-semibold tracking-tight">5+</strong>
+          <strong className="block text-[17px] font-semibold tracking-tight">
+            5+
+          </strong>
           <span className="mt-0.5 block text-[8.5px] leading-tight text-white/40">
             {t(copy.experience)}
           </span>
         </div>
         <div className="border-x border-white/10 px-3">
-          <strong className="block text-[17px] font-semibold tracking-tight">40k+</strong>
+          <strong className="block text-[17px] font-semibold tracking-tight">
+            40k+
+          </strong>
           <span className="mt-0.5 block text-[8.5px] leading-tight text-white/40">
             {t(copy.users)}
           </span>
         </div>
         <div className="pl-3">
-          <strong className="block text-[17px] font-semibold tracking-tight">100+</strong>
+          <strong className="block text-[17px] font-semibold tracking-tight">
+            100+
+          </strong>
           <span className="mt-0.5 block text-[8.5px] leading-tight text-white/40">
             {t(copy.screens)}
           </span>
@@ -98,7 +104,9 @@ export default function NowWidget({
 
       <button
         type="button"
-        onClick={(event) => openApp("contact", { x: event.clientX, y: event.clientY })}
+        onClick={(event) =>
+          openApp("contact", { x: event.clientX, y: event.clientY })
+        }
         className="mt-4 flex w-full items-center justify-between rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/15 hover:text-white"
       >
         {t(ui.actions.writeToMe)}

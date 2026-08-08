@@ -29,7 +29,8 @@ export default function InfoApp() {
         aria-hidden
         className="flex h-16 w-16 items-center justify-center rounded-[24%] text-[22px] font-bold text-white shadow-soft"
         style={{
-          background: "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
+          background:
+            "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
         }}
       >
         {initials}
