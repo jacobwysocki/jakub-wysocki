@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 
 type MagneticButtonProps = {
   href: string;

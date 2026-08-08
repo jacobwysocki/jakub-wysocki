@@ -36,7 +36,9 @@ export default function Extras() {
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal className="mx-auto max-w-prose text-center">
-          <p className="text-caption uppercase text-muted">{t(ui.sections.extras)}</p>
+          <p className="text-caption uppercase text-muted">
+            {t(ui.sections.extras)}
+          </p>
           <h2 className="mt-4 text-h2">{t(ui.sections.extrasTitle)}</h2>
         </Reveal>
 
@@ -53,7 +55,10 @@ export default function Extras() {
               </h3>
               <ul className="mt-3 flex flex-1 flex-col divide-y divide-line/60">
                 {education.certifications.map((cert) => (
-                  <li key={cert.code} className="flex flex-1 items-center gap-3 py-2.5 text-[14px]">
+                  <li
+                    key={cert.code}
+                    className="flex flex-1 items-center gap-3 py-2.5 text-[14px]"
+                  >
                     <span className="w-14 shrink-0 rounded-md bg-ink py-0.5 text-center text-[10px] font-bold tracking-wide text-white">
                       {cert.code}
                     </span>
@@ -74,7 +79,10 @@ export default function Extras() {
               </h3>
               <ul className="mt-3 flex flex-1 flex-col divide-y divide-line/60">
                 {education.languages.map((language, i) => (
-                  <li key={i} className="flex flex-1 flex-col justify-center py-3">
+                  <li
+                    key={i}
+                    className="flex flex-1 flex-col justify-center py-3"
+                  >
                     <p className="text-[15px] font-semibold capitalize text-ink">
                       {t(language.name)}
                     </p>
@@ -99,7 +107,10 @@ export default function Extras() {
                 {hobbies.map((hobby) => {
                   const Icon = HOBBY_ICONS[hobby.id] ?? Zap;
                   return (
-                    <li key={hobby.id} className="flex flex-1 items-center gap-3 py-2.5">
+                    <li
+                      key={hobby.id}
+                      className="flex flex-1 items-center gap-3 py-2.5"
+                    >
                       <Icon
                         size={17}
                         strokeWidth={1.7}

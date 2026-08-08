@@ -14,6 +14,8 @@
 
 html {
   /* Lenis przejmuje scroll; natywny smooth wyłączony, żeby nie dublować */
+  /* Framer useScroll mierzy targety względem tego scroll-containera. */
+  position: relative;
   scroll-behavior: auto;
 }
 

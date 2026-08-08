@@ -86,7 +86,10 @@ export const studioProjects: StudioProject[] = [
   {
     slug: "alumed",
     client: "Alumed",
-    tag: { pl: "UX design + web development", en: "UX design + web development" },
+    tag: {
+      pl: "UX design + web development",
+      en: "UX design + web development",
+    },
     description: {
       pl: "Kompleksowy UX design i strona premium dla kliniki medycyny estetycznej.",
       en: "End-to-end premium UX design and web development for an aesthetic medicine clinic.",
@@ -117,7 +120,10 @@ export const studioProjects: StudioProject[] = [
   {
     slug: "printly",
     client: "Printly",
-    tag: { pl: "UX/UI + architektura informacji", en: "UX/UI + information architecture" },
+    tag: {
+      pl: "UX/UI + architektura informacji",
+      en: "UX/UI + information architecture",
+    },
     description: {
       pl: "Kompletny projekt UX/UI i architektury informacji dla e-commerce'owej platformy druku.",
       en: "Complete UX/UI and information-architecture design for an e-commerce print platform.",
@@ -143,7 +149,10 @@ export const studioProjects: StudioProject[] = [
     gallery: [],
     gradient: "linear-gradient(135deg, #40180A 0%, #C2410C 100%)",
     link: "https://ultrastud.io/portfolio/printly",
-    linkLabel: { pl: "Zobacz case study na ultrastud.io", en: "See the case study on ultrastud.io" },
+    linkLabel: {
+      pl: "Zobacz case study na ultrastud.io",
+      en: "See the case study on ultrastud.io",
+    },
   },
 ];
 

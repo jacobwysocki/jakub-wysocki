@@ -161,8 +161,7 @@ const organizationNodes = [
     "@id": ID.squizzu,
     name: "Squizzu",
     url: contactInfo.squizzu,
-    description:
-      "Gamified IT learning and interview-preparation platform.",
+    description: "Gamified IT learning and interview-preparation platform.",
     foundingDate: "2024-07",
     founder: { "@id": ID.person },
   },

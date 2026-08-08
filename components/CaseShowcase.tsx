@@ -38,7 +38,7 @@ function Step({
   const opacity = useTransform(
     progress,
     [start, start + slice * 0.25, end - slice * 0.25, end],
-    [0, 1, 1, index === total - 1 ? 1 : 0]
+    [0, 1, 1, index === total - 1 ? 1 : 0],
   );
   const y = useTransform(progress, [start, start + slice * 0.25], [32, 0]);
 
@@ -48,7 +48,9 @@ function Step({
       className="absolute inset-x-0 bottom-0 px-8 pb-10 text-center md:px-16 md:pb-14"
     >
       <h3 className="text-h3 text-white">{title}</h3>
-      <p className="mx-auto mt-3 max-w-[46ch] text-body text-white/60">{text}</p>
+      <p className="mx-auto mt-3 max-w-[46ch] text-body text-white/60">
+        {text}
+      </p>
     </motion.div>
   );
 }
@@ -84,7 +86,7 @@ export default function CaseShowcase({ project }: { project: FeaturedCase }) {
   // Reduced motion / dotyk: zwykła sekcja bez pinningu
   if (reduced || coarse) {
     return (
-      <div className="mx-auto mt-16 max-w-content px-6 md:mt-24">
+      <div ref={ref} className="mx-auto mt-16 max-w-content px-6 md:mt-24">
         <CaseImage project={project} />
         <div className="mt-10 space-y-10 text-center">
           {steps.map((step) => (
@@ -189,7 +191,9 @@ export function CaseImage({
       role="img"
       aria-label={label}
       className={
-        fill ? "h-full w-full" : "aspect-[16/10] w-full rounded-card shadow-lift"
+        fill
+          ? "h-full w-full"
+          : "aspect-[16/10] w-full rounded-card shadow-lift"
       }
       style={{ background: project.gradient }}
     />

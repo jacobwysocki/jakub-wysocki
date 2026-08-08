@@ -4,7 +4,11 @@ import type { Transition, Variants } from "framer-motion";
 export const EASE_APPLE = [0.16, 1, 0.3, 1] as const;
 
 /** Sprężyna dla mikrointerakcji (hover / tap) */
-export const SPRING: Transition = { type: "spring", stiffness: 140, damping: 20 };
+export const SPRING: Transition = {
+  type: "spring",
+  stiffness: 140,
+  damping: 20,
+};
 
 /** Domyślna tranzycja reveal */
 export const REVEAL_TRANSITION: Transition = {

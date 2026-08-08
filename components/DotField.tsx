@@ -170,7 +170,8 @@ const MASK =
   "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 10%, rgba(0,0,0,0.46) 26%, rgba(0,0,0,0.42) 82%, rgba(0,0,0,0.6) 93%, rgba(0,0,0,0.85) 100%)";
 
 /** Elementy, na których kliknięcie należy do nich, nie do pola. */
-const INTERACTIVE = 'a,button,input,textarea,select,label,summary,[role="button"]';
+const INTERACTIVE =
+  'a,button,input,textarea,select,label,summary,[role="button"]';
 
 /**
  * Hash pozycji w siatce. Rozsypanie MUSI być funkcją współrzędnych, a nie
@@ -354,7 +355,7 @@ function paintAll(
   f: Field,
   sprites: HTMLCanvasElement[],
   w: number,
-  h: number
+  h: number,
 ) {
   g.clearRect(0, 0, w, h);
   for (let i = 0; i < f.n; i++) {
@@ -364,7 +365,7 @@ function paintAll(
       f.hx[i] - BASE_HALF,
       f.hy[i] - BASE_HALF,
       BASE_SIZE,
-      BASE_SIZE
+      BASE_SIZE,
     );
   }
 }
@@ -519,7 +520,7 @@ export default function DotField({
         Math.max(0, Math.ceil((cx - r - ox) / s)),
         Math.min(cols - 1, Math.floor((cx + r - ox) / s)),
         Math.max(0, Math.ceil((cy - r - oy) / s)),
-        Math.min(rows - 1, Math.floor((cy + r - oy) / s))
+        Math.min(rows - 1, Math.floor((cy + r - oy) / s)),
       );
     };
 
@@ -560,7 +561,7 @@ export default function DotField({
       const { cols } = field;
       const active = lens.k > 0.002;
 
-      for (let k = 0; k < field.count; ) {
+      for (let k = 0; k < field.count;) {
         const i = field.awake[k];
 
         let ax = (field.hx[i] - field.x[i]) * STIFF;
@@ -620,7 +621,7 @@ export default function DotField({
             field.hx[i] - BASE_HALF,
             field.hy[i] - BASE_HALF,
             BASE_SIZE,
-            BASE_SIZE
+            BASE_SIZE,
           );
           field.awake[k] = field.awake[--field.count];
         } else {
@@ -695,7 +696,7 @@ export default function DotField({
           field.x[i] - ERASE_M,
           field.y[i] - ERASE_M,
           field.x[i] + ERASE_M,
-          field.y[i] + ERASE_M
+          field.y[i] + ERASE_M,
         );
       }
 
@@ -733,9 +734,15 @@ export default function DotField({
           const half = size * 0.5;
           ctx.globalAlpha = Math.min(
             1,
-            TONES[field.tone[i]].alpha * (1 + fl * FLARE_ALPHA)
+            TONES[field.tone[i]].alpha * (1 + fl * FLARE_ALPHA),
           );
-          ctx.drawImage(full[field.tone[i]], field.x[i] - half, field.y[i] - half, size, size);
+          ctx.drawImage(
+            full[field.tone[i]],
+            field.x[i] - half,
+            field.y[i] - half,
+            size,
+            size,
+          );
           ctx.globalAlpha = 1;
         } else {
           ctx.drawImage(
@@ -743,7 +750,7 @@ export default function DotField({
             field.x[i] - BASE_HALF,
             field.y[i] - BASE_HALF,
             BASE_SIZE,
-            BASE_SIZE
+            BASE_SIZE,
           );
         }
       }
@@ -816,7 +823,8 @@ export default function DotField({
       }
       // Wracając w kadr, pętlę wznawiam tylko wtedy, gdy jest co dokończyć:
       // coś jeszcze lata, kursor stoi nad polem albo został niezamalowany brud.
-      if (f && (f.count > 0 || aim.k > 0.002 || painted.x1 > painted.x0)) start();
+      if (f && (f.count > 0 || aim.k > 0.002 || painted.x1 > painted.x0))
+        start();
     };
 
     const onScroll = () => {
@@ -884,7 +892,7 @@ export default function DotField({
         onScreen = entries[0]?.isIntersecting ?? true;
         sync();
       },
-      { rootMargin: "80px" }
+      { rootMargin: "80px" },
     );
     io.observe(canvas);
 

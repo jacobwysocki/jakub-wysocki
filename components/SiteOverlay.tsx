@@ -159,6 +159,6 @@ export default function SiteOverlay({
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }

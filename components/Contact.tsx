@@ -42,7 +42,9 @@ export default function Contact() {
           </MagneticButton>
           <p className="mt-5 text-[14px] text-white/50">
             <RevealPhone className="transition-colors hover:text-white" />
-            <span aria-hidden className="mx-2.5">·</span>
+            <span aria-hidden className="mx-2.5">
+              ·
+            </span>
             {contactInfo.location}
           </p>
         </Reveal>
@@ -54,7 +56,9 @@ export default function Contact() {
                 <motion.a
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  rel={
+                    href.startsWith("http") ? "noopener noreferrer" : undefined
+                  }
                   aria-label={label}
                   className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors duration-300 hover:border-white/40 hover:text-white"
                   whileHover={reduced ? undefined : { scale: 1.08 }}

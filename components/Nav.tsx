@@ -157,13 +157,18 @@ export default function Nav() {
                   />
                   <span className="hidden min-[360px]:block sm:hidden">OS</span>
                   <span className="hidden sm:block">
-                    <StableText l10n={ui.mode.toDesktop} className="whitespace-nowrap" />
+                    <StableText
+                      l10n={ui.mode.toDesktop}
+                      className="whitespace-nowrap"
+                    />
                   </span>
                 </button>
 
                 <button
                   type="button"
-                  aria-label={menuOpen ? t(ui.actions.close) : t(ui.desktop.mainMenu)}
+                  aria-label={
+                    menuOpen ? t(ui.actions.close) : t(ui.desktop.mainMenu)
+                  }
                   aria-expanded={menuOpen}
                   aria-controls={menuId}
                   onClick={() => setMenuOpen((open) => !open)}
@@ -175,12 +180,16 @@ export default function Nav() {
                   <motion.span
                     aria-hidden
                     className="block h-px w-4 bg-current"
-                    animate={menuOpen ? { y: 3.5, rotate: 45 } : { y: 0, rotate: 0 }}
+                    animate={
+                      menuOpen ? { y: 3.5, rotate: 45 } : { y: 0, rotate: 0 }
+                    }
                   />
                   <motion.span
                     aria-hidden
                     className="block h-px w-4 bg-current"
-                    animate={menuOpen ? { y: -3.5, rotate: -45 } : { y: 0, rotate: 0 }}
+                    animate={
+                      menuOpen ? { y: -3.5, rotate: -45 } : { y: 0, rotate: 0 }
+                    }
                   />
                 </button>
               </div>
@@ -265,7 +274,11 @@ export default function Nav() {
                     }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.55, delay: 0.4, ease: [...EASE_APPLE] }}
+                    transition={{
+                      duration: 0.55,
+                      delay: 0.4,
+                      ease: [...EASE_APPLE],
+                    }}
                   >
                     <span
                       aria-hidden

@@ -1,4 +1,5 @@
 import type { L10n } from "@/lib/lang-store";
+import { PUBLIC_DESKTOP_APP_COUNT } from "@/features/portfolio-navigation/app-catalog";
 
 /**
  * Projekty osobiste: rzeczy budowane poza płatnym briefem.
@@ -53,8 +54,8 @@ export const interactiveOs: PersonalProject = {
       en: "macOS-style dock with icon magnification: cursor distance physically drives the scale and lift of each icon.",
     },
     {
-      pl: "7 wbudowanych aplikacji, od live preview stron w iframe po experience timeline i kontakt, z sidebarami i zakładkami.",
-      en: "7 built-in apps, from live site previews in iframes to an experience timeline and contact, with sidebars and tabs.",
+      pl: `${PUBLIC_DESKTOP_APP_COUNT} wbudowanych aplikacji, od live preview stron w iframe po experience timeline i kontakt, z sidebarami i zakładkami.`,
+      en: `${PUBLIC_DESKTOP_APP_COUNT} built-in apps, from live site previews in iframes to an experience timeline and contact, with sidebars and tabs.`,
     },
     {
       pl: "Pasek menu z zegarem, menu kontekstowe z wyborem tapety oraz ekran startowy z progress barem: detale, które domykają wrażenie systemu.",

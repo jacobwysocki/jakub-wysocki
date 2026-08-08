@@ -10,7 +10,11 @@ type CountUpProps = {
 };
 
 /** Liczba animowana count-up przy wejściu w viewport (raz). */
-export default function CountUp({ value, suffix = "", duration = 1.4 }: CountUpProps) {
+export default function CountUp({
+  value,
+  suffix = "",
+  duration = 1.4,
+}: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const reduced = useReducedMotion();
@@ -38,7 +42,9 @@ export default function CountUp({ value, suffix = "", duration = 1.4 }: CountUpP
     <span ref={ref} className="whitespace-nowrap">
       {display}
       {suffix && (
-        <span className="ml-1 align-middle text-[0.5em] font-semibold">{suffix.trim()}</span>
+        <span className="ml-1 align-middle text-[0.5em] font-semibold">
+          {suffix.trim()}
+        </span>
       )}
     </span>
   );

@@ -14,7 +14,11 @@ type RevealProps = {
  * Reużywalny reveal na scrollu: fade + wynurzenie z dołu, raz na sesję.
  * Przy prefers-reduced-motion redukuje się do szybkiego fade bez ruchu.
  */
-export default function Reveal({ children, delay = 0, className }: RevealProps) {
+export default function Reveal({
+  children,
+  delay = 0,
+  className,
+}: RevealProps) {
   const reduced = useReducedMotion();
 
   return (
@@ -23,9 +27,7 @@ export default function Reveal({ children, delay = 0, className }: RevealProps) 
       initial={{ opacity: 0, y: reduced ? 0 : 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10% 0px" }}
-      transition={
-        reduced ? { duration: 0.2 } : { ...REVEAL_TRANSITION, delay }
-      }
+      transition={reduced ? { duration: 0.2 } : { ...REVEAL_TRANSITION, delay }}
     >
       {children}
     </motion.div>

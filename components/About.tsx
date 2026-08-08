@@ -153,8 +153,12 @@ export default function About() {
     >
       <div className="mx-auto max-w-content px-6">
         <Reveal>
-          <p className="text-caption uppercase text-muted">{t(ui.sections.about)}</p>
-          <h2 className="mt-4 max-w-[16ch] text-h2">{t(ui.sections.aboutTitle)}</h2>
+          <p className="text-caption uppercase text-muted">
+            {t(ui.sections.about)}
+          </p>
+          <h2 className="mt-4 max-w-[16ch] text-h2">
+            {t(ui.sections.aboutTitle)}
+          </h2>
         </Reveal>
 
         <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] md:gap-14">
@@ -165,7 +169,9 @@ export default function About() {
           <div className="md:pt-2">
             {plain ? (
               <Reveal>
-                <p className="max-w-prose text-h3 font-medium leading-snug">{paragraph}</p>
+                <p className="max-w-prose text-h3 font-medium leading-snug">
+                  {paragraph}
+                </p>
               </Reveal>
             ) : (
               <HighlightedParagraph key={paragraph} text={paragraph} />

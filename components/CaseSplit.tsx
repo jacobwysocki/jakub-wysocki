@@ -167,7 +167,9 @@ function ScrollSteps({ steps }: { steps: Step[] }) {
     if (!el) return;
     const measure = () => {
       centers.current = Array.from(el.children)
-        .filter((child): child is HTMLLIElement => child instanceof HTMLLIElement)
+        .filter(
+          (child): child is HTMLLIElement => child instanceof HTMLLIElement,
+        )
         .map((li) => li.offsetTop + 18);
       syncActive(scrollYProgress.get());
     };
@@ -272,7 +274,7 @@ function ProductWindow({
             still={still(
               stacked
                 ? "(max-width: 1288px) 100vw, 1192px"
-                : "(max-width: 1023px) 100vw, 680px"
+                : "(max-width: 1023px) 100vw, 680px",
             )}
             onOpen={() => setOpen(true)}
             triggerRef={triggerRef}
@@ -281,7 +283,7 @@ function ProductWindow({
           still(
             stacked
               ? "(max-width: 1288px) 100vw, 1192px"
-              : "(max-width: 1023px) 100vw, 680px"
+              : "(max-width: 1023px) 100vw, 680px",
           )
         )}
       </MacWindow>

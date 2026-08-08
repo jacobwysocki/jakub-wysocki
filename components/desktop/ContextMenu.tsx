@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import type { Point } from "@/lib/window-store";
@@ -23,11 +24,33 @@ export default function ContextMenu({
 }) {
   const { switchToSimple } = useDesktop();
   const t = useT();
-  const left = Math.min(point.x, (typeof window !== "undefined" ? window.innerWidth : 1200) - 240);
-  const top = Math.min(point.y, (typeof window !== "undefined" ? window.innerHeight : 800) - 260);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const left = Math.min(
+    point.x,
+    (typeof window !== "undefined" ? window.innerWidth : 1200) - 240,
+  );
+  const top = Math.min(
+    point.y,
+    (typeof window !== "undefined" ? window.innerHeight : 800) - 260,
+  );
 
   const item =
     "flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-[13px] font-medium text-ink transition-colors hover:bg-accent hover:text-white focus-visible:bg-accent focus-visible:text-white";
+
+  useEffect(() => {
+    const active = document.activeElement;
+    if (active instanceof HTMLElement) returnFocusRef.current = active;
+    menuRef.current
+      ?.querySelector<HTMLElement>('[role="menuitem"], [role="menuitemradio"]')
+      ?.focus({ preventScroll: true });
+    return () => {
+      window.requestAnimationFrame(() => {
+        const target = returnFocusRef.current;
+        if (target?.isConnected) target.focus({ preventScroll: true });
+      });
+    };
+  }, []);
 
   return (
     <>
@@ -41,8 +64,40 @@ export default function ContextMenu({
         aria-hidden
       />
       <motion.div
+        ref={menuRef}
         role="menu"
         aria-label="Menu pulpitu"
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
+            onClose();
+            return;
+          }
+          if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+            return;
+          }
+          const items = Array.from(
+            menuRef.current?.querySelectorAll<HTMLElement>(
+              '[role="menuitem"], [role="menuitemradio"]',
+            ) ?? [],
+          );
+          if (items.length === 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const currentIndex = items.indexOf(
+            document.activeElement as HTMLElement,
+          );
+          const nextIndex =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? items.length - 1
+                : event.key === "ArrowUp"
+                  ? (currentIndex - 1 + items.length) % items.length
+                  : (currentIndex + 1) % items.length;
+          items[nextIndex].focus({ preventScroll: true });
+        }}
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.15, ease: [...EASE_APPLE] }}

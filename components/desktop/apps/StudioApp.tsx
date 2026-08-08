@@ -4,15 +4,30 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, LoaderCircle } from "lucide-react";
-import { studioProjects, studioInfo, type StudioProject } from "@/data/projects";
+import {
+  studioProjects,
+  studioInfo,
+  type StudioProject,
+} from "@/data/projects";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
 import { UltraStudioLogo } from "@/components/logos";
+import { useDesktop } from "@/components/desktop/DesktopContext";
 import { useWindowChrome } from "@/components/desktop/Window";
 import { EASE_APPLE } from "@/lib/motion";
 import { ScaledFrame } from "./SiteApp";
 
-type Tab = "studio" | "printly" | "alumed" | "live";
+type Tab = "studio" | "live" | `project:${string}`;
+
+const projectTab = (slug: string): Tab => `project:${slug}`;
+
+function tabForProject(slug: string): Tab | undefined {
+  const project = studioProjects.find((candidate) => candidate.slug === slug);
+  if (!project) return undefined;
+  return project.slug === "ultrastudio-site"
+    ? "studio"
+    : projectTab(project.slug);
+}
 
 const fade = {
   initial: { opacity: 0, y: 10 },
@@ -23,7 +38,9 @@ const fade = {
 /** Zakładka "Studio" — czym jest pracownia + wyróżniki */
 function StudioTab({ onOpenLive }: { onOpenLive: () => void }) {
   const t = useT();
-  const studioProject = studioProjects.find((p) => p.slug === "ultrastudio-site");
+  const studioProject = studioProjects.find(
+    (p) => p.slug === "ultrastudio-site",
+  );
 
   return (
     <motion.div {...fade} className="px-8 py-7">
@@ -40,7 +57,9 @@ function StudioTab({ onOpenLive }: { onOpenLive: () => void }) {
       <div className="mt-7 space-y-6 border-t border-line/60 pt-6">
         {studioProject?.details.map((detail, i) => (
           <div key={i}>
-            <h2 className="text-[15px] font-semibold text-ink">{t(detail.title)}</h2>
+            <h2 className="text-[15px] font-semibold text-ink">
+              {t(detail.title)}
+            </h2>
             <p className="mt-1.5 max-w-[58ch] text-[14px] leading-relaxed text-muted">
               {t(detail.text)}
             </p>
@@ -120,7 +139,9 @@ function ProjectTab({ project }: { project: StudioProject }) {
         <div className="mt-7 space-y-6 border-t border-line/60 pt-6">
           {project.details.map((detail, i) => (
             <div key={i}>
-              <h2 className="text-[15px] font-semibold text-ink">{t(detail.title)}</h2>
+              <h2 className="text-[15px] font-semibold text-ink">
+                {t(detail.title)}
+              </h2>
               <p className="mt-1.5 max-w-[56ch] text-[14px] leading-relaxed text-muted">
                 {t(detail.text)}
               </p>
@@ -139,17 +160,40 @@ function ProjectTab({ project }: { project: StudioProject }) {
  */
 export default function StudioApp() {
   const t = useT();
-  const [tab, setTab] = useState<Tab>("studio");
+  const { selectionFor } = useDesktop();
   const [loaded, setLoaded] = useState(false);
   const { focused, interacting } = useWindowChrome();
+  const launchSelection = selectionFor("studio");
+  const launchTab =
+    launchSelection?.area === "studio" && launchSelection.projectSlug
+      ? tabForProject(launchSelection.projectSlug)
+      : undefined;
+  const [view, setView] = useState(() => ({
+    launchSelection,
+    tab: launchTab ?? ("studio" as Tab),
+  }));
 
-  const printly = studioProjects.find((p) => p.slug === "printly")!;
-  const alumed = studioProjects.find((p) => p.slug === "alumed")!;
+  if (launchTab && view.launchSelection !== launchSelection) {
+    setView({ launchSelection, tab: launchTab });
+  }
+
+  const tab = view.tab;
+  const selectTab = (nextTab: Tab) =>
+    setView({ launchSelection, tab: nextTab });
+  const selectedProject = tab.startsWith("project:")
+    ? studioProjects.find(
+        (project) => project.slug === tab.slice("project:".length),
+      )
+    : undefined;
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "studio", label: "Studio" },
-    { id: "printly", label: "Printly" },
-    { id: "alumed", label: "Alumed" },
+    ...studioProjects
+      .filter((project) => project.slug !== "ultrastudio-site")
+      .map((project) => ({
+        id: projectTab(project.slug),
+        label: project.client,
+      })),
     { id: "live", label: t(ui.desktop.liveTab) },
   ];
 
@@ -161,7 +205,7 @@ export default function StudioApp() {
             <button
               key={id}
               type="button"
-              onClick={() => setTab(id)}
+              onClick={() => selectTab(id)}
               aria-pressed={tab === id}
               className={`rounded-[7px] px-3 py-[3px] text-[12px] font-semibold transition-all duration-200 ${
                 tab === id
@@ -205,16 +249,22 @@ export default function StudioApp() {
               </p>
             </div>
           )}
-          {(!focused || interacting) && <div aria-hidden className="absolute inset-0" />}
+          {(!focused || interacting) && (
+            <div aria-hidden className="absolute inset-0" />
+          )}
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto">
           <AnimatePresence mode="wait">
             {tab === "studio" && (
-              <StudioTab key="studio" onOpenLive={() => setTab("live")} />
+              <StudioTab key="studio" onOpenLive={() => selectTab("live")} />
             )}
-            {tab === "printly" && <ProjectTab key="printly" project={printly} />}
-            {tab === "alumed" && <ProjectTab key="alumed" project={alumed} />}
+            {selectedProject && (
+              <ProjectTab
+                key={selectedProject.slug}
+                project={selectedProject}
+              />
+            )}
           </AnimatePresence>
         </div>
       )}

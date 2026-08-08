@@ -112,7 +112,10 @@ function RoleDetail({ role }: { role: Role }) {
 
       <ul className="mt-4 max-w-[60ch] space-y-2.5">
         {role.highlights.map((highlight, i) => (
-          <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink/75">
+          <li
+            key={i}
+            className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink/75"
+          >
             <span
               aria-hidden
               className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent"
@@ -160,12 +163,30 @@ function RoleDetail({ role }: { role: Role }) {
  */
 export default function ExperienceApp() {
   const t = useT();
+  const { selectionFor } = useDesktop();
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [selectedId, setSelectedId] = useState(ALL_ROLES[0].id);
   const [filters, setFilters] = useState<string[]>([]);
   const [narrow, setNarrow] = useState(false);
+  const launchSelection = selectionFor("experience");
+  const launchRoleId =
+    launchSelection?.area === "experience" &&
+    launchSelection.roleId &&
+    ALL_ROLES.some((role) => role.id === launchSelection.roleId)
+      ? launchSelection.roleId
+      : undefined;
+  const [view, setView] = useState(() => ({
+    launchSelection,
+    selectedId: launchRoleId ?? ALL_ROLES[0].id,
+  }));
 
+  if (launchRoleId && view.launchSelection !== launchSelection) {
+    setView({ launchSelection, selectedId: launchRoleId });
+  }
+
+  const selectedId = view.selectedId;
   const selected = ALL_ROLES.find((r) => r.id === selectedId) ?? ALL_ROLES[0];
+  const selectRole = (roleId: string) =>
+    setView({ launchSelection, selectedId: roleId });
 
   useEffect(() => {
     const el = rootRef.current;
@@ -181,7 +202,7 @@ export default function ExperienceApp() {
     setFilters((current) =>
       current.includes(filter)
         ? current.filter((f) => f !== filter)
-        : [...current, filter]
+        : [...current, filter],
     );
 
   const isDimmed = (role: Role) =>
@@ -192,7 +213,7 @@ export default function ExperienceApp() {
     e.preventDefault();
     const index = ALL_ROLES.findIndex((r) => r.id === selectedId);
     const next = e.key === "ArrowDown" ? index + 1 : index - 1;
-    if (next >= 0 && next < ALL_ROLES.length) setSelectedId(ALL_ROLES[next].id);
+    if (next >= 0 && next < ALL_ROLES.length) selectRole(ALL_ROLES[next].id);
   };
 
   if (narrow) {
@@ -204,7 +225,7 @@ export default function ExperienceApp() {
             <button
               key={role.id}
               type="button"
-              onClick={() => setSelectedId(role.id)}
+              onClick={() => selectRole(role.id)}
               className={`shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold transition-colors ${
                 selectedId === role.id
                   ? "bg-accent text-white"
@@ -244,7 +265,7 @@ export default function ExperienceApp() {
                 role={role}
                 selected={selectedId === role.id}
                 dimmed={isDimmed(role)}
-                onSelect={() => setSelectedId(role.id)}
+                onSelect={() => selectRole(role.id)}
               />
             ))}
           </div>
@@ -255,7 +276,7 @@ export default function ExperienceApp() {
             role={studioNote}
             selected={selectedId === studioNote.id}
             dimmed={isDimmed(studioNote)}
-            onSelect={() => setSelectedId(studioNote.id)}
+            onSelect={() => selectRole(studioNote.id)}
           />
         </div>
 

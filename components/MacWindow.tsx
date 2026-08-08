@@ -38,7 +38,10 @@ export const CONTENT_RATIO = 1560 / 819;
 
 /** Adres do pigułki: bez protokołu, bez www i bez końcowego slasha */
 export function displayUrl(url: string): string {
-  return url.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
+  return url
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/$/, "");
 }
 
 export default function MacWindow({
@@ -119,7 +122,9 @@ export default function MacWindow({
           w jego 40px i światła siadałyby o pół piksela wyżej. */}
       <div aria-hidden className="h-px w-full bg-ink/10" />
 
-      <div className={`relative w-full overflow-hidden bg-[#F5F5F7] ${CONTENT_ASPECT}`}>
+      <div
+        className={`relative w-full overflow-hidden bg-[#F5F5F7] ${CONTENT_ASPECT}`}
+      >
         {children}
       </div>
     </div>

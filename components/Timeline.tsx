@@ -78,7 +78,9 @@ function TimelineItem({ entry }: { entry: Role }) {
           {t(entry.role)}
           <span className="text-muted"> · {entry.company}</span>
         </h3>
-        <p className="mt-3 max-w-prose text-body text-muted">{t(entry.summary)}</p>
+        <p className="mt-3 max-w-prose text-body text-muted">
+          {t(entry.summary)}
+        </p>
         <ul className="mt-4 max-w-prose space-y-2 text-[15px] leading-relaxed text-ink/75">
           {entry.highlights.map((highlight, i) => (
             <li key={i} className="flex gap-2.5">
@@ -294,9 +296,14 @@ function PersonalProjects() {
   return (
     // scroll-mt-24 — zapas na przyklejony pasek przy natywnym skoku po
     // kotwicy (dotyk, gdzie Lenis nie działa)
-    <div id="personal-projects" className="mx-auto mt-16 max-w-4xl scroll-mt-24 md:mt-32">
+    <div
+      id="personal-projects"
+      className="mx-auto mt-16 max-w-4xl scroll-mt-24 md:mt-32"
+    >
       <Reveal className="text-center">
-        <h3 className="text-h3 text-ink">{t(ui.sections.personalProjectsTitle)}</h3>
+        <h3 className="text-h3 text-ink">
+          {t(ui.sections.personalProjectsTitle)}
+        </h3>
       </Reveal>
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[1.1fr_0.9fr]">
@@ -343,7 +350,9 @@ export default function Timeline() {
       const rect = el.getBoundingClientRect();
       const line = window.innerHeight * 0.75;
       // 8px / 16px — szyna ma top-2 i bottom-2 względem <ol>
-      fillHeight.set(Math.min(Math.max(line - rect.top - 8, 0), rect.height - 16));
+      fillHeight.set(
+        Math.min(Math.max(line - rect.top - 8, 0), rect.height - 16),
+      );
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
@@ -371,7 +380,9 @@ export default function Timeline() {
             {t(ui.sections.engineering)}
           </p>
           <h2 className="mt-4 text-h2">{t(ui.sections.engineeringTitle)}</h2>
-          <p className="mt-6 text-body text-muted">{t(ui.sections.engineeringSub)}</p>
+          <p className="mt-6 text-body text-muted">
+            {t(ui.sections.engineeringSub)}
+          </p>
         </Reveal>
 
         {/* Jedna szyna po lewej — kropki na linii, treść zawsze od lewej.
@@ -390,8 +401,9 @@ export default function Timeline() {
           <motion.div
             aria-hidden
             style={reduced ? undefined : { height: smoothHeight }}
-            className={`absolute left-[7px] top-2 -ml-px w-0.5 rounded-full bg-accent ${reduced ? "bottom-2" : ""
-              }`}
+            className={`absolute left-[7px] top-2 -ml-px w-0.5 rounded-full bg-accent ${
+              reduced ? "bottom-2" : ""
+            }`}
           />
           {entries.map((entry) => (
             <TimelineItem key={entry.id} entry={entry} />

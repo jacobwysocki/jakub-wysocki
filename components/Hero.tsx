@@ -51,7 +51,7 @@ function useLocalTime(lang: string) {
           hour: "2-digit",
           minute: "2-digit",
           timeZone: contactInfo.timezone,
-        }).format(new Date())
+        }).format(new Date()),
       );
     format();
     const id = setInterval(format, 30_000);
@@ -276,7 +276,10 @@ export default function Hero() {
           <Headline />
         </div>
 
-        <motion.p className="mt-5 max-w-prose text-body text-ink/70 md:mt-6" {...rise(0.24)}>
+        <motion.p
+          className="mt-5 max-w-prose text-body text-ink/70 md:mt-6"
+          {...rise(0.24)}
+        >
           <StableText l10n={site.hero.subline} />
         </motion.p>
 
@@ -390,7 +393,11 @@ export default function Hero() {
       >
         <motion.span
           className="block h-12 w-px bg-gradient-to-b from-ink/0 via-ink/35 to-ink/0"
-          animate={reduced ? undefined : { scaleY: [1, 0.6, 1], opacity: [0.8, 0.35, 0.8] }}
+          animate={
+            reduced
+              ? undefined
+              : { scaleY: [1, 0.6, 1], opacity: [0.8, 0.35, 0.8] }
+          }
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.div>

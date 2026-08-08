@@ -22,7 +22,10 @@ const COPY = {
   certifications: { pl: "Certyfikaty", en: "Certifications" },
   elsewhere: { pl: "W sieci", en: "Elsewhere on the web" },
   present: { pl: "obecnie", en: "present" },
-  otherLang: { pl: "Read this page in English", en: "Przeczytaj tę stronę po polsku" },
+  otherLang: {
+    pl: "Read this page in English",
+    en: "Przeczytaj tę stronę po polsku",
+  },
 } satisfies Record<string, { pl: string; en: string }>;
 
 export default function EntityHome({ lang }: { lang: Lang }) {

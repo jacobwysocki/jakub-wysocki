@@ -8,5 +8,8 @@ export const dynamic = "force-dynamic";
 export function GET() {
   const number = process.env.CONTACT_PHONE;
   if (!number) return new Response(null, { status: 404 });
-  return Response.json({ number, href: `tel:${number.replace(/[^+\d]/g, "")}` });
+  return Response.json({
+    number,
+    href: `tel:${number.replace(/[^+\d]/g, "")}`,
+  });
 }

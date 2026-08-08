@@ -21,11 +21,14 @@ const HOBBY_ICONS: Record<string, LucideIcon> = {
 export default function AboutApp() {
   const t = useT();
   const lang = useLang();
-  const today = new Date().toLocaleDateString(lang === "pl" ? "pl-PL" : "en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const today = new Date().toLocaleDateString(
+    lang === "pl" ? "pl-PL" : "en-GB",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    },
+  );
 
   return (
     <div className="px-8 py-7">
@@ -92,7 +95,9 @@ export default function AboutApp() {
                   <Icon size={13} strokeWidth={2} aria-hidden />
                 </span>
                 <p className="text-[12.5px] leading-snug text-muted">
-                  <span className="font-semibold text-ink">{t(hobby.title)}.</span>{" "}
+                  <span className="font-semibold text-ink">
+                    {t(hobby.title)}.
+                  </span>{" "}
                   {t(hobby.text)}
                 </p>
               </li>

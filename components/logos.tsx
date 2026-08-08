@@ -69,7 +69,10 @@ export function BehanceIcon({ size = 24, className = "" }: BrandIconProps) {
   );
 }
 
-export function StackOverflowIcon({ size = 24, className = "" }: BrandIconProps) {
+export function StackOverflowIcon({
+  size = 24,
+  className = "",
+}: BrandIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"

@@ -99,7 +99,9 @@ export default function ProjectModal({
           {/* Nagłówek z CTA po prawej — przycisk widać od razu, bez scrollowania */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="text-caption uppercase text-muted">{t(project.tag)}</p>
+              <p className="text-caption uppercase text-muted">
+                {t(project.tag)}
+              </p>
               <h2 className="mt-2 text-[28px] font-bold tracking-tight text-ink">
                 {project.client}
               </h2>
@@ -149,7 +151,10 @@ export default function ProjectModal({
           {project.gallery.length > 0 && (
             <div className="mt-8 grid grid-cols-2 gap-3">
               {project.gallery.map((src) => (
-                <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                <div
+                  key={src}
+                  className="relative aspect-[4/3] overflow-hidden rounded-xl"
+                >
                   <Image
                     src={src}
                     alt={project.client}

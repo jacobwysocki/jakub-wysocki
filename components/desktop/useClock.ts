@@ -8,10 +8,13 @@ export function useClock(): Date {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
-    const timeout = setTimeout(() => {
-      setNow(new Date());
-      interval = setInterval(() => setNow(new Date()), 60_000);
-    }, 60_000 - (Date.now() % 60_000));
+    const timeout = setTimeout(
+      () => {
+        setNow(new Date());
+        interval = setInterval(() => setNow(new Date()), 60_000);
+      },
+      60_000 - (Date.now() % 60_000),
+    );
     return () => {
       clearTimeout(timeout);
       if (interval) clearInterval(interval);
@@ -21,7 +24,10 @@ export function useClock(): Date {
   return now;
 }
 
-export function formatMenuBarClock(now: Date, lang: "pl" | "en" = "pl"): string {
+export function formatMenuBarClock(
+  now: Date,
+  lang: "pl" | "en" = "pl",
+): string {
   const locale = lang === "pl" ? "pl-PL" : "en-GB";
   const date = now.toLocaleDateString(locale, {
     weekday: "short",

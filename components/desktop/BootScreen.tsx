@@ -38,7 +38,10 @@ export default function BootScreen() {
       {visible && (
         <motion.div
           aria-hidden
-          exit={{ opacity: 0, transition: { duration: 0.5, ease: [...EASE_APPLE] } }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.5, ease: [...EASE_APPLE] },
+          }}
           className="absolute inset-0 z-[100] flex flex-col items-center justify-center gap-10 bg-black"
         >
           <span className="text-3xl font-bold tracking-tight text-white">

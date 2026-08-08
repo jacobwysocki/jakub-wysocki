@@ -11,7 +11,10 @@ export const education = {
       en: "First Class Honours",
     },
     school: "Northumbria University",
-    place: { pl: "Newcastle, Wielka Brytania", en: "Newcastle, United Kingdom" },
+    place: {
+      pl: "Newcastle, Wielka Brytania",
+      en: "Newcastle, United Kingdom",
+    },
     period: { pl: "2019-2023", en: "2019-2023" },
     projectsLabel: { pl: "Wybrane projekty", en: "Key projects" },
     keyProjects: [

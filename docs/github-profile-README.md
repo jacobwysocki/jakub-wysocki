@@ -1,6 +1,8 @@
 # Hi, I'm Jakub Wysocki 👋
 
-**Software Engineer & UX/UI Designer** — I build *brands and software*, from backend architecture to the last pixel.
+> This is the maintained copy source for the separate `jacobwysocki/jacobwysocki` profile repository, not this project's README. Before publishing it, reconcile identity, role, project, education, and metric claims with the canonical exports under `data/`; changes here do not propagate automatically.
+
+**Software Engineer & UX/UI Designer** — I build _brands and software_, from backend architecture to the last pixel.
 
 📍 Kraków, PL · Co-founder of two ventures · shipped across Poland, the UK and Mexico 🇵🇱 🇬🇧 🇲🇽
 
@@ -14,8 +16,8 @@
 
 ### 🚀 What I'm building now
 
-- **[Squizzu](https://www.squizzu.com)** — *Co-Founder & Full-Stack Engineer.* A gamified IT learning and interview-preparation platform. Built the architecture (.NET 8 / Aspire, Next.js + React 19, CosmosDB on Azure), integrated **GPT-4o** product agents with self-healing JSON validation, and designed **100+ screens** from scratch.
-- **[Ultra Studio](https://ultrastud.io)** — *Co-Founder, Design & Development.* A creative studio for high-end branding, web design and custom development.
+- **[Squizzu](https://www.squizzu.com)** — _Co-Founder & Full-Stack Engineer._ A gamified IT learning and interview-preparation platform. Built the architecture (.NET 8 / Aspire, Next.js + React 19, CosmosDB on Azure), integrated **GPT-4o** product agents with self-healing JSON validation, and designed **100+ screens** from scratch.
+- **[Ultra Studio](https://ultrastud.io)** — _Co-Founder, Design & Development._ A creative studio for high-end branding, web design and custom development.
 
 ### 🛠 Previously
 
@@ -31,7 +33,7 @@ Dissertation → **[AERO-PATH](https://github.com/jacobwysocki/drone-path-optimi
 
 1. **K-Means** clusters deliveries so each drone gets a coherent local workload.
 2. **Ant Colony Optimization** solves each drone's visit order as a TSP — 15 ants, 50 iterations, roulette-wheel selection with pheromone evaporation.
-3. **Cooperative A\*** searches a *(row, col, altitude, time)* state space against a shared reservation table, checking both vertex and edge reservations so two drones can't swap through each other. Climbing costs 2×, descending 0.5×, so a drone flies *over* a building only when that beats waiting.
+3. **Cooperative A\*** searches a _(row, col, altitude, time)_ state space against a shared reservation table, checking both vertex and edge reservations so two drones can't swap through each other. Climbing costs 2×, descending 0.5×, so a drone flies _over_ a building only when that beats waiting.
 
 A\* and Dijkstra are in there as a baseline: shorter individual paths, and the drones crash into each other. That contrast is the whole argument for the MAPF variant.
 

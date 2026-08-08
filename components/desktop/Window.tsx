@@ -48,7 +48,10 @@ const clamp = (v: number, min: number, max: number) =>
  * (iframe połykałby pointermove). Domyślna wartość obsługuje kontekst
  * bez okna (mobilne sheety).
  */
-const WindowChromeContext = createContext<{ focused: boolean; interacting: boolean }>({
+const WindowChromeContext = createContext<{
+  focused: boolean;
+  interacting: boolean;
+}>({
   focused: true,
   interacting: false,
 });
@@ -71,7 +74,8 @@ function TrafficLights({
   const t = useT();
   const dot =
     "flex h-3 w-3 items-center justify-center rounded-full text-black/55 transition-colors duration-200";
-  const glyph = "h-2 w-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100";
+  const glyph =
+    "h-2 w-2 opacity-0 transition-opacity duration-150 group-hover:opacity-100";
   return (
     <div
       className="group absolute left-4 top-1/2 flex -translate-y-1/2 items-center gap-2"
@@ -85,7 +89,12 @@ function TrafficLights({
         className={`${dot} ${focused ? "bg-[#FF5F57]" : "bg-black/20 group-hover:bg-[#FF5F57]"}`}
       >
         <svg viewBox="0 0 8 8" className={glyph} aria-hidden>
-          <path d="M1.7 1.7l4.6 4.6M6.3 1.7L1.7 6.3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          <path
+            d="M1.7 1.7l4.6 4.6M6.3 1.7L1.7 6.3"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
       <button
@@ -95,7 +104,12 @@ function TrafficLights({
         className={`${dot} ${focused ? "bg-[#FEBC2E]" : "bg-black/20 group-hover:bg-[#FEBC2E]"}`}
       >
         <svg viewBox="0 0 8 8" className={glyph} aria-hidden>
-          <path d="M1.5 4h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          <path
+            d="M1.5 4h5"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
       <button
@@ -105,7 +119,10 @@ function TrafficLights({
         className={`${dot} ${focused ? "bg-[#28C840]" : "bg-black/20 group-hover:bg-[#28C840]"}`}
       >
         <svg viewBox="0 0 8 8" className={glyph} aria-hidden>
-          <path d="M2 4.6V2h2.6L2 4.6zM6 3.4V6H3.4L6 3.4z" fill="currentColor" />
+          <path
+            d="M2 4.6V2h2.6L2 4.6zM6 3.4V6H3.4L6 3.4z"
+            fill="currentColor"
+          />
         </svg>
       </button>
     </div>
@@ -128,10 +145,12 @@ function WindowFrame({
   const minimize = useWindowStore((s) => s.minimize);
   const toggleMaximize = useWindowStore((s) => s.toggleMaximize);
   const commitRect = useWindowStore((s) => s.commitRect);
+  const reconcileArea = useWindowStore((s) => s.reconcileArea);
 
   const reduced = useReducedMotion();
   const dragControls = useDragControls();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
   const [interacting, setInteracting] = useState(false);
 
   const x = useMotionValue(win.rect.x);
@@ -141,8 +160,94 @@ function WindowFrame({
 
   // Fokus klawiaturowy na świeżo otwartym oknie
   useEffect(() => {
+    const active = document.activeElement;
+    if (
+      active instanceof HTMLElement &&
+      (active.dataset.appLauncher === win.id ||
+        active.dataset.windowReturn === "true")
+    ) {
+      returnFocusRef.current = active;
+    }
     sectionRef.current?.focus({ preventScroll: true });
-  }, []);
+    return () => {
+      window.requestAnimationFrame(() => {
+        const { focusedId } = useWindowStore.getState();
+        const nextWindow = Array.from(
+          document.querySelectorAll<HTMLElement>("[data-window-id]"),
+        ).find(
+          (element) =>
+            element.dataset.windowId === focusedId &&
+            element.getAttribute("aria-hidden") !== "true",
+        );
+        if (nextWindow) {
+          nextWindow.focus({ preventScroll: true });
+          return;
+        }
+        const launcher = returnFocusRef.current;
+        if (launcher?.isConnected) launcher.focus({ preventScroll: true });
+      });
+    };
+  }, [win.id]);
+
+  useEffect(() => {
+    if (focused && !win.minimized) {
+      const active = document.activeElement;
+      if (
+        active instanceof HTMLElement &&
+        (active.dataset.appLauncher === win.id ||
+          active.dataset.windowReturn === "true")
+      ) {
+        returnFocusRef.current = active;
+      }
+      sectionRef.current?.focus({ preventScroll: true });
+    }
+  }, [focused, win.id, win.minimized]);
+
+  useEffect(() => {
+    if (!win.minimized) return;
+    const frame = window.requestAnimationFrame(() => {
+      const { focusedId } = useWindowStore.getState();
+      const nextWindow = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-window-id]"),
+      ).find(
+        (element) =>
+          element.dataset.windowId === focusedId &&
+          element.getAttribute("aria-hidden") !== "true",
+      );
+      if (nextWindow) {
+        nextWindow.focus({ preventScroll: true });
+        return;
+      }
+      const launcher = returnFocusRef.current;
+      if (launcher?.isConnected) launcher.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [win.minimized]);
+
+  useEffect(() => {
+    const area = areaRef.current;
+    if (!area || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      if (win.maximized) {
+        x.set(0);
+        y.set(0);
+        w.set(area.clientWidth);
+        h.set(area.clientHeight);
+      }
+      reconcileArea({ w: area.clientWidth, h: area.clientHeight });
+    });
+    observer.observe(area);
+    return () => observer.disconnect();
+  }, [areaRef, h, reconcileArea, w, win.maximized, x, y]);
+
+  useEffect(() => {
+    if (interacting || win.maximized) return;
+    x.set(win.rect.x);
+    y.set(win.rect.y);
+    w.set(win.rect.w);
+    h.set(win.rect.h);
+  }, [h, interacting, w, win.maximized, win.rect, x, y]);
 
   // Maksymalizacja / przywrócenie — animacja motion values do celu
   const prevMax = useRef(win.maximized);
@@ -151,7 +256,10 @@ function WindowFrame({
     prevMax.current = win.maximized;
     const area = areaRef.current;
     if (!area) return;
-    const opts = { duration: reduced ? 0 : 0.4, ease: [...EASE_APPLE] } as const;
+    const opts = {
+      duration: reduced ? 0 : 0.4,
+      ease: [...EASE_APPLE],
+    } as const;
     if (win.maximized) {
       animate(x, 0, opts);
       animate(y, 0, opts);
@@ -168,8 +276,16 @@ function WindowFrame({
   // Punkt "wyrastania" okna przy otwarciu (np. ikona docka) — zamrożony na mount
   const openOrigin = useMemo(() => {
     if (!win.origin) return "50% 55%";
-    const ox = clamp(((win.origin.x - win.rect.x) / win.rect.w) * 100, -60, 160);
-    const oy = clamp(((win.origin.y - win.rect.y) / win.rect.h) * 100, -60, 160);
+    const ox = clamp(
+      ((win.origin.x - win.rect.x) / win.rect.w) * 100,
+      -60,
+      160,
+    );
+    const oy = clamp(
+      ((win.origin.y - win.rect.y) / win.rect.h) * 100,
+      -60,
+      160,
+    );
     return `${ox}% ${oy}%`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -225,15 +341,17 @@ function WindowFrame({
 
   const chrome = useMemo(
     () => ({ focused, interacting }),
-    [focused, interacting]
+    [focused, interacting],
   );
 
   return (
     <motion.section
       ref={sectionRef}
+      data-window-id={win.id}
       role="dialog"
       aria-label={title}
       aria-hidden={win.minimized || undefined}
+      inert={win.minimized ? true : undefined}
       tabIndex={-1}
       drag={!win.maximized}
       dragControls={dragControls}
@@ -292,8 +410,8 @@ function WindowFrame({
             <AppTile appId={app.id} className="h-5 w-5 shrink-0 shadow-sm" />
             <span
               className={`truncate text-[12.5px] font-semibold ${
-              focused ? "text-ink/80" : "text-ink/40"
-            }`}
+                focused ? "text-ink/80" : "text-ink/40"
+              }`}
             >
               {title}
             </span>

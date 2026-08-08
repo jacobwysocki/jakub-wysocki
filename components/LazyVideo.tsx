@@ -34,17 +34,14 @@ export default function LazyVideo({
         }
       },
       // Startujemy ładowanie z wyprzedzeniem, zanim wideo wjedzie w kadr
-      { rootMargin: "300px 0px" }
+      { rootMargin: "300px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`overflow-hidden bg-white/[0.04] ${className}`}
-    >
+    <div ref={ref} className={`overflow-hidden bg-white/[0.04] ${className}`}>
       {show && (
         <video
           src={src}

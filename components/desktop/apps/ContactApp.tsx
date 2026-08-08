@@ -127,7 +127,11 @@ export default function ContactApp() {
                 {row.detail}
               </span>
             </span>
-            <ArrowUpRight size={16} className="shrink-0 text-muted" aria-hidden />
+            <ArrowUpRight
+              size={16}
+              className="shrink-0 text-muted"
+              aria-hidden
+            />
           </motion.a>
         ))}
       </div>

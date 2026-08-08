@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BatteryFull, ChevronDown, Search, Wifi } from "lucide-react";
+import { BatteryFull, ChevronDown, Wifi } from "lucide-react";
 import { site, contactInfo } from "@/data/site";
+import { Spotlight } from "@/features/spotlight";
 import { ui } from "@/data/ui";
 import { useWindowStore } from "@/lib/window-store";
 import { useLang, useSetLang, useT } from "@/lib/lang-store";
@@ -12,7 +13,13 @@ import { useDesktop } from "./DesktopContext";
 import { getApp } from "./registry";
 import { formatMenuBarClock, useClock } from "./useClock";
 
-function LogoMenu({ onClose }: { onClose: () => void }) {
+function LogoMenu({
+  onClose,
+  onAction,
+}: {
+  onClose: () => void;
+  onAction: () => void;
+}) {
   const { openApp, switchToSimple } = useDesktop();
   const t = useT();
   const ref = useRef<HTMLDivElement | null>(null);
@@ -33,32 +40,75 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
     "flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-[13px] font-medium text-ink transition-colors hover:bg-accent hover:text-white focus-visible:bg-accent focus-visible:text-white";
 
   const run = (fn: () => void) => () => {
-    onClose();
+    onAction();
     fn();
   };
 
   return (
     <>
-      <div className="fixed inset-0 cursor-default" onClick={onClose} aria-hidden />
+      <div
+        className="fixed inset-0 cursor-default"
+        onClick={onClose}
+        aria-hidden
+      />
       <motion.div
         ref={ref}
         role="menu"
         aria-label={t(ui.desktop.mainMenu)}
+        onKeyDown={(event) => {
+          if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+            return;
+          }
+          const items = Array.from(
+            ref.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ??
+              [],
+          );
+          if (items.length === 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const currentIndex = items.indexOf(
+            document.activeElement as HTMLElement,
+          );
+          const nextIndex =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? items.length - 1
+                : event.key === "ArrowUp"
+                  ? (currentIndex - 1 + items.length) % items.length
+                  : (currentIndex + 1) % items.length;
+          items[nextIndex].focus({ preventScroll: true });
+        }}
         initial={{ opacity: 0, y: -4, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -4, scale: 0.98 }}
         transition={{ duration: 0.18, ease: [...EASE_APPLE] }}
         className="absolute left-0 top-[46px] w-72 origin-top-left rounded-[20px] border border-white/40 bg-[#f5f5f7]/90 p-2 shadow-[0_24px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
       >
-        <button type="button" role="menuitem" className={item} onClick={run(() => openApp("info"))}>
+        <button
+          type="button"
+          role="menuitem"
+          className={item}
+          onClick={run(() => openApp("info"))}
+        >
           {t(ui.desktop.aboutPortfolio)}
         </button>
-        <button type="button" role="menuitem" className={item} onClick={run(() => openApp("studio"))}>
+        <button
+          type="button"
+          role="menuitem"
+          className={item}
+          onClick={run(() => openApp("studio"))}
+        >
           {site.studio}
         </button>
         <div aria-hidden className="mx-2 my-1.5 h-px bg-black/10" />
         {/* Realne kanały kontaktu — jak menu systemowe z linkami */}
-        <a role="menuitem" className={item} href={`mailto:${contactInfo.email}`} onClick={onClose}>
+        <a
+          role="menuitem"
+          className={item}
+          href={`mailto:${contactInfo.email}`}
+          onClick={onAction}
+        >
           {t(ui.actions.writeToMe)}
           <span className="text-[11px] text-muted">{contactInfo.email}</span>
         </a>
@@ -68,7 +118,7 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
           href={contactInfo.linkedin}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={onClose}
+          onClick={onAction}
         >
           LinkedIn
         </a>
@@ -78,7 +128,7 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
           href={contactInfo.github}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={onClose}
+          onClick={onAction}
         >
           GitHub
         </a>
@@ -88,7 +138,7 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
           href={contactInfo.behance}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={onClose}
+          onClick={onAction}
         >
           Behance
         </a>
@@ -98,12 +148,17 @@ function LogoMenu({ onClose }: { onClose: () => void }) {
           href={contactInfo.stackoverflow}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={onClose}
+          onClick={onAction}
         >
           Stack Overflow
         </a>
         <div aria-hidden className="mx-2 my-1.5 h-px bg-black/10" />
-        <button type="button" role="menuitem" className={item} onClick={run(switchToSimple)}>
+        <button
+          type="button"
+          role="menuitem"
+          className={item}
+          onClick={run(switchToSimple)}
+        >
           {t(ui.mode.switchToSimple)}
         </button>
       </motion.div>
@@ -130,12 +185,23 @@ function MenuLangSwitch() {
 /** Górny pasek menu: logo z menu, nazwa aktywnej aplikacji, status + zegar. */
 export default function MenuBar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const now = useClock();
   const t = useT();
   const lang = useLang();
   const activeApp = useWindowStore((s) =>
-    s.focusedId ? getApp(s.focusedId) : null
+    s.focusedId ? getApp(s.focusedId) : null,
   );
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    window.requestAnimationFrame(() => {
+      triggerRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
+  const prepareMenuAction = useCallback(() => {
+    setMenuOpen(false);
+    triggerRef.current?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <header className="absolute inset-x-4 top-3 z-[80] flex h-11 items-center justify-between rounded-2xl border border-white/20 bg-black/25 px-2.5 text-[13px] text-white shadow-[0_14px_45px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
@@ -143,6 +209,8 @@ export default function MenuBar() {
         <div className="relative">
           {/* Nazwa + chevron zamiast samego monogramu — wyraźna zachęta do kliknięcia */}
           <button
+            ref={triggerRef}
+            data-window-return="true"
             type="button"
             aria-haspopup="menu"
             aria-expanded={menuOpen}
@@ -162,7 +230,9 @@ export default function MenuBar() {
             />
           </button>
           <AnimatePresence>
-            {menuOpen && <LogoMenu onClose={() => setMenuOpen(false)} />}
+            {menuOpen && (
+              <LogoMenu onClose={closeMenu} onAction={prepareMenuAction} />
+            )}
           </AnimatePresence>
         </div>
         <span className="max-w-52 truncate rounded-lg border border-white/10 bg-white/[0.07] px-2.5 py-1 text-[12px] font-semibold text-white/80">
@@ -172,9 +242,19 @@ export default function MenuBar() {
 
       <div className="flex items-center gap-2.5 pr-1">
         <MenuLangSwitch />
-        <Wifi size={15} strokeWidth={1.8} aria-hidden className="hidden opacity-80 lg:block" />
-        <Search size={13.5} strokeWidth={2} aria-hidden className="hidden opacity-80 lg:block" />
-        <BatteryFull size={19} strokeWidth={1.6} aria-hidden className="hidden opacity-80 lg:block" />
+        <Wifi
+          size={15}
+          strokeWidth={1.8}
+          aria-hidden
+          className="hidden opacity-80 lg:block"
+        />
+        <Spotlight variant="desktop" />
+        <BatteryFull
+          size={19}
+          strokeWidth={1.6}
+          aria-hidden
+          className="hidden opacity-80 lg:block"
+        />
         <time
           dateTime={now.toISOString()}
           className="rounded-lg bg-white/[0.08] px-2 py-1 text-[11.5px] font-medium tabular-nums opacity-95"

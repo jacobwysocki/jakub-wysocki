@@ -14,6 +14,7 @@ import type { ShowcaseSite } from "@/data/showcase";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
 import { useMediaQuery } from "@/lib/useMediaQuery";
+import { useDesktop } from "@/components/desktop/DesktopContext";
 import { useWindowChrome } from "@/components/desktop/Window";
 import { SITE_GLYPHS } from "@/components/desktop/siteGlyphs";
 
@@ -119,7 +120,13 @@ function TechChips({ tech }: { tech: string[] }) {
 }
 
 /** Zakładka Przegląd: czym jest projekt, jak powstał, rola, technologie. */
-function Overview({ site, onOpenLive }: { site: ShowcaseSite; onOpenLive?: () => void }) {
+function Overview({
+  site,
+  onOpenLive,
+}: {
+  site: ShowcaseSite;
+  onOpenLive?: () => void;
+}) {
   const t = useT();
 
   const block = (heading: string, text: string) => (
@@ -138,7 +145,9 @@ function Overview({ site, onOpenLive }: { site: ShowcaseSite; onOpenLive?: () =>
       <div className="flex items-center gap-4">
         <SiteTile site={site} />
         <div className="min-w-0">
-          <h1 className="text-[22px] font-bold tracking-tight text-ink">{site.name}</h1>
+          <h1 className="text-[22px] font-bold tracking-tight text-ink">
+            {site.name}
+          </h1>
           <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted">
             {t(site.tag)}
           </p>
@@ -199,13 +208,32 @@ function Overview({ site, onOpenLive }: { site: ShowcaseSite; onOpenLive?: () =>
  * (mini-przeglądarka ze skalowanym iframe'em w układzie desktopowym).
  */
 export default function SiteApp({ site }: { site: ShowcaseSite }) {
-  const [tab, setTab] = useState<"overview" | "live">("overview");
-  const [loaded, setLoaded] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
+  const { selectionFor } = useDesktop();
   const { focused, interacting } = useWindowChrome();
   const t = useT();
   // Na dotyku/małym ekranie (sheet) nie osadzamy — przegląd z linkiem
   const isSmall = useMediaQuery("(max-width: 767px)");
+  const launchSelection = selectionFor(`site:${site.slug}`);
+  const launchView =
+    launchSelection?.area === "showcase" &&
+    launchSelection.slug === site.slug &&
+    launchSelection.view
+      ? launchSelection.view
+      : undefined;
+  const [view, setView] = useState(() => ({
+    launchSelection,
+    tab: launchView ?? ("overview" as "overview" | "live"),
+  }));
+  const [loaded, setLoaded] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  if (launchView && view.launchSelection !== launchSelection) {
+    setView({ launchSelection, tab: launchView });
+  }
+
+  const tab = view.tab;
+  const selectTab = (nextTab: "overview" | "live") =>
+    setView({ launchSelection, tab: nextTab });
 
   if (isSmall || !site.embed) {
     return <Overview site={site} />;
@@ -217,7 +245,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
   const segment = (value: "overview" | "live", label: string) => (
     <button
       type="button"
-      onClick={() => setTab(value)}
+      onClick={() => selectTab(value)}
       aria-pressed={tab === value}
       className={`rounded-[7px] px-3 py-[3px] text-[12px] font-semibold transition-all duration-200 ${
         tab === value
@@ -240,10 +268,16 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
 
         {tab === "live" ? (
           <>
-            <span aria-hidden className={`${toolbarBtn} !cursor-default opacity-40`}>
+            <span
+              aria-hidden
+              className={`${toolbarBtn} !cursor-default opacity-40`}
+            >
               <ChevronLeft size={16} strokeWidth={2} />
             </span>
-            <span aria-hidden className={`${toolbarBtn} !cursor-default opacity-40`}>
+            <span
+              aria-hidden
+              className={`${toolbarBtn} !cursor-default opacity-40`}
+            >
               <ChevronRight size={16} strokeWidth={2} />
             </span>
             <button
@@ -294,7 +328,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
 
       {tab === "overview" ? (
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <Overview site={site} onOpenLive={() => setTab("live")} />
+          <Overview site={site} onOpenLive={() => selectTab("live")} />
         </div>
       ) : (
         // min-h-0: iframe (wyższy layoutowo od kontenera przez skalowanie)
@@ -322,7 +356,9 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
            *   w cross-origin iframe;
            * - drag/resize → iframe nie połyka pointermove.
            */}
-          {(!focused || interacting) && <div aria-hidden className="absolute inset-0" />}
+          {(!focused || interacting) && (
+            <div aria-hidden className="absolute inset-0" />
+          )}
         </div>
       )}
     </div>

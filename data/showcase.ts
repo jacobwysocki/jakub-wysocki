@@ -70,7 +70,10 @@ export const showcase: ShowcaseSite[] = [
     name: "Drone Simulation",
     url: contactInfo.droneLive,
     repo: contactInfo.droneRepo,
-    tag: { pl: "Symulacja 3D · optymalizacja flot", en: "3D simulation · fleet optimization" },
+    tag: {
+      pl: "Symulacja 3D · optymalizacja flot",
+      en: "3D simulation · fleet optimization",
+    },
     description: {
       pl: "Interaktywna symulacja 3D planowania tras flot dronów dostawczych, od pracy dyplomowej do pełnego przepisania z kooperacyjnym wyszukiwaniem ścieżek.",
       en: "An interactive 3D simulation of delivery-drone fleet routing, grown from my dissertation into a full rewrite with cooperative pathfinding.",
