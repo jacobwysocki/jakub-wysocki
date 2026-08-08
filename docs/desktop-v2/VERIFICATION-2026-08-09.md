@@ -25,12 +25,13 @@ The original Desktop v2 work is grouped into six reviewable commits and is prese
 | `npm run typecheck`                   | Pass, including `next typegen`                                                                                       |
 | `next build --webpack`                | Pass on the current Node 24.17.0 runner; all application and API routes compiled; supported-runtime rerun pending    |
 | `npm run audit:prod`                  | Pass: zero production vulnerabilities reported by npm                                                                |
+| Vercel Preview                        | Pass for commit `15e85dc`; the default Turbopack deployment completed successfully                                   |
 | `git diff --check`                    | Pass                                                                                                                 |
 | Focused working-tree secret scan      | No private-key, common cloud-key, Groq-key, OpenAI-key, or Anthropic-key pattern found                               |
 | Git-history secret-pattern scan       | No matching committed history found                                                                                  |
 | Generated client-bundle boundary scan | No server model port, Groq endpoint/model/environment marker, hidden phone variable, or testing Adapter marker found |
 
-The exact default `npm run build` path uses Turbopack. Its final widget-branch rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. The byte-identical pre-widget source trees at the merged feature commit and `main` both completed Vercel builds; the fresh widget Preview must still run the exact Turbopack command on an unrestricted supported Node runtime. This report does not relabel the local runner limitation as a passing widget-branch Turbopack result.
+The exact default `npm run build` path uses Turbopack. Its final local widget-branch rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. Vercel then completed the fresh widget Preview for commit `15e85dc` through the repository's default Turbopack build on its unrestricted runner. The deployment is protected by Vercel sign-in, so authenticated browser and live-provider smoke tests remain separate gates.
 
 The compiled route set includes `/`, `/about`, `/o-mnie`, `/api/ask-jakub`, `/api/phone`, icons, Open Graph image, robots, and sitemap routes.
 
@@ -102,7 +103,7 @@ The following remain external release gates:
 - runtime reduced-motion switching and animation visual quality;
 - fresh screenshots of the new Squizzu Studio tab and Ask states;
 - Lighthouse/Core Web Vitals and the existing public-media budget;
-- preview/staging smoke tests, including the exact Turbopack build command.
+- authenticated Preview UI and live-provider smoke tests; the exact Turbopack build itself has passed on the fresh widget Preview.
 
 ## Gates that still block an unqualified model-enabled release
 
