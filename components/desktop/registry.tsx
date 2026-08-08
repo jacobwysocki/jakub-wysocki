@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { AtSign, Briefcase, GraduationCap, Info, NotebookText } from "lucide-react";
+import { AtSign, Briefcase, GraduationCap, Info, NotebookText, Radar } from "lucide-react";
 import type { L10n } from "@/lib/lang-store";
 import { showcase, type ShowcaseSite } from "@/data/showcase";
 import { UltraStudioLogo } from "@/components/logos";
@@ -13,6 +13,7 @@ import EducationApp from "./apps/EducationApp";
 import ContactApp from "./apps/ContactApp";
 import InfoApp from "./apps/InfoApp";
 import SiteApp from "./apps/SiteApp";
+import VenorApp from "./apps/VenorApp";
 
 export type AppConfig = {
   id: string;
@@ -89,6 +90,20 @@ export const APPS: AppConfig[] = [
     scroll: false,
   },
   ...showcase.map(siteApp),
+  {
+    // Tint sygnałowy, nieużywany przez żaden inny kafelek: wermilion nosi już
+    // Ultra Studio, a dwie bliźniacze płytki obok siebie w docku źle się skanuje.
+    id: "venor",
+    title: same("Venor"),
+    size: { w: 880, h: 720 },
+    tile: {
+      bg: darkTile("rgba(50,199,222,0.36)"),
+      glyph: glyph(Radar, "#8FE0EE"),
+    },
+    Content: VenorApp,
+    dock: true,
+    desktopIcon: true,
+  },
   {
     id: "experience",
     title: { pl: "Doświadczenie", en: "Experience" },

@@ -196,8 +196,11 @@ export const studioNote: Role = {
       en: "Selected work: Alumed (a premium aesthetic medicine clinic), Printly (a B2B print platform) and the full brand identity for Squizzu.",
     },
     {
-      pl: "Zbudowałem wewnętrzną platformę lead generation, która wyszukuje i kwalifikuje potencjalnych klientów dla studiów brandingowych.",
-      en: "Built an in-house lead generation platform that sources and qualifies prospects for branding studios.",
+      // Nazwa pada tu celowo: ten sam fakt ma niżej własną kartę w sekcji
+      // projektów osobistych. Bez nazwy sekcja opisywałaby jedną rzecz dwa
+      // razy, raz bezimiennie, i czytelnik nie miałby jak ich połączyć.
+      pl: "Zbudowałem Venor, wewnętrzną platformę lead generation, która wyszukuje i kwalifikuje potencjalnych klientów dla studiów brandingowych.",
+      en: "Built Venor, an in-house lead generation platform that sources and qualifies prospects for branding studios.",
     },
     {
       pl: "Zbudowałem autonomicznego agenta AI, który crawluje strony klientów i generuje dane strukturalne JSON-LD pod ich SEO.",
