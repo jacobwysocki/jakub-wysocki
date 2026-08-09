@@ -64,16 +64,22 @@ export const site = {
       pl: "Software engineer i projektant UX/UI. Współzałożyciel Ultra Studio i Squizzu.",
       en: "Software engineer & UX/UI designer. Co-founder of Ultra Studio and Squizzu.",
     } satisfies L10n,
-    /** Te same fakty mają osobno wartość i etykietę, żeby mobile mógł
-     *  zbudować zwarty pas metryk bez drugiego źródła copy. */
+    /** Te same fakty mają osobno wartość oraz etykietę kompaktową i pełną.
+     *  Mobile dostaje krótki pas metryk, a desktop zachowuje dotychczasowe
+     *  zdania bez utrzymywania dwóch niezależnych zestawów faktów. */
     facts: [
       {
         value: { pl: "5 lat", en: "5 years" },
         label: { pl: "doświadczenia", en: "of experience" },
+        compactLabel: { pl: "doświadczenia", en: "experience" },
       },
       {
         value: { pl: "PL · UK · MX", en: "PL · UK · MX" },
         label: { pl: "", en: "" },
+        compactLabel: {
+          pl: "doświadczenie międzynarodowe",
+          en: "international work",
+        },
       },
       {
         value: { pl: "40k+", en: "40k+" },
@@ -81,8 +87,12 @@ export const site = {
           pl: "użytkowników moich aplikacji",
           en: "users of my apps",
         },
+        compactLabel: {
+          pl: "użytkowników aplikacji",
+          en: "app users",
+        },
       },
-    ] satisfies { value: L10n; label: L10n }[],
+    ] satisfies { value: L10n; label: L10n; compactLabel: L10n }[],
   },
   about: {
     paragraph: {

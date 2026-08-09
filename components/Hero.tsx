@@ -287,12 +287,62 @@ export default function Hero() {
           <StableText l10n={site.hero.subline} />
         </motion.p>
 
-        {/* Mobilna kolejność jest konwersyjna: akcje, dowody, dyscypliny.
+        {/* Mobile prowadzi od dowodów przez działanie do zakresu usług.
             Od `md` grid wraca do zatwierdzonej kompozycji desktopowej:
             fakty zajmują pierwszy rząd, a dyscypliny i CTA drugi. */}
         <div className="mt-6 grid md:mt-10 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] md:items-end md:gap-x-14">
+          {/* Fakty — pas dowodów na kreskach zamiast w pigułkach. Na
+              desktopie i telefonie siedzi bezpośrednio pod obietnicą. */}
+          <motion.ul
+            aria-label={t(listLabels.facts)}
+            className="order-1 grid grid-cols-3 border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] md:col-span-2 md:row-start-1"
+            {...rise(0.32)}
+          >
+            {site.hero.facts.map((fact, i) => {
+              const compactLabel = t(fact.compactLabel);
+              const desktopLabel = t(fact.label);
+
+              return (
+                <li
+                  key={i}
+                  className="flex min-w-0 flex-col items-center justify-center border-l border-line/70 px-1.5 py-3 text-center first:border-l-0 sm:px-2 md:flex-row md:items-baseline md:justify-start md:gap-3 md:px-0 md:py-3.5 md:pl-5 md:text-left md:first:pl-0"
+                >
+                  <span
+                    aria-hidden
+                    className="mb-2 block h-px w-5 shrink-0 bg-accent/70 md:mb-0 md:h-[0.85em] md:w-px"
+                  />
+                  <span className="flex min-w-0 flex-col items-center md:flex-row md:items-baseline md:gap-1">
+                    <strong
+                      className={`min-w-0 font-semibold leading-none text-ink/85 md:text-[15px] md:font-medium md:leading-snug md:text-ink/75 ${
+                        i === 1 ? "text-[12px] sm:text-[14px]" : "text-[18px]"
+                      }`}
+                    >
+                      {t(fact.value)}
+                    </strong>
+                    {compactLabel === desktopLabel ? (
+                      <span className="mt-1 min-w-0 text-[10px] font-medium leading-[1.15] text-ink/60 md:mt-0 md:text-[15px] md:leading-snug md:text-ink/75">
+                        {compactLabel}
+                      </span>
+                    ) : (
+                      <>
+                        <span className="mt-1 min-w-0 text-[10px] font-medium leading-[1.15] text-ink/60 md:hidden">
+                          {compactLabel}
+                        </span>
+                        {desktopLabel && (
+                          <span className="hidden min-w-0 text-[15px] leading-snug text-ink/75 md:inline">
+                            {desktopLabel}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </motion.ul>
+
           <motion.div
-            className="order-1 flex flex-wrap items-center gap-3 md:order-3 md:col-start-2 md:row-start-2 md:mt-14"
+            className="order-2 mt-6 flex flex-wrap items-center gap-3 md:order-3 md:col-start-2 md:row-start-2 md:mt-14"
             {...rise(0.48)}
           >
             <a
@@ -322,67 +372,28 @@ export default function Hero() {
             </a>
           </motion.div>
 
-          {/* Fakty — pas dowodów na kreskach zamiast w pigułkach. Na
-              desktopie nadal siedzi bezpośrednio pod obietnicą; na telefonie
-              ustępuje miejsca działaniu, ale pozostaje w tym samym hero. */}
-          <motion.ul
-            aria-label={t(listLabels.facts)}
-            className="order-2 mt-7 grid grid-cols-3 border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] md:order-1 md:col-span-2 md:row-start-1 md:mt-0"
-            {...rise(0.32)}
-          >
-            {site.hero.facts.map((fact, i) => (
-              <li
-                key={i}
-                className="flex min-w-0 flex-col items-center justify-center border-l border-line/70 px-2 py-3 text-center first:border-l-0 md:flex-row md:items-baseline md:justify-start md:gap-3 md:px-0 md:py-3.5 md:pl-5 md:text-left md:first:pl-0"
-              >
-                <span
-                  aria-hidden
-                  className="mb-2 block h-px w-5 shrink-0 bg-accent/70 md:mb-0 md:h-[0.85em] md:w-px"
-                />
-                <span className="flex min-w-0 flex-col items-center md:flex-row md:items-baseline md:gap-1">
-                  <strong
-                    className={`min-w-0 font-semibold leading-none text-ink/85 md:text-[15px] md:font-medium md:leading-snug md:text-ink/75 ${
-                      i === 1 ? "text-[12px] sm:text-[14px]" : "text-[18px]"
-                    }`}
-                  >
-                    {t(fact.value)}
-                  </strong>
-                  {t(fact.label) && (
-                    <span className="mt-1 min-w-0 text-[10px] font-medium leading-tight text-ink/60 md:mt-0 md:text-[15px] md:leading-snug md:text-ink/75">
-                      {t(fact.label)}
-                    </span>
-                  )}
-                </span>
-              </li>
-            ))}
-          </motion.ul>
-
-          {/* Dyscypliny — lekka lista inline na telefonie, numerowane wiersze
-              na desktopie. To jest hierarchia sekcji, nie etykieta nad
-              nagłówkiem, dlatego zachowuje własną skalę. */}
+          {/* Dyscypliny — trzy równe, numerowane wiersze. Ten sam system na
+              telefonie i desktopie nie zostawia samotnego „Branding” po
+              zawinięciu, a na dużym ekranie zachowuje zatwierdzoną skalę. */}
           <motion.ol
-            className="order-3 mt-7 flex flex-wrap items-center gap-x-4 gap-y-3 border-y border-line/70 bg-surface/75 py-3 supports-[backdrop-filter]:backdrop-blur-[2px] md:order-2 md:col-start-1 md:row-start-2 md:mt-14 md:block md:border-b-0 md:py-0"
+            className="order-3 mt-7 block border-t border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] md:order-2 md:col-start-1 md:row-start-2 md:mt-14"
             aria-label={t(listLabels.disciplines)}
             {...rise(0.4)}
           >
             {disciplines.map((discipline, i) => (
               <li
                 key={i}
-                className="flex items-center gap-2 md:items-baseline md:gap-4 md:border-b md:border-line/70 md:py-4"
+                className="flex items-baseline gap-4 border-b border-line/70 py-2.5 md:py-4"
               >
                 <span
                   aria-hidden
-                  className="h-1 w-1 shrink-0 rounded-full bg-accent/70 md:hidden"
-                />
-                <span
-                  aria-hidden
-                  className="hidden w-6 shrink-0 text-[12px] font-semibold tabular-nums text-ink/55 md:block"
+                  className="block w-6 shrink-0 text-[11px] font-semibold tabular-nums text-ink/55 md:text-[12px]"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <StableText
                   l10n={discipline}
-                  className="text-[14px] font-medium leading-snug md:text-[19px]"
+                  className="text-[15px] font-medium leading-snug md:text-[19px]"
                 />
               </li>
             ))}

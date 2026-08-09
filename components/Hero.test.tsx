@@ -38,7 +38,7 @@ describe("Simple Mode Hero", () => {
     vi.unstubAllGlobals();
   });
 
-  it("puts both portfolio actions before supporting proof in the visitor reading order", () => {
+  it("puts proof before both portfolio actions and disciplines after them", () => {
     const view = renderHero();
     const hero = view.getByRole("region", { name: "Intro" });
     const primaryAction = within(hero).getByRole("link", {
@@ -53,15 +53,15 @@ describe("Simple Mode Hero", () => {
     });
 
     expect(
-      primaryAction.compareDocumentPosition(facts) &
+      facts.compareDocumentPosition(primaryAction) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(
-      secondaryAction.compareDocumentPosition(facts) &
+      primaryAction.compareDocumentPosition(secondaryAction) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(
-      facts.compareDocumentPosition(disciplines) &
+      secondaryAction.compareDocumentPosition(disciplines) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
@@ -73,7 +73,13 @@ describe("Simple Mode Hero", () => {
     expect(within(facts).getByText("5 lat").tagName).toBe("STRONG");
     expect(within(facts).getByText("doświadczenia")).toBeInTheDocument();
     expect(within(facts).getByText("PL · UK · MX").tagName).toBe("STRONG");
+    expect(
+      within(facts).getByText("doświadczenie międzynarodowe"),
+    ).toBeInTheDocument();
     expect(within(facts).getByText("40k+").tagName).toBe("STRONG");
+    expect(
+      within(facts).getByText("użytkowników aplikacji"),
+    ).toBeInTheDocument();
     expect(
       within(facts).getByText("użytkowników moich aplikacji"),
     ).toBeInTheDocument();
@@ -84,9 +90,12 @@ describe("Simple Mode Hero", () => {
     const facts = view.getByRole("list", { name: "At a glance" });
 
     expect(within(facts).getByText("5 years").tagName).toBe("STRONG");
+    expect(within(facts).getByText("experience")).toBeInTheDocument();
     expect(within(facts).getByText("of experience")).toBeInTheDocument();
     expect(within(facts).getByText("PL · UK · MX").tagName).toBe("STRONG");
+    expect(within(facts).getByText("international work")).toBeInTheDocument();
     expect(within(facts).getByText("40k+").tagName).toBe("STRONG");
+    expect(within(facts).getByText("app users")).toBeInTheDocument();
     expect(within(facts).getByText("users of my apps")).toBeInTheDocument();
   });
 });
