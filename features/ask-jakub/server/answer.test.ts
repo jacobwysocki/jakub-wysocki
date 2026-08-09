@@ -299,7 +299,7 @@ describe("Ask Jakub answer operation", () => {
           kind: "answered",
           text: "Squizzu demonstrates React, product design, and applied AI.",
           knowledgeIds: ["knowledge:role:squizzu:summary"],
-          suggestionIds: ["suggestion:react-design"],
+          suggestionIds: ["suggestion:squizzu"],
         };
       },
     ]);
@@ -521,11 +521,11 @@ describe("Ask Jakub answer operation", () => {
           "knowledge:contact:email:primary",
         ],
         suggestionIds: [
-          "suggestion:applied-ai",
-          "suggestion:applied-ai",
-          "suggestion:squizzu-role",
-          "suggestion:react-design",
-          "suggestion:engineering-design",
+          "suggestion:current-work",
+          "suggestion:current-work",
+          "suggestion:venor",
+          "suggestion:squizzu",
+          "suggestion:ultra-studio",
           "suggestion:full-stack-hiring",
         ],
       },
@@ -543,9 +543,9 @@ describe("Ask Jakub answer operation", () => {
       type: "answer.completed",
       evidenceIds: ["evidence:contact"],
       suggestionIds: [
-        "suggestion:applied-ai",
-        "suggestion:squizzu-role",
-        "suggestion:react-design",
+        "suggestion:current-work",
+        "suggestion:venor",
+        "suggestion:squizzu",
       ],
     });
   });

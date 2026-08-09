@@ -31,7 +31,7 @@ const lifecycle: readonly AskEvent[] = [
     kind: "answered",
     text: "Squizzu is a documented applied-AI example.",
     evidenceIds: ["evidence:experience:squizzu"],
-    suggestionIds: ["suggestion:react-design"],
+    suggestionIds: ["suggestion:squizzu"],
   },
 ];
 

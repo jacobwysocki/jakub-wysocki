@@ -9,6 +9,7 @@ import {
   normalizeSearchText,
   retrieveKnowledge,
 } from "./retrieval";
+import { portfolioKnowledge } from "./catalog";
 
 describe("Portfolio Knowledge retrieval", () => {
   it("normalizes casing, punctuation, and Polish diacritics", () => {
@@ -42,6 +43,85 @@ describe("Portfolio Knowledge retrieval", () => {
     expect(retrieveKnowledge("   ", "pl")).toEqual([]);
     expect(retrieveKnowledge("React", "en", { limit: 100 })).toHaveLength(10);
   });
+
+  it.each([
+    {
+      question: "Jakie pasje ma Jakbub?",
+      lang: "pl" as const,
+      expected: ["knowledge:profile:passions"],
+    },
+    {
+      question: "What are Jakub's passions?",
+      lang: "en" as const,
+      expected: ["knowledge:profile:passions"],
+    },
+    {
+      question: "Czym obecnie zajmuje się Jakub?",
+      lang: "pl" as const,
+      expected: ["knowledge:profile:current-work"],
+    },
+    {
+      question: "What is Jakub currently working on?",
+      lang: "en" as const,
+      expected: ["knowledge:profile:current-work"],
+    },
+    {
+      question: "Czym jest Venor?",
+      lang: "pl" as const,
+      expected: ["knowledge:personal-project:venor:summary"],
+    },
+    {
+      question: "What is Venor?",
+      lang: "en" as const,
+      expected: ["knowledge:personal-project:venor:summary"],
+    },
+    {
+      question: "Czym jest Squizzu?",
+      lang: "pl" as const,
+      expected: ["knowledge:showcase:squizzu:what"],
+    },
+    {
+      question: "What is Squizzu?",
+      lang: "en" as const,
+      expected: ["knowledge:showcase:squizzu:what"],
+    },
+    {
+      question: "Co oferuje Ultra Studio?",
+      lang: "pl" as const,
+      expected: ["knowledge:role:ultrastudio:summary"],
+    },
+    {
+      question: "What does Ultra Studio offer?",
+      lang: "en" as const,
+      expected: ["knowledge:role:ultrastudio:summary"],
+    },
+  ])("retrieves owned facts for: $question", ({ question, lang, expected }) => {
+    const actual = retrieveKnowledge(question, lang, { limit: 6 }).map(
+      (match) => match.entry.id,
+    );
+
+    for (const knowledgeId of expected) {
+      expect(actual).toContain(knowledgeId);
+    }
+  });
+
+  it.each(["pl", "en"] as const)(
+    "retrieves mapped facts for every %s Suggested Question",
+    (lang) => {
+      const misses = portfolioKnowledge.suggestions.flatMap((suggestion) => {
+        const actual = new Set(
+          retrieveKnowledge(suggestion.question[lang], lang, {
+            limit: RETRIEVAL_FIXTURE_LIMIT,
+          }).map((match) => match.entry.id),
+        );
+        return suggestion.knowledge.some((id) => actual.has(id))
+          ? []
+          : [suggestion.id];
+      });
+
+      expect(misses).toEqual([]);
+    },
+  );
 
   it(`meets the ${(RETRIEVAL_RECALL_TARGET * 100).toFixed(0)}% bilingual recall contract`, () => {
     const misses: string[] = [];

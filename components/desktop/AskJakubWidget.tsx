@@ -141,7 +141,7 @@ export default function AskJakubWidget({
             <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#FFB39A]">
               {copy("latestAnswer")}
             </p>
-            <p className="mt-1 line-clamp-3 text-[11px] leading-relaxed text-white/75">
+            <p className="mt-1 max-h-28 overflow-y-auto break-words pr-1 text-[11px] leading-relaxed text-white/75">
               {latestGuideTurn.text}
             </p>
           </>

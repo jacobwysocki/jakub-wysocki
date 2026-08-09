@@ -200,9 +200,9 @@ describe("Ask Jakub Desktop App", () => {
     ).toBeInTheDocument();
     expect(
       view.getAllByRole("button", {
-        name: /Which project|What is Jakub|Show me/i,
+        name: /What is Jakub currently|What is Venor|What is Squizzu|What does Ultra Studio/i,
       }),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(
       view.getByRole("textbox", { name: "Question about Jakub's work" }),
     ).toHaveAccessibleDescription(
@@ -313,7 +313,7 @@ describe("Ask Jakub Desktop App", () => {
           kind: "answered",
           text: "Squizzu combines product design with full-stack delivery.",
           evidenceIds: ["evidence:experience:squizzu"],
-          suggestionIds: ["suggestion:squizzu-role"],
+          suggestionIds: ["suggestion:squizzu"],
         };
       },
     ]);
@@ -360,7 +360,7 @@ describe("Ask Jakub Desktop App", () => {
       "Squizzu combines product design with full-stack delivery.",
     );
     expect(
-      view.getByRole("button", { name: "What is Jakub's role at Squizzu?" }),
+      view.getByRole("button", { name: "What is Squizzu?" }),
     ).toBeInTheDocument();
   });
 
@@ -664,14 +664,14 @@ describe("Ask Jakub Desktop App", () => {
     );
     const view = renderScriptedApp(transport, vi.fn(), true);
     const suggestion = view.getByRole("button", {
-      name: /Which project best demonstrates applied AI\?/,
+      name: /What is Jakub currently working on\?/,
     });
 
     fireEvent.click(suggestion);
 
     await waitFor(() => expect(transport.requests).toHaveLength(1));
     expect(transport.requests[0]?.question).toBe(
-      "Which project best demonstrates applied AI?",
+      "What is Jakub currently working on?",
     );
     expect(await view.findByText("Clarification")).toBeInTheDocument();
 
