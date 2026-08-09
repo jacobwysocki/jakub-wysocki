@@ -128,12 +128,13 @@ export default function Nav() {
                     wysokości 44 px: sama kapsuła zostaje wizualnie lekka,
                     a palec dostaje pełny cel. Rozszerzamy tylko w pionie —
                     w poziomie kapsuła i tak jest szersza niż 44 px, a wyjście
-                    w bok weszłoby w sąsiadów. */}
+                    w bok weszłoby w sąsiadów. Poniżej 360 px znika całkiem:
+                    ten sam, opisany tekstem przełącznik jest już w menu. */}
                 <button
                   type="button"
                   onClick={() => setMode("desktop")}
                   title={t(ui.mode.toDesktopHint)}
-                  className="group relative flex items-center gap-1.5 rounded-full p-2.5 text-[12px] font-semibold text-white shadow-[0_4px_16px_rgba(194,65,12,0.35)] transition-shadow duration-300 before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[''] hover:shadow-[0_6px_22px_rgba(194,65,12,0.5)] sm:py-1.5 sm:pl-3 sm:pr-3.5 sm:text-[13px]"
+                  className="group relative flex items-center gap-1.5 rounded-full p-2.5 text-[12px] font-semibold text-white shadow-[0_4px_16px_rgba(194,65,12,0.35)] transition-shadow duration-300 before:absolute before:inset-x-0 before:top-1/2 before:h-11 before:-translate-y-1/2 before:content-[''] hover:shadow-[0_6px_22px_rgba(194,65,12,0.5)] max-[359px]:hidden sm:py-1.5 sm:pl-3 sm:pr-3.5 sm:text-[13px]"
                   style={{
                     background:
                       "linear-gradient(135deg, #FF6A3D 0%, #C2410C 55%, #9A3412 100%)",

@@ -126,8 +126,10 @@ function Arrow() {
  * 524 px przy 72 px i zerowym trackingu, czyli ~7,28 px na każdy piksel
  * rozmiaru. Przy 104 px to 757 px w kolumnie 1072 px (max-w-content minus
  * px-6 z obu stron) — mieści się z zapasem. Przy 390 px okna clamp schodzi
- * do 40 px, słowo ma 291 px w kolumnie 342 px, też się mieści. Podnosząc
- * rozmiar albo rozluźniając tracking, przelicz oba końce ponownie.
+ * do 40 px, słowo ma 291 px w kolumnie 342 px. Poniżej 360 px podłoga spada
+ * do 34 px: sklejka „i oprogramowanie.” ma wtedy około 251 px i mieści się
+ * także w 257 px realnej kolumny Chrome przy viewportcie 320 px. Podnosząc
+ * rozmiar albo rozluźniając tracking, przelicz wszystkie trzy końce.
  */
 function Headline() {
   const reduced = useReducedMotion();
@@ -138,7 +140,7 @@ function Headline() {
       // Nazwa dostępna z pełnego zdania: wizualnie słowa są osobnymi
       // elementami, a twarda spacja w sklejce nie należy do treści.
       aria-label={t(site.hero.headline)}
-      className="text-[clamp(40px,8vw,104px)] font-bold leading-[1.02] tracking-[-0.018em] text-ink [overflow-wrap:break-word]"
+      className="text-[clamp(34px,8vw,104px)] font-bold leading-[1.02] tracking-[-0.018em] text-ink [overflow-wrap:break-word] min-[360px]:text-[clamp(40px,8vw,104px)]"
     >
       <span className="block">
         <StableText l10n={site.hero.headline}>
@@ -245,7 +247,9 @@ export default function Hero() {
       // przeszło na biel, rytm rozjechałby się o jedną sekcję dalej.
       // pt-16 to podłoga, nie wybór stylistyczny: pasek nawigacji ma
       // dokładnie 64 px i wiersz stanu ma się zaczynać pod nim, nie za nim.
-      className="relative flex min-h-[100svh] scroll-mt-24 flex-col justify-center overflow-hidden border-b border-line/60 bg-surface pb-12 pt-16 text-ink md:pb-28 md:pt-32"
+      // Na wysokim telefonie hero kończy się po 700 px, zamiast pompować
+      // pustą przestrzeń do pełnego 100svh. Desktop zachowuje pełny kadr.
+      className="relative flex min-h-[min(100svh,700px)] scroll-mt-24 flex-col justify-center overflow-hidden border-b border-line/60 bg-surface pb-12 pt-16 text-ink md:min-h-[100svh] md:pb-28 md:pt-32"
     >
       <DotField target={stage} />
 
@@ -283,70 +287,62 @@ export default function Hero() {
           <StableText l10n={site.hero.subline} />
         </motion.p>
 
-        {/* Fakty — pas dowodów tuż pod obietnicą, na kreskach zamiast
-            w pigułkach. Pigułki wyglądały jak doklejone etykiety; ten pas
-            jest częścią konstrukcji strony. Cynobrowa kreseczka przed każdym
-            wpisem to ten sam akcent, który świeci w matrycy kropek za tekstem.
-            Mleczne podbicie między kreskami odcina tekst od matrycy — kropki
-            za pasem czytają się jak faktura za szkłem, nie jak szum pod
-            literami. Bez backdrop-filter zostaje samo półkryjące tło. */}
-        <motion.ul
-          aria-label={t(listLabels.facts)}
-          className="mt-7 grid border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] sm:grid-cols-3 md:mt-10"
-          {...rise(0.32)}
-        >
-          {site.hero.facts.map((fact, i) => (
-            <li
-              key={i}
-              className="flex items-baseline gap-3 border-b border-line/70 py-2.5 last:border-b-0 sm:border-b-0 sm:border-l sm:pl-5 sm:first:border-l-0 sm:first:pl-0 md:py-3.5"
-            >
-              <span
-                aria-hidden
-                className="inline-block h-[0.85em] w-px shrink-0 bg-accent/70"
-              />
-              <StableText
-                l10n={fact}
-                className="min-w-0 text-[14px] font-medium leading-snug text-ink/75 md:text-[15px]"
-              />
-            </li>
-          ))}
-        </motion.ul>
-
-        {/* Wszystkie odstępy w tym hero mają wersję telefonową ciaśniejszą od
-            docelowej. Powód jest mierzalny: przy 390x664 (iPhone z paskami
-            przeglądarki) rozstrzelony układ spychał oba przyciski pod
-            krawędź ekranu. Wartości `md:` to układ zatwierdzony na dużym
-            ekranie i one się nie ruszają. */}
-        <div className="mt-7 grid gap-6 md:mt-14 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] md:items-end md:gap-14">
-          {/* Dyscypliny — numerowane wiersze na kreskach. To jest hierarchia
-              sekcji, nie etykieta nad nagłówkiem, dlatego ma własną skalę
-              i własną siatkę, a nie wersaliki 13 px. */}
-          <motion.ol
-            className="border-t border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px]"
-            aria-label={t(listLabels.disciplines)}
-            {...rise(0.4)}
+        {/* Mobile prowadzi od dowodów przez działanie do zakresu usług.
+            Od `md` grid wraca do zatwierdzonej kompozycji desktopowej:
+            fakty zajmują pierwszy rząd, a dyscypliny i CTA drugi. */}
+        <div className="mt-6 grid md:mt-10 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] md:items-end md:gap-x-14">
+          {/* Fakty — pas dowodów na kreskach zamiast w pigułkach. Na
+              desktopie i telefonie siedzi bezpośrednio pod obietnicą. */}
+          <motion.ul
+            aria-label={t(listLabels.facts)}
+            className="order-1 grid grid-cols-3 border-y border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] md:col-span-2 md:row-start-1"
+            {...rise(0.32)}
           >
-            {disciplines.map((discipline, i) => (
-              <li
-                key={i}
-                className="flex items-baseline gap-4 border-b border-line/70 py-3 md:py-4"
-              >
-                <span
-                  aria-hidden
-                  className="w-6 shrink-0 text-[12px] font-semibold tabular-nums text-ink/55"
+            {site.hero.facts.map((fact, i) => {
+              const compactLabel = t(fact.compactLabel);
+              const desktopLabel = t(fact.label);
+
+              return (
+                <li
+                  key={i}
+                  className="flex min-w-0 flex-col items-center justify-center border-l border-line/70 px-1.5 py-3 text-center first:border-l-0 sm:px-2 md:flex-row md:items-baseline md:justify-start md:gap-3 md:px-0 md:py-3.5 md:pl-5 md:text-left md:first:pl-0"
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <StableText
-                  l10n={discipline}
-                  className="text-[17px] font-medium leading-snug md:text-[19px]"
-                />
-              </li>
-            ))}
-          </motion.ol>
+                  <span
+                    aria-hidden
+                    className="mb-2 block h-px w-5 shrink-0 bg-accent/70 md:mb-0 md:h-[0.85em] md:w-px"
+                  />
+                  <span className="flex min-w-0 flex-col items-center md:flex-row md:items-baseline md:gap-1">
+                    <strong
+                      className={`min-w-0 font-semibold leading-none text-ink/85 md:text-[15px] md:font-medium md:leading-snug md:text-ink/75 ${
+                        i === 1 ? "text-[12px] sm:text-[14px]" : "text-[18px]"
+                      }`}
+                    >
+                      {t(fact.value)}
+                    </strong>
+                    {compactLabel === desktopLabel ? (
+                      <span className="mt-1 min-w-0 text-[10px] font-medium leading-[1.15] text-ink/60 md:mt-0 md:text-[15px] md:leading-snug md:text-ink/75">
+                        {compactLabel}
+                      </span>
+                    ) : (
+                      <>
+                        <span className="mt-1 min-w-0 text-[10px] font-medium leading-[1.15] text-ink/60 md:hidden">
+                          {compactLabel}
+                        </span>
+                        {desktopLabel && (
+                          <span className="hidden min-w-0 text-[15px] leading-snug text-ink/75 md:inline">
+                            {desktopLabel}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </motion.ul>
 
           <motion.div
-            className="flex flex-wrap items-center gap-3"
+            className="order-2 mt-6 flex flex-wrap items-center gap-3 md:order-3 md:col-start-2 md:row-start-2 md:mt-14"
             {...rise(0.48)}
           >
             <a
@@ -375,6 +371,33 @@ export default function Hero() {
               <Arrow />
             </a>
           </motion.div>
+
+          {/* Dyscypliny — trzy równe, numerowane wiersze. Ten sam system na
+              telefonie i desktopie nie zostawia samotnego „Branding” po
+              zawinięciu, a na dużym ekranie zachowuje zatwierdzoną skalę. */}
+          <motion.ol
+            className="order-3 mt-7 block border-t border-line/70 bg-surface/75 supports-[backdrop-filter]:backdrop-blur-[2px] md:order-2 md:col-start-1 md:row-start-2 md:mt-14"
+            aria-label={t(listLabels.disciplines)}
+            {...rise(0.4)}
+          >
+            {disciplines.map((discipline, i) => (
+              <li
+                key={i}
+                className="flex items-baseline gap-4 border-b border-line/70 py-2.5 md:py-4"
+              >
+                <span
+                  aria-hidden
+                  className="block w-6 shrink-0 text-[11px] font-semibold tabular-nums text-ink/55 md:text-[12px]"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <StableText
+                  l10n={discipline}
+                  className="text-[15px] font-medium leading-snug md:text-[19px]"
+                />
+              </li>
+            ))}
+          </motion.ol>
         </div>
       </div>
 
