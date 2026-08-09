@@ -64,12 +64,25 @@ export const site = {
       pl: "Software engineer i projektant UX/UI. Współzałożyciel Ultra Studio i Squizzu.",
       en: "Software engineer & UX/UI designer. Co-founder of Ultra Studio and Squizzu.",
     } satisfies L10n,
-    /** Krótkie fakty pod headline'em — hero w wariancie foto + typografia */
+    /** Te same fakty mają osobno wartość i etykietę, żeby mobile mógł
+     *  zbudować zwarty pas metryk bez drugiego źródła copy. */
     facts: [
-      { pl: "5 lat doświadczenia", en: "5 years of experience" },
-      { pl: "PL · UK · MX", en: "PL · UK · MX" },
-      { pl: "40k+ użytkowników moich aplikacji", en: "40k+ users of my apps" },
-    ] satisfies L10n[],
+      {
+        value: { pl: "5 lat", en: "5 years" },
+        label: { pl: "doświadczenia", en: "of experience" },
+      },
+      {
+        value: { pl: "PL · UK · MX", en: "PL · UK · MX" },
+        label: { pl: "", en: "" },
+      },
+      {
+        value: { pl: "40k+", en: "40k+" },
+        label: {
+          pl: "użytkowników moich aplikacji",
+          en: "users of my apps",
+        },
+      },
+    ] satisfies { value: L10n; label: L10n }[],
   },
   about: {
     paragraph: {
