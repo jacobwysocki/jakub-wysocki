@@ -1,6 +1,6 @@
 # Desktop v2 verification — 2026-08-09
 
-Status: focused Ask Jakub content and widget audit complete locally; current-branch Preview verification pending
+Status: focused Ask Jakub content and widget audit complete locally and on Vercel Preview; external release gates remain
 
 This report records the local integration review for Desktop v2 and the follow-up Ask Jakub content audit on `fix/ask-jakub-content-audit`. The widget and Desktop v2 work are already present on `main`; this branch improves question discovery, canonical knowledge coverage, and long-answer presentation. The report separates checks proven in this workspace from checks that still need assistive technology, CI, staging, or a production host.
 
@@ -25,13 +25,13 @@ The original Desktop v2 work and compact widget are present on `main`. This foll
 | `npm run typecheck`                   | Pass, including `next typegen`                                                                                       |
 | `next build --webpack`                | Pass on the current Node 24.17.0 runner; all application and API routes compiled; supported-runtime rerun pending    |
 | `npm run audit:prod`                  | Pass: zero production vulnerabilities reported by npm                                                                |
-| Vercel Preview                        | Historical widget Preview passed for `15e85dc`; the current content-audit branch still needs its own Preview rerun   |
+| Vercel Preview                        | Pass for content-audit commit `4bc06b3`; Vercel reports “Deployment has completed”                                   |
 | `git diff --check`                    | Pass                                                                                                                 |
 | Focused working-tree secret scan      | No private-key, common cloud-key, Groq-key, OpenAI-key, or Anthropic-key pattern found                               |
 | Git-history secret-pattern scan       | No matching committed history found                                                                                  |
 | Generated client-bundle boundary scan | No server model port, Groq endpoint/model/environment marker, hidden phone variable, or testing Adapter marker found |
 
-The exact default `npm run build` path uses Turbopack. Its focused content-audit rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. Vercel previously completed the widget Preview for commit `15e85dc` through the repository's default Turbopack build on its unrestricted runner; this branch still needs that CI/Preview confirmation. The deployment is protected by Vercel sign-in, so authenticated browser and live-provider smoke tests remain separate gates.
+The exact default `npm run build` path uses Turbopack. Its focused content-audit rerun was blocked by this execution environment while Turbopack attempted to create a PostCSS helper process and bind an ephemeral localhost port (`EPERM`). The same final source compiled successfully through Next.js's supported webpack production builder. Vercel then completed the content-audit Preview for commit `4bc06b3` through the repository's default Turbopack build on its unrestricted runner. The deployment is protected by Vercel sign-in, so authenticated browser and live-provider smoke tests remain separate gates.
 
 The compiled route set includes `/`, `/about`, `/o-mnie`, `/api/ask-jakub`, `/api/phone`, icons, Open Graph image, robots, and sitemap routes.
 
@@ -124,4 +124,4 @@ Until those checks are recorded, the safe release path is provider disabled: the
 
 ## Conclusion
 
-The focused content and widget audit is locally coherent and strongly covered. It is ready for intentional commit preparation and a current-branch Vercel Preview, not yet an unqualified public-release claim. A model-enabled launch still needs the external gates above; adding credentials alone is not recorded as release proof.
+The focused content and widget audit is locally coherent, strongly covered, and compiled successfully on its current-branch Vercel Preview. It is ready for review, not yet an unqualified public-release claim. A model-enabled launch still needs the external gates above; adding credentials alone is not recorded as release proof.
