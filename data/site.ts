@@ -42,14 +42,20 @@ export const contactInfo = {
  * Dopisuj tu każdy nowy zweryfikowany profil (Wikidata, ORCID, Crunchbase).
  * `label` jest tekstem linku na wizytówce, więc nie jest tłumaczony:
  * nazwy własne serwisów brzmią tak samo w obu językach.
+ *
+ * `identity` rozstrzyga, czy adres opisuje TĘ OSOBĘ, czy tylko coś, co
+ * współtworzy. Do `sameAs` idą wyłącznie te pierwsze: adresy firm mają
+ * w tym samym grafie własne węzły Organization, więc powtórzone w `sameAs`
+ * twierdziłyby, że osoba i firma to jeden byt. Widoczna lista na wizytówce
+ * pokazuje wszystkie — dla człowieka to nadal linki „gdzie mnie znaleźć".
  */
 export const entityProfiles = [
-  { label: "LinkedIn", href: contactInfo.linkedin },
-  { label: "GitHub", href: contactInfo.github },
-  { label: "Behance", href: contactInfo.behance },
-  { label: "Stack Overflow", href: contactInfo.stackoverflow },
-  { label: "Ultra Studio", href: contactInfo.ultrastudio },
-  { label: "Squizzu", href: contactInfo.squizzu },
+  { label: "LinkedIn", href: contactInfo.linkedin, identity: true },
+  { label: "GitHub", href: contactInfo.github, identity: true },
+  { label: "Behance", href: contactInfo.behance, identity: true },
+  { label: "Stack Overflow", href: contactInfo.stackoverflow, identity: true },
+  { label: "Ultra Studio", href: contactInfo.ultrastudio, identity: false },
+  { label: "Squizzu", href: contactInfo.squizzu, identity: false },
 ] as const;
 
 export const site = {

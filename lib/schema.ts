@@ -26,8 +26,16 @@ export const ID = {
  * Profile, które Google ma uznać za tę samą osobę. Wyprowadzone z
  * `entityProfiles`, wspólnego źródła z widocznymi linkami na wizytówkach —
  * dopisuj tam, nie tutaj.
+ *
+ * Filtr po `identity` wycina adresy firm. Ten sam dokument definiuje niżej
+ * węzły Organization o dokładnie tych URL-ach, więc trzymanie ich w `sameAs`
+ * mówiło wprost „ta osoba JEST tą witryną" — modelowy sposób na sklejenie
+ * jednoosobowego założyciela z jego firmą. Relację niesie `worksFor`
+ * i `founder`; wizytówki dalej pokazują wszystkie sześć linków.
  */
-const sameAs: string[] = entityProfiles.map((p) => p.href);
+const sameAs: string[] = entityProfiles
+  .filter((p) => p.identity)
+  .map((p) => p.href);
 
 /**
  * Węzeł osoby — JEDNA definicja, identyczna na każdym URL-u serwisu.
@@ -111,6 +119,10 @@ const personNode = {
       name: education.degree.school,
     },
   },
+  // Jedyny fakt o tej osobie z zewnętrznym, niezależnym udokumentowaniem —
+  // ogłosił go ktoś inny. Do tej pory żył wyłącznie w prozie
+  // data/experience.ts, więc dla maszyn nie istniał.
+  award: "Best New E-commerce — Premios eCommerce MX 2024 (Safetystore.mx)",
   knowsAbout: person.knowsAbout,
   knowsLanguage: [
     { "@type": "Language", name: "Polish", alternateName: "pl" },
@@ -119,10 +131,6 @@ const personNode = {
   ],
   sameAs,
 };
-  // Jedyny fakt o tej osobie z zewnętrznym, niezależnym udokumentowaniem —
-  // ogłosił go ktoś inny. Do tej pory żył wyłącznie w prozie
-  // data/experience.ts, więc dla maszyn nie istniał.
-  award: "Best New E-commerce — Premios eCommerce MX 2024 (Safetystore.mx)",
 
 const organizationNodes = [
   {
