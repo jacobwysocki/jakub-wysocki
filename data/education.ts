@@ -82,6 +82,12 @@ export const education = {
    * `sameAs` wskazuje witrynę wystawcy, nie stronę pojedynczego certyfikatu.
    * Numerów ani linków weryfikacyjnych repozytorium nie zna, a zmyślony
    * identyfikator byłby gorszy niż jego brak.
+   *
+   * Trafia tu wyłącznie certyfikat, czyli dokument wystawiony przez kogoś
+   * z zewnątrz. Poziom językowy nim nie jest: CEFR to Common European
+   * Framework of Reference for Languages — skala Rady Europy, nie egzamin
+   * i nie wystawca. Angielski jest opisany niżej w `languages`, gdzie ma
+   * swoje właściwe miejsce razem z polskim i hiszpańskim.
    */
   certifications: [
     {
@@ -103,14 +109,6 @@ export const education = {
       name: "ITIL® Foundation, IT Service Management",
       code: "ITIL",
       issuer: { name: "AXELOS", sameAs: "https://www.axelos.com/" },
-    },
-    {
-      name: "CEFR Cambridge English",
-      code: "CEFR",
-      issuer: {
-        name: "Cambridge English",
-        sameAs: "https://www.cambridgeenglish.org/",
-      },
     },
   ],
   /**

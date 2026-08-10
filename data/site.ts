@@ -23,7 +23,10 @@ export const contactInfo = {
   stackoverflow: "https://stackoverflow.com/users/14391216/jakub-wysocki",
   droneRepo: "https://github.com/jacobwysocki/drone-path-optimization",
   droneLive: "https://jacobwysocki.github.io/drone-path-optimization/",
-  squizzu: "https://www.squizzu.com",
+  // Apex, nie www — `www.squizzu.com` robi 308 tutaj, a kanoniczny adres
+  // samej witryny to też apex. Decyzja „Apex, nie www" z sekcji 5
+  // `docs/ENTITY.md` dotyczy każdej domeny w grafie, nie tylko tej.
+  squizzu: "https://squizzu.com",
   squizzuApp: "https://app.squizzu.com",
   ultrastudio: "https://ultrastud.io",
 } as const;
