@@ -73,12 +73,45 @@ export const education = {
       en: "An intensive full-stack JavaScript programme: React and React Native, Node.js with Express, MongoDB, server-side rendering for SEO, plus team and pair programming, from front-end work to shipping web and mobile apps.",
     },
   },
+  /**
+   * `issuer` opisuje organizację, która certyfikat wystawia — to ona robi
+   * z niego fakt weryfikowalny przez kogoś z zewnątrz, a nie deklarację
+   * o sobie. Stąd bierze się `recognizedBy` w węźle Person (lib/schema.ts):
+   * dane są tutaj, żeby widoczna lista i JSON-LD miały jedno źródło.
+   *
+   * `sameAs` wskazuje witrynę wystawcy, nie stronę pojedynczego certyfikatu.
+   * Numerów ani linków weryfikacyjnych repozytorium nie zna, a zmyślony
+   * identyfikator byłby gorszy niż jego brak.
+   */
   certifications: [
-    { name: "Azure Fundamentals", code: "AZ-900" },
-    { name: "Azure AI Fundamentals", code: "AI-900" },
-    { name: "Azure Data Fundamentals", code: "DP-900" },
-    { name: "ITIL® Foundation, IT Service Management", code: "ITIL" },
-    { name: "CEFR Cambridge English", code: "CEFR" },
+    {
+      name: "Azure Fundamentals",
+      code: "AZ-900",
+      issuer: { name: "Microsoft", sameAs: "https://www.microsoft.com/" },
+    },
+    {
+      name: "Azure AI Fundamentals",
+      code: "AI-900",
+      issuer: { name: "Microsoft", sameAs: "https://www.microsoft.com/" },
+    },
+    {
+      name: "Azure Data Fundamentals",
+      code: "DP-900",
+      issuer: { name: "Microsoft", sameAs: "https://www.microsoft.com/" },
+    },
+    {
+      name: "ITIL® Foundation, IT Service Management",
+      code: "ITIL",
+      issuer: { name: "AXELOS", sameAs: "https://www.axelos.com/" },
+    },
+    {
+      name: "CEFR Cambridge English",
+      code: "CEFR",
+      issuer: {
+        name: "Cambridge English",
+        sameAs: "https://www.cambridgeenglish.org/",
+      },
+    },
   ],
   /**
    * `short` to zwarta etykieta poziomu dla miejsc, gdzie nie ma miejsca na

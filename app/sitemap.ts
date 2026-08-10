@@ -1,8 +1,13 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, person } from "@/data/site";
+import { FACTS_UPDATED, SITE_URL, person } from "@/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  // Data utrzymywana ręcznie, nie `new Date()`. Ta trasa jest statyczna, więc
+  // `new Date()` zamrażał czas builda i wszystkie trzy adresy dostawały ten
+  // sam znacznik przy każdym deployu — także przy poprawce CSS. Google
+  // przestaje ufać źródłom `lastmod`, które przyłapie na takim szumie, a wtedy
+  // traci się sygnał również wtedy, gdy naprawdę coś się zmieni.
+  const lastModified = FACTS_UPDATED;
 
   // Kody muszą być identyczne z `alternates.languages` w <head> stron
   // wizytówek. Rozjazd "en" vs "en-GB" to dwie sprzeczne adnotacje hreflang

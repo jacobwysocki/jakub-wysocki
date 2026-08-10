@@ -2,7 +2,7 @@
 
 Status: bieżący rejestr techniczny
 
-Ostatnia synchronizacja z kodem: 2026-08-08
+Ostatnia synchronizacja z kodem: 2026-08-10
 
 Stany usług zewnętrznych, profili i Search Console są zapisem operacyjnym z dnia ostatniej ręcznej weryfikacji, a nie czymś, co da się potwierdzić samym kodem repozytorium.
 
@@ -27,15 +27,24 @@ skleja informacje z różnych stron i różnych domen w jedną encję. Zmiana
 któregokolwiek z nich jest równoznaczna z powiedzeniem „to ktoś inny" i
 kasuje dotychczasową historię dopasowania.
 
-| Identyfikator                                 | Co opisuje            | Deklarowany w                               |
-| --------------------------------------------- | --------------------- | ------------------------------------------- |
-| `https://jakub-wysocki.com/#person`           | osoba                 | `lib/schema.ts`, `ultrastud.io` (site-wide) |
-| `https://jakub-wysocki.com/#website`          | witryna osobista      | `lib/schema.ts`                             |
-| `https://jakub-wysocki.com/about#profilepage` | strona-wizytówka      | `lib/schema.ts`                             |
-| `https://ultrastud.io/#organization`          | Ultra Studio          | `lib/schema.ts`, `ultrastud.io`             |
-| `https://ultrastud.io/#website`               | witryna studia        | `ultrastud.io`                              |
-| `https://ultrastud.io/#filip-mazur`           | drugi współzałożyciel | `ultrastud.io`                              |
-| `https://www.squizzu.com/#organization`       | Squizzu               | `lib/schema.ts`, `ultrastud.io`             |
+| Identyfikator                                 | Co opisuje            | Deklarowany w                                |
+| --------------------------------------------- | --------------------- | -------------------------------------------- |
+| `https://jakub-wysocki.com/#person`           | osoba                 | `lib/schema.ts`, `ultrastud.io` (site-wide)  |
+| `https://jakub-wysocki.com/#website`          | witryna osobista      | `lib/schema.ts`                              |
+| `https://jakub-wysocki.com/#portrait`         | portret (ImageObject) | `lib/schema.ts`                              |
+| `https://jakub-wysocki.com/about#profilepage` | strona-wizytówka      | `lib/schema.ts`                              |
+| `https://ultrastud.io/#organization`          | Ultra Studio          | `lib/schema.ts`, `ultrastud.io`              |
+| `https://ultrastud.io/#website`               | witryna studia        | `ultrastud.io`                               |
+| `https://ultrastud.io/#filip-mazur`           | drugi współzałożyciel | `ultrastud.io`, `lib/schema.ts` (referencja) |
+| `https://www.squizzu.com/#organization`       | Squizzu               | `lib/schema.ts`, `ultrastud.io`              |
+
+`#portrait` istnieje po to, żeby `Person.image` i `ProfilePage.primaryImageOfPage`
+wskazywały jeden węzeł, a nie dwa razy ten sam URL.
+
+`#filip-mazur` jest **definiowany** tylko przez `ultrastud.io`. Na tej domenie
+występuje wyłącznie jako referencja w `Organization.founder` — celowo bez
+`name`, bo pisownia nazwiska pochodzi z adresu LinkedIna i nie jest
+zweryfikowana. Błędne `name` przy poprawnym `@id` byłoby gorsze niż samo `@id`.
 
 Dwie domeny używają tych samych identyfikatorów celowo. Dzięki temu
 `ultrastud.io` nie opisuje „jakiegoś Jakuba Wysockiego", tylko potwierdza
@@ -57,7 +66,10 @@ Kolumna „źródło" mówi, skąd wziąć wartość.
 | tytuły, opisy, canonical, hreflang     | `app/*/page.tsx`            | budowane z `person`                             |
 | treść wizytówek                        | `components/EntityHome.tsx` | z `data/`, bez drugiego źródła                  |
 | portret                                | `person.portrait`           | zwykły URL, nie `/_next/image`                  |
+| wymiary portretu                       | `person.portraitSize`       | odczyt z pliku przez `sips`                     |
 | sitemap z `<image:image>`              | `app/sitemap.ts`            |                                                 |
+| `lastmod` i `ProfilePage.dateModified` | `FACTS_UPDATED`             | data ręczna, patrz sekcja 4                     |
+| certyfikaty i ich wystawcy             | `data/education.ts`         | `hasCredential` wyprowadzone, nie przepisane    |
 
 Zmiana w `data/site.ts` propaguje się tu automatycznie. Reszta tabeli
 wymaga ręcznej aktualizacji.
@@ -91,10 +103,13 @@ Przy dodawaniu zweryfikowanego profilu:
 ## 3. Procedura przy zmianie faktu
 
 1. Zmień w `data/site.ts`, nigdzie indziej.
-2. Uruchom pełny kontrakt jakości z `README.md`, w tym testy schematu i build.
-3. Przejdź rejestr z sekcji 2 i zaktualizuj powierzchnie ręczne.
-4. [Rich Results Test](https://search.google.com/test/rich-results) na `/`, `/about`, `/o-mnie`.
-5. Search Console → Sprawdzanie adresu URL → Poproś o zindeksowanie.
+2. Podnieś `FACTS_UPDATED` w `data/site.ts` na dzisiejszą datę. To jedyne
+   miejsce, które mówi Google'owi, że fakty faktycznie się zmieniły — nic nie
+   zrobi tego automatycznie i celowo, patrz sekcja 4.
+3. Uruchom pełny kontrakt jakości z `README.md`, w tym testy schematu i build.
+4. Przejdź rejestr z sekcji 2 i zaktualizuj powierzchnie ręczne.
+5. [Rich Results Test](https://search.google.com/test/rich-results) na `/`, `/about`, `/o-mnie`.
+6. Search Console → Sprawdzanie adresu URL → Poproś o zindeksowanie.
 
 ---
 
@@ -130,14 +145,62 @@ więc wpisanie jej tworzyłoby relację nieodwzajemnioną.
 **Kody hreflang muszą być identyczne w `<head>` i w sitemapie.** Rozjazd
 `en` kontra `en-GB` to dwie sprzeczne adnotacje dla tej samej pary URL-i.
 
-**`Person.image` to zwykły URL.** Nie adres optymalizatora Next
-(`/_next/image?...`), bo wyszukiwarka grafiki nie przypisze go do encji.
+**`Person.image` to `ImageObject`, a jego URL jest zwykłym URL-em.** Węzeł ma
+własne `@id` (`#portrait`), `width`, `height` i `caption`, więc wizytówka może
+go wskazać przez `primaryImageOfPage` zamiast powtarzać adres, a wyszukiwarka
+grafiki wie, w jakiej rozdzielczości dostaje plik. Samo `url`/`contentUrl`
+zostaje adresem pliku w `/public`, nie optymalizatora Next
+(`/_next/image?...`) — tamtego wyszukiwarka grafiki nie przypisze do encji.
 Plik nazywa się nazwiskiem, a nie `portrait.jpg` — nazwa pliku jest sygnałem
-w image search. Portret jest też jawnie zgłoszony w sitemapie.
+w image search. Portret jest też jawnie zgłoszony w sitemapie. Wymiary siedzą
+w `person.portraitSize`, bo to fakt o tym samym pliku co ścieżka; po podmianie
+zdjęcia odczytaj je na nowo (`sips -g pixelWidth -g pixelHeight`).
 
-**`sameAs` kontra `worksFor`.** `sameAs` powinno zawierać adresy
-identyfikujące **tę osobę**. Adresy firm są tam nadal obecne, choć relację
-niesie już `worksFor` i `founder`. Do posprzątania, patrz sekcja 5.
+**Daty są ręczne, nie `new Date()`.** `FACTS_UPDATED` w `data/site.ts` zasila
+`lastmod` w sitemapie i `ProfilePage.dateModified`. Obie trasy są statyczne,
+więc `new Date()` zamrażał czas builda: każdy deploy, także poprawka CSS,
+ogłaszał zmianę wszystkich trzech stron naraz. Google przestaje ufać źródłom
+`lastmod`, które przyłapie na takim szumie — i wtedy sygnał znika także wtedy,
+gdy naprawdę coś się zmieni. Data nieprawdziwa jest gorsza niż żadna.
+
+**`hasCredential` jest wyprowadzone z `data/education.ts`.** Ta sama lista
+renderuje widoczne certyfikaty w `Extras` i `EducationApp`, więc przepisanie
+jej do `lib/schema.ts` gwarantowałoby rozjazd przy pierwszej zmianie. Każdy
+certyfikat ma `recognizedBy` z wystawcą i jego `sameAs` — to wystawca robi
+z certyfikatu fakt potwierdzony z zewnątrz, a nie deklarację o sobie. `sameAs`
+wskazuje witrynę organizacji, nie stronę pojedynczego certyfikatu: numerów
+ani linków weryfikacyjnych repozytorium nie zna.
+
+**`robots.txt` blokuje `/api/`, ale nie blokuje żadnego crawlera AI.** To
+witryna-encja, więc modele mają ją czytać — po to są tu dane strukturalne
+i dlatego nie ma bloków per-agent. Wyjątkiem jest `/api/`: `GET /api/phone`
+oddaje numer telefonu jako JSON, gdy w env jest `CONTACT_PHONE`, a cała ta
+trasa istnieje po to, żeby numer nie leżał w statycznym HTML-u. Nic do niej
+nie linkuje, więc to zabezpieczenie, a nie łatanie wycieku.
+
+**404 jest komponentem serwerowym.** `app/not-found.tsx` eksportuje `metadata`
+(`404 | Jakub Wysocki`, `noindex, follow`), a w komponencie klienckim taki
+eksport jest zabroniony — dlatego treść mieszka w `components/NotFoundView.tsx`.
+Wcześniej `/_not-found` renderował `<title>` strony głównej, czyli każdy błędny
+adres zapowiadał się w SERP-ie i w podglądach linków jako wizytówka osoby.
+`follow: true` jest świadome: crawler, który wpadnie na 404, ma zachować
+ścieżkę powrotną na stronę główną.
+
+**`sameAs` kontra `worksFor`.** `sameAs` zawiera wyłącznie adresy
+identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
+`identity` w `entityProfiles`: ten sam dokument definiuje dla nich węzły
+`Organization`, więc powtórzone w `sameAs` twierdziłyby, że osoba i firma to
+jeden byt. Relację niesie `worksFor` i `founder`, a widoczna lista na
+wizytówkach pokazuje wszystkie sześć linków bez zmian.
+
+**`<html lang>` jest angielskie.** Root layout jest statyczny dla wszystkich
+tras i musi zadeklarować jeden język; angielski, bo `/about` jest `x-default`,
+węzeł `Person` jest angielski, a `og:locale:alternate` to `en_GB`. Wcześniejsze
+`pl` przeczyło na `/about` trzem sygnałom naraz, a rozjazd `lang` kontra
+`hreflang` bywa powodem odrzucenia całego klastra. Polski niosą poddrzewa:
+`EntityHome` na `/o-mnie` i `LangProvider` na stronie głównej. Języka nie
+przepuszczamy przez root layout dynamicznie — to uczyniłoby każdą trasę
+dynamiczną.
 
 **`StableText` renderuje tylko aktywny język.** Wcześniej komponent trzymał
 w DOM obie wersje, przez co crawler czytał sklejki w rodzaju
@@ -184,16 +247,43 @@ Poniższy stan powierzchni zewnętrznych wymaga datowanej ręcznej weryfikacji p
 - `ultrastud.io` potwierdza encję: graf site-wide z `Organization`, `Person`
   i Squizzu, `CreativeWork` na każdym case study, link zwrotny w biogramie
   `/o-nas`, rola ujednolicona jako `co-founder, design & development`
+- `Person.sameAs` odchudzone do samych profili osobowych (flaga `identity`)
+- nagroda Premios eCommerce MX 2024 w `Person.award`, a highlighty ról
+  widoczne na `/about` i `/o-mnie`
+- własny `opengraph-image` na `/about` i `/o-mnie` (segment eksportujący
+  `openGraph` gubi obrazek odziedziczony z korzenia)
+- `rel="me"` także w stopce strony głównej, nie tylko na wizytówkach
+- pięć certyfikatów (AZ-900, AI-900, DP-900, ITIL Foundation, Cambridge)
+  w `hasCredential`, każdy z wystawcą — wcześniej graf znał tylko dyplom
+- portret jako `ImageObject` z `@id`, wymiarami i podpisem, wskazywany też
+  przez `ProfilePage.primaryImageOfPage`
+- `WebSite` z `about`, `copyrightHolder`, `description` i `alternateName` —
+  wcześniej wiązało go z osobą samo `publisher`
+- oba `Organization` z `logo`; Ultra Studio z dwoma założycielami i kontem
+  na Instagramie, Squizzu z subdomeną aplikacji
+- `lastmod` i `dateModified` na ręcznej dacie zamiast czasu builda
+- `robots.txt` z `Disallow: /api/`
+- 404 z własnym tytułem i `noindex, follow`
+- usunięty duplikat `public/images/portrait.jpg`
 
 ### Otwarte
 
-- rozważyć usunięcie `ultrastud.io` i `squizzu.com` z `Person.sameAs` —
-  relację niesie już `worksFor` i `founder`
-- `public/images/portrait.jpg` — osierocony po zmianie nazwy pliku
-- **węzeł `Squizzu` jest zaślepką**: `name`, `url`, `description`,
-  `foundingDate`, `founder`. Bez `sameAs`, bez `logo`, bez węzła `WebSite`.
-  Sama domena `squizzu.com` nie jest objęta żadnym dokumentem, mimo że to
-  najmocniejsze aktywo pod notoryjność z sekcji 7
+- **węzeł `Squizzu` wciąż bez `WebSite`.** Ma już `name`, `url`,
+  `description`, `foundingDate`, `founder`, `logo` i `sameAs` z subdomeną
+  aplikacji, ale sama domena `squizzu.com` nadal nie jest objęta żadnym
+  własnym dokumentem, mimo że to najmocniejsze aktywo pod notoryjność
+  z sekcji 7
+- `squizzu.com` linkuje z własnej strony głównej do czterech profili
+  (Instagram `@squizzu_`, X `@squizzu_`, LinkedIn `company/squizzu`,
+  Facebook), zweryfikowanych `curl`em. Nie weszły jeszcze do `sameAs`
+  organizacji — do świadomej decyzji, tak samo jak przy `entityProfiles`
+- `contactInfo.squizzu` to `https://www.squizzu.com`, a ten adres robi 308 na
+  `https://squizzu.com`. `Organization.url` wskazuje więc adres, który
+  przekierowuje — dokładnie problem z decyzji „Apex, nie www". `@id` zmienić
+  nie wolno, ale `url` dałoby się rozdzielić od `@id`
+- `logo` obu organizacji to białe SVG przygotowane pod ciemne kafelki
+  pulpitu. Na białym tle znak Ultra Studio jest niewidoczny; docelowo
+  potrzebny wariant kontrastowy
 - Wikidata — dopiero gdy będą niezależne źródła
 
 ---

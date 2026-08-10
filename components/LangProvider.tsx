@@ -57,9 +57,9 @@ export default function LangProvider({
       {/*
         lang na wrapperze, bo <html lang> ustawia root layout i nie da się go
         zmienić z poziomu trasy bez uczynienia całej aplikacji dynamiczną.
-        Dokument deklaruje polski jako język domyślny serwisu, a ta sekcja
+        Dokument deklaruje angielski (x-default to /about), a ta sekcja
         nadpisuje go językiem faktycznie renderowanym — ten sam zabieg co
-        w EntityHome. Dzięki temu angielska treść jest poprawnie otagowana
+        w EntityHome. Dzięki temu polska treść jest poprawnie otagowana
         już w HTML-u serwerowym, a nie dopiero po hydratacji.
       */}
       <div lang={lang}>{children}</div>

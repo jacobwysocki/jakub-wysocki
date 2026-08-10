@@ -69,7 +69,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pl" className={inter.variable} suppressHydrationWarning>
+    // lang="en" na korzeniu, bo root layout jest statyczny dla wszystkich
+    // tras i musi zadeklarować jeden język. Angielski wygrywa, bo /about
+    // jest x-default, węzeł Person jest angielski, a og:locale:alternate to
+    // en_GB — wcześniejsze "pl" przeczyło wszystkim trzem sygnałom naraz
+    // i rozjazd lang kontra hreflang potrafi unieważnić cały klaster.
+    // /o-mnie zostaje poprawne na poziomie poddrzewa: EntityHome ustawia
+    // lang={lang} na własnym wrapperze, a strona niesie og:locale=pl_PL
+    // i inLanguage=pl-PL. Języka nie przepuszczamy przez root layout
+    // dynamicznie — to uczyniłoby każdą trasę dynamiczną.
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Ustala tryb widoku (prosty/pulpit) przed pierwszym paintem — bez migania */}
         <script dangerouslySetInnerHTML={{ __html: MODE_INIT_SCRIPT }} />

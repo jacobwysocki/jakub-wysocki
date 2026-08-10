@@ -42,18 +42,28 @@ export const contactInfo = {
  * Dopisuj tu każdy nowy zweryfikowany profil (Wikidata, ORCID, Crunchbase).
  * `label` jest tekstem linku na wizytówce, więc nie jest tłumaczony:
  * nazwy własne serwisów brzmią tak samo w obu językach.
+ *
+ * `identity` rozstrzyga, czy adres opisuje TĘ OSOBĘ, czy tylko coś, co
+ * współtworzy. Do `sameAs` idą wyłącznie te pierwsze: adresy firm mają
+ * w tym samym grafie własne węzły Organization, więc powtórzone w `sameAs`
+ * twierdziłyby, że osoba i firma to jeden byt. Widoczna lista na wizytówce
+ * pokazuje wszystkie — dla człowieka to nadal linki „gdzie mnie znaleźć".
  */
 export const entityProfiles = [
-  { label: "LinkedIn", href: contactInfo.linkedin },
-  { label: "GitHub", href: contactInfo.github },
-  { label: "Behance", href: contactInfo.behance },
-  { label: "Stack Overflow", href: contactInfo.stackoverflow },
-  { label: "Ultra Studio", href: contactInfo.ultrastudio },
-  { label: "Squizzu", href: contactInfo.squizzu },
+  { label: "LinkedIn", href: contactInfo.linkedin, identity: true },
+  { label: "GitHub", href: contactInfo.github, identity: true },
+  { label: "Behance", href: contactInfo.behance, identity: true },
+  { label: "Stack Overflow", href: contactInfo.stackoverflow, identity: true },
+  { label: "Ultra Studio", href: contactInfo.ultrastudio, identity: false },
+  { label: "Squizzu", href: contactInfo.squizzu, identity: false },
 ] as const;
 
 export const site = {
-  name: "jakub-wysocki",
+  // Nazwa własna, nie slug repo — ta wartość jest marką w nawigacji, więc
+  // to ona odpowiada za obecność frazy „Jakub Wysocki" w widocznej treści
+  // strony głównej. Wcześniej nazwisko było tylko w stopce i w JSON-LD.
+  // Ta sama decyzja co przy `applicationName` w app/layout.tsx.
+  name: "Jakub Wysocki",
   studio: "Ultra Studio",
   hero: {
     headline: {
@@ -182,6 +192,13 @@ export const person = {
   // Nazwa pliku jest sygnałem w wyszukiwarce grafiki, dlatego zawiera
   // imię i nazwisko zamiast generycznego "portrait".
   portrait: "/images/jakub-wysocki-portrait.jpg",
+  /**
+   * Wymiary pliku wyżej, w pikselach — zasilają węzeł ImageObject
+   * w lib/schema.ts. Trzymane przy ścieżce, bo to fakt o tym samym pliku:
+   * po podmianie portretu odczytaj je na nowo z
+   * `sips -g pixelWidth -g pixelHeight public/images/<plik>`.
+   */
+  portraitSize: { width: 1122, height: 1402 },
   /** Kanoniczna nota biograficzna — ta sama treść co w bio LinkedIna. */
   bio: {
     pl: "Jakub Wysocki jest inżynierem oprogramowania i projektantem UX/UI z siedzibą w Krakowie. Współzałożyciel Ultra Studio (studio kreatywne zajmujące się brandingiem, web designem i custom developmentem) oraz Squizzu, grywalizowanej platformy do nauki IT i przygotowania do rozmów rekrutacyjnych. Od 2021 roku pracuje na styku inżynierii i designu w Wielkiej Brytanii, Polsce i Meksyku, budując systemy w .NET i React dla klientów korporacyjnych i produktów wczesnej fazy.",
@@ -204,3 +221,19 @@ export const person = {
   /** Adresy stron-wizytówek w obu językach — canonical + hreflang. */
   entityHome: { en: "/about", pl: "/o-mnie" },
 } as const;
+
+/**
+ * Data ostatniej zmiany FAKTÓW o osobie — nie ostatniego deployu. Podnoś ją
+ * ręcznie, gdy zmienia się treść `person`, `contactInfo` albo `entityProfiles`.
+ *
+ * Mieszka obok faktów, bo opisuje właśnie je, a czytają ją dwie powierzchnie:
+ * `ProfilePage.dateModified` (lib/schema.ts) i `lastmod` w sitemapie
+ * (app/sitemap.ts). Wcześniej sitemap liczył `new Date()` — trasa jest
+ * statyczna, więc wszystkie trzy adresy dostawały czas builda i każdy deploy,
+ * także poprawka CSS, ogłaszał Google'owi zmianę wszystkich stron. Google
+ * przestaje ufać źródłom `lastmod`, które przyłapie na takim szumie, więc
+ * data nieprawdziwa jest gorsza niż żadna.
+ *
+ * Format ISO 8601 (sama data): poprawny i dla `<lastmod>`, i dla schema.org.
+ */
+export const FACTS_UPDATED = "2026-08-10";
