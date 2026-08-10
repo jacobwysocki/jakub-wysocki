@@ -26,6 +26,13 @@ export const metadata: Metadata = {
     type: "profile",
     locale: "en_GB",
   },
+  // Bez tego twitter dziedziczy się z korzenia w całości i wizytówka
+  // zapowiadałaby się tytułem strony głównej. `images` doklei Next
+  // z app/about/opengraph-image.tsx.
+  twitter: {
+    title: `About ${person.fullName}`,
+    description: person.bio.en,
+  },
 };
 
 export default function AboutPage() {

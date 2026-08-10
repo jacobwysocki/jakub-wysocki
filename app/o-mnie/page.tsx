@@ -26,6 +26,12 @@ export const metadata: Metadata = {
     type: "profile",
     locale: "pl_PL",
   },
+  // Patrz app/about/page.tsx — dziedziczony twitter z korzenia zapowiadałby
+  // tę wizytówkę tytułem i opisem strony głównej, w dodatku po angielsku.
+  twitter: {
+    title: `O mnie | ${person.fullName}`,
+    description: person.bio.pl,
+  },
 };
 
 export default function OMniePage() {
