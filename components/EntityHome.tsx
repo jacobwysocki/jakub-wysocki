@@ -115,6 +115,16 @@ export default function EntityHome({ lang }: { lang: Lang }) {
                   {t(r.period)} · {t(r.location)}
                 </p>
                 <p className="mt-1">{t(r.summary)}</p>
+                {/* Highlights, nie samo streszczenie: to w nich siedzą fakty
+                    z zewnętrznym potwierdzeniem — nagroda Premios eCommerce
+                    MX 2024, 40 000+ użytkowników, First Class Honours,
+                    300+ firm transportowych. Bez nich strona niosąca
+                    ProfilePage i x-default nie miała ich wcale. */}
+                <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-line">
+                  {r.highlights.map((h, i) => (
+                    <li key={i}>{t(h)}</li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ol>

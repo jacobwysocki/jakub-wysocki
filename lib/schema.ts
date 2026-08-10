@@ -119,6 +119,10 @@ const personNode = {
   ],
   sameAs,
 };
+  // Jedyny fakt o tej osobie z zewnętrznym, niezależnym udokumentowaniem —
+  // ogłosił go ktoś inny. Do tej pory żył wyłącznie w prozie
+  // data/experience.ts, więc dla maszyn nie istniał.
+  award: "Best New E-commerce — Premios eCommerce MX 2024 (Safetystore.mx)",
 
 const organizationNodes = [
   {
