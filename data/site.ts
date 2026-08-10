@@ -53,7 +53,11 @@ export const entityProfiles = [
 ] as const;
 
 export const site = {
-  name: "jakub-wysocki",
+  // Nazwa własna, nie slug repo — ta wartość jest marką w nawigacji, więc
+  // to ona odpowiada za obecność frazy „Jakub Wysocki" w widocznej treści
+  // strony głównej. Wcześniej nazwisko było tylko w stopce i w JSON-LD.
+  // Ta sama decyzja co przy `applicationName` w app/layout.tsx.
+  name: "Jakub Wysocki",
   studio: "Ultra Studio",
   hero: {
     headline: {
