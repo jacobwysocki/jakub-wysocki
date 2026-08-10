@@ -5,11 +5,11 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Github,
   LoaderCircle,
   Lock,
   RotateCw,
 } from "lucide-react";
+import { GithubIcon } from "@/components/logos";
 import type { ShowcaseSite } from "@/data/showcase";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
@@ -194,7 +194,7 @@ function Overview({
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-black/[0.04]"
           >
-            <Github size={14} aria-hidden />
+            <GithubIcon size={14} aria-hidden />
             {t(ui.actions.sourceCode)}
           </a>
         )}
@@ -311,7 +311,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
             title="GitHub"
             className={toolbarBtn}
           >
-            <Github size={15} strokeWidth={1.8} />
+            <GithubIcon size={15} strokeWidth={1.8} />
           </a>
         )}
         <a

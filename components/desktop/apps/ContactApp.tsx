@@ -1,8 +1,13 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Linkedin, Github, Mail, Phone } from "lucide-react";
-import { BehanceIcon, StackOverflowIcon } from "@/components/logos";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import {
+  BehanceIcon,
+  GithubIcon,
+  LinkedinIcon,
+  StackOverflowIcon,
+} from "@/components/logos";
 import type { SocialIcon } from "@/data/links";
 import { site, contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
@@ -64,14 +69,14 @@ export default function ContactApp() {
       label: "LinkedIn",
       detail: hostLabel(contactInfo.linkedin),
       href: contactInfo.linkedin,
-      icon: Linkedin,
+      icon: LinkedinIcon,
       external: true,
     },
     {
       label: "GitHub",
       detail: hostLabel(contactInfo.github),
       href: contactInfo.github,
-      icon: Github,
+      icon: GithubIcon,
       external: true,
     },
     {
