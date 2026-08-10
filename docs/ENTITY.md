@@ -2,7 +2,7 @@
 
 Status: bieżący rejestr techniczny
 
-Ostatnia synchronizacja z kodem: 2026-08-08
+Ostatnia synchronizacja z kodem: 2026-08-10
 
 Stany usług zewnętrznych, profili i Search Console są zapisem operacyjnym z dnia ostatniej ręcznej weryfikacji, a nie czymś, co da się potwierdzić samym kodem repozytorium.
 
@@ -135,9 +135,21 @@ więc wpisanie jej tworzyłoby relację nieodwzajemnioną.
 Plik nazywa się nazwiskiem, a nie `portrait.jpg` — nazwa pliku jest sygnałem
 w image search. Portret jest też jawnie zgłoszony w sitemapie.
 
-**`sameAs` kontra `worksFor`.** `sameAs` powinno zawierać adresy
-identyfikujące **tę osobę**. Adresy firm są tam nadal obecne, choć relację
-niesie już `worksFor` i `founder`. Do posprzątania, patrz sekcja 5.
+**`sameAs` kontra `worksFor`.** `sameAs` zawiera wyłącznie adresy
+identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
+`identity` w `entityProfiles`: ten sam dokument definiuje dla nich węzły
+`Organization`, więc powtórzone w `sameAs` twierdziłyby, że osoba i firma to
+jeden byt. Relację niesie `worksFor` i `founder`, a widoczna lista na
+wizytówkach pokazuje wszystkie sześć linków bez zmian.
+
+**`<html lang>` jest angielskie.** Root layout jest statyczny dla wszystkich
+tras i musi zadeklarować jeden język; angielski, bo `/about` jest `x-default`,
+węzeł `Person` jest angielski, a `og:locale:alternate` to `en_GB`. Wcześniejsze
+`pl` przeczyło na `/about` trzem sygnałom naraz, a rozjazd `lang` kontra
+`hreflang` bywa powodem odrzucenia całego klastra. Polski niosą poddrzewa:
+`EntityHome` na `/o-mnie` i `LangProvider` na stronie głównej. Języka nie
+przepuszczamy przez root layout dynamicznie — to uczyniłoby każdą trasę
+dynamiczną.
 
 **`StableText` renderuje tylko aktywny język.** Wcześniej komponent trzymał
 w DOM obie wersje, przez co crawler czytał sklejki w rodzaju
@@ -184,11 +196,15 @@ Poniższy stan powierzchni zewnętrznych wymaga datowanej ręcznej weryfikacji p
 - `ultrastud.io` potwierdza encję: graf site-wide z `Organization`, `Person`
   i Squizzu, `CreativeWork` na każdym case study, link zwrotny w biogramie
   `/o-nas`, rola ujednolicona jako `co-founder, design & development`
+- `Person.sameAs` odchudzone do samych profili osobowych (flaga `identity`)
+- nagroda Premios eCommerce MX 2024 w `Person.award`, a highlighty ról
+  widoczne na `/about` i `/o-mnie`
+- własny `opengraph-image` na `/about` i `/o-mnie` (segment eksportujący
+  `openGraph` gubi obrazek odziedziczony z korzenia)
+- `rel="me"` także w stopce strony głównej, nie tylko na wizytówkach
 
 ### Otwarte
 
-- rozważyć usunięcie `ultrastud.io` i `squizzu.com` z `Person.sameAs` —
-  relację niesie już `worksFor` i `founder`
 - `public/images/portrait.jpg` — osierocony po zmianie nazwy pliku
 - **węzeł `Squizzu` jest zaślepką**: `name`, `url`, `description`,
   `foundingDate`, `founder`. Bez `sameAs`, bez `logo`, bez węzła `WebSite`.
