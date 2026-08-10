@@ -50,6 +50,13 @@ Dwie domeny używają tych samych identyfikatorów celowo. Dzięki temu
 `ultrastud.io` nie opisuje „jakiegoś Jakuba Wysockiego", tylko potwierdza
 tę samą encję, którą definiuje `jakub-wysocki.com`.
 
+`@id` Squizzu zawiera `www`, a `Organization.url` wskazuje apex — i tak ma
+zostać. `@id` jest kluczem nieprzezroczystym, nie adresem do pobrania, więc
+nie musi się z `url` zgadzać; `ultrastud.io` odwołuje się dokładnie do tego
+ciągu. Dlatego `ID.squizzu` w `lib/schema.ts` jest literałem, a nie wyrażeniem
+z `contactInfo.squizzu` — inaczej poprawienie adresu po cichu przepisałoby
+identyfikator i rozjechało oba grafy.
+
 ---
 
 ## 2. Rejestr powierzchni
@@ -265,6 +272,20 @@ Poniższy stan powierzchni zewnętrznych wymaga datowanej ręcznej weryfikacji p
 - `robots.txt` z `Disallow: /api/`
 - 404 z własnym tytułem i `noindex, follow`
 - usunięty duplikat `public/images/portrait.jpg`
+- **`Organization.url` Squizzu na apex**, `@id` bez zmian jako klucz
+  nieprzezroczysty (sekcja 1). Decyzja właściciela: kanoniczny adres to
+  `https://squizzu.com`
+- **pięć firmowych profili Squizzu w `sameAs` węzła Organization** —
+  LinkedIn, X, Instagram, Facebook, TikTok. Świadomie na Organization,
+  nie na Person: to konta firmy, więc trafiają tam, gdzie `identity: false`
+  w `entityProfiles`. TikTok potwierdzony przez właściciela, nie był
+  w pierwotnym przeglądzie strony
+- **CEFR usunięty z `certifications`.** Common European Framework of
+  Reference for Languages to skala Rady Europy, nie certyfikat i nie
+  wystawca, więc `hasCredential` twierdziło nieprawdę. Angielski był i jest
+  opisany w `languages` jako „C1/C2 Cambridge" — fakt nie znika, wraca tylko
+  na właściwe miejsce. `hasCredential` ma teraz cztery pozycje, wszystkie
+  z realnym wystawcą
 
 ### Otwarte
 
@@ -273,14 +294,6 @@ Poniższy stan powierzchni zewnętrznych wymaga datowanej ręcznej weryfikacji p
   aplikacji, ale sama domena `squizzu.com` nadal nie jest objęta żadnym
   własnym dokumentem, mimo że to najmocniejsze aktywo pod notoryjność
   z sekcji 7
-- `squizzu.com` linkuje z własnej strony głównej do czterech profili
-  (Instagram `@squizzu_`, X `@squizzu_`, LinkedIn `company/squizzu`,
-  Facebook), zweryfikowanych `curl`em. Nie weszły jeszcze do `sameAs`
-  organizacji — do świadomej decyzji, tak samo jak przy `entityProfiles`
-- `contactInfo.squizzu` to `https://www.squizzu.com`, a ten adres robi 308 na
-  `https://squizzu.com`. `Organization.url` wskazuje więc adres, który
-  przekierowuje — dokładnie problem z decyzji „Apex, nie www". `@id` zmienić
-  nie wolno, ale `url` dałoby się rozdzielić od `@id`
 - `logo` obu organizacji to białe SVG przygotowane pod ciemne kafelki
   pulpitu. Na białym tle znak Ultra Studio jest niewidoczny; docelowo
   potrzebny wariant kontrastowy

@@ -34,7 +34,14 @@ export const ID = {
    * poprawnym `@id` byłoby gorsze niż samo `@id`.
    */
   ultraStudioCoFounder: `${contactInfo.ultrastudio}/#filip-mazur`,
-  squizzu: `${contactInfo.squizzu}/#organization`,
+  /**
+   * Celowo literał, nie `${contactInfo.squizzu}`. `@id` to nieprzezroczysty,
+   * stały klucz — nie adres do pobrania — i `ultrastud.io` odwołuje się do
+   * dokładnie tego ciągu. Kanoniczny adres Squizzu to apex (`url` niżej),
+   * ale zmiana `@id` rozjechałaby oba grafy, czyli koszt większy niż to,
+   * że historyczny klucz ma w sobie `www`. Sekcja 5 `docs/ENTITY.md`.
+   */
+  squizzu: "https://www.squizzu.com/#organization",
   /** Strona-wizytówka uznana za kanoniczną (ta sama, co x-default w hreflang). */
   profilePage: `${SITE_URL}${person.entityHome.en}#profilepage`,
 } as const;
@@ -258,7 +265,19 @@ const organizationNodes = [
     // Sama aplikacja stoi na osobnej subdomenie i jest drugą powierzchnią
     // tej samej organizacji — bez tego graf opisuje wyłącznie witrynę
     // wizerunkową i nie wie o produkcie.
-    sameAs: [contactInfo.squizzuApp],
+    //
+    // Profile społecznościowe są tutaj, a nie w `sameAs` osoby: to konta
+    // FIRMY. Ta sama zasada, co `identity` w `entityProfiles` — osoba i
+    // firma to dwa byty, więc konta firmowe wzmacniają węzeł Organization.
+    // Wszystkie zadeklarowane przez samą stronę główną squizzu.com.
+    sameAs: [
+      contactInfo.squizzuApp,
+      "https://www.linkedin.com/company/squizzu/",
+      "https://x.com/squizzu_",
+      "https://www.instagram.com/squizzu_/",
+      "https://www.facebook.com/profile.php?id=61584419813171",
+      "https://www.tiktok.com/@squizzu_",
+    ],
   },
 ];
 
