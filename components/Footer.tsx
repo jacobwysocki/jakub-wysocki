@@ -32,6 +32,14 @@ function useLocalTime(lang: string) {
 }
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
+/**
+ * Wariant dla profili tej samej osoby. `rel="me"` jest tu potrzebne, bo
+ * profile zewnętrzne linkują z powrotem tym samym atrybutem, a wzajemność
+ * to osobny sygnał tożsamości — do tej pory niosły go tylko wizytówki
+ * /about i /o-mnie, czyli nie ta strona, na którą wchodzi ruch.
+ * Kolumna Projekty go NIE dostaje: to adresy firm i produktów, nie osoby.
+ */
+const identity = { target: "_blank", rel: "me noopener noreferrer" } as const;
 
 function Column({
   heading,
@@ -55,22 +63,27 @@ function FooterLink({
   children,
   onClick,
   isExternal = false,
+  isIdentity = false,
 }: {
   href: string;
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
   isExternal?: boolean;
+  isIdentity?: boolean;
 }) {
+  // Profil tożsamościowy jest też linkiem zewnętrznym — dostaje tę samą
+  // strzałkę i to samo otwarcie w nowej karcie, różni się tylko o `me`.
+  const opensNewTab = isExternal || isIdentity;
   return (
     <li>
       <a
         href={href}
         onClick={onClick}
-        {...(isExternal ? external : {})}
+        {...(isIdentity ? identity : isExternal ? external : {})}
         className="group inline-flex items-center gap-1 text-[14px] text-white/70 transition-colors duration-300 hover:text-white"
       >
         {children}
-        {isExternal && (
+        {opensNewTab && (
           <ArrowUpRight
             size={12}
             aria-hidden
@@ -166,16 +179,16 @@ export default function Footer() {
             <li>
               <RevealPhone className="text-[14px] text-white/70 transition-colors duration-300 hover:text-white" />
             </li>
-            <FooterLink href={contactInfo.linkedin} isExternal>
+            <FooterLink href={contactInfo.linkedin} isIdentity>
               LinkedIn
             </FooterLink>
-            <FooterLink href={contactInfo.github} isExternal>
+            <FooterLink href={contactInfo.github} isIdentity>
               GitHub
             </FooterLink>
-            <FooterLink href={contactInfo.behance} isExternal>
+            <FooterLink href={contactInfo.behance} isIdentity>
               Behance
             </FooterLink>
-            <FooterLink href={contactInfo.stackoverflow} isExternal>
+            <FooterLink href={contactInfo.stackoverflow} isIdentity>
               Stack Overflow
             </FooterLink>
           </Column>
