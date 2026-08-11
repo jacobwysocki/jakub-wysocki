@@ -11,6 +11,7 @@ import {
 import { useLang } from "@/lib/lang-store";
 import { useDesktop } from "./DesktopContext";
 import { askJakubCopy } from "./apps/ask-jakub-copy";
+import { ASK_JAKUB_WIDGET_RIGHT, DESKTOP_LAYOUT } from "./desktop-layout";
 
 export default function AskJakubWidget({
   areaRef,
@@ -67,7 +68,12 @@ export default function AskJakubWidget({
       hidden={hidden}
       onContextMenu={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
-      className="absolute bottom-4 right-[226px] z-[1] w-[330px] overflow-hidden rounded-[28px] border border-white/20 bg-black/30 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl max-[899px]:hidden"
+      style={{
+        bottom: DESKTOP_LAYOUT.edgeInset,
+        right: ASK_JAKUB_WIDGET_RIGHT,
+        width: DESKTOP_LAYOUT.askJakubWidget.width,
+      }}
+      className="absolute z-[1] overflow-hidden rounded-[28px] border border-white/20 bg-black/30 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl max-[899px]:hidden"
     >
       <div
         onPointerDown={(event) => dragControls.start(event)}

@@ -6,6 +6,7 @@ import { contactInfo, site } from "@/data/site";
 import { ui } from "@/data/ui";
 import { useT, type L10n } from "@/lib/lang-store";
 import { useDesktop } from "./DesktopContext";
+import { DESKTOP_LAYOUT } from "./desktop-layout";
 
 const copy = {
   now: { pl: "Teraz", en: "Now" },
@@ -36,7 +37,12 @@ export default function NowWidget({
       dragElastic={0}
       dragConstraints={areaRef}
       aria-label={t(copy.now)}
-      className="absolute bottom-4 left-4 w-[290px] overflow-hidden rounded-[28px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-2xl"
+      style={{
+        bottom: DESKTOP_LAYOUT.edgeInset,
+        left: DESKTOP_LAYOUT.edgeInset,
+        width: DESKTOP_LAYOUT.nowWidget.width,
+      }}
+      className="absolute overflow-hidden rounded-[28px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-2xl"
     >
       <div
         onPointerDown={(event) => dragControls.start(event)}

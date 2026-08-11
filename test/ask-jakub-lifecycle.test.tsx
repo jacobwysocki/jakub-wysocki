@@ -9,6 +9,10 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import Desktop from "@/components/desktop/Desktop";
+import {
+  ASK_JAKUB_WIDGET_RIGHT,
+  DESKTOP_LAYOUT,
+} from "@/components/desktop/desktop-layout";
 import { LangContext } from "@/lib/lang-store";
 import { useWindowStore } from "@/lib/window-store";
 
@@ -211,6 +215,11 @@ describe("Ask Jakub Desktop Mode lifecycle", () => {
       name: "Ask Jakub quick chat",
     });
 
+    expect(widget).toHaveStyle({
+      bottom: `${DESKTOP_LAYOUT.edgeInset}px`,
+      right: `${ASK_JAKUB_WIDGET_RIGHT}px`,
+      width: `${DESKTOP_LAYOUT.askJakubWidget.width}px`,
+    });
     expect(
       within(widget).getByRole("textbox", {
         name: "Question about Jakub's work",
