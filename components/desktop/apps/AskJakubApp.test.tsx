@@ -194,7 +194,7 @@ describe("Ask Jakub Desktop App", () => {
     expect(
       view.getByRole("heading", { name: "Ask Jakub" }),
     ).toBeInTheDocument();
-    expect(view.getByText("Portfolio guide · not Jakub")).toBeInTheDocument();
+    expect(view.getByText("AI portfolio guide")).toBeInTheDocument();
     expect(
       view.getByText(/Answers use this portfolio and link back to the source/i),
     ).toBeInTheDocument();
@@ -776,7 +776,7 @@ describe("Ask Jakub Desktop App", () => {
 
     expect(
       english.getByText(
-        "When AI answers are enabled, your question, completed chat history, and selected public portfolio facts are sent to Groq. This site does not save the conversation.",
+        "Your question goes to a third-party model provider; this conversation is not stored.",
       ),
     ).toBeInTheDocument();
 
@@ -789,7 +789,7 @@ describe("Ask Jakub Desktop App", () => {
     );
     expect(
       polish.getByText(
-        "Gdy odpowiedzi AI są włączone, Twoje pytanie, ukończona historia rozmowy i wybrane publiczne fakty z portfolio są wysyłane do Groq. Ta strona nie zapisuje rozmowy.",
+        "Pytanie trafia do zewnętrznego dostawcy modelu AI; ta rozmowa nie jest zapisywana.",
       ),
     ).toBeInTheDocument();
   });
@@ -805,9 +805,7 @@ describe("Ask Jakub Desktop App", () => {
     expect(
       view.getByRole("heading", { name: "Zapytaj o Jakuba" }),
     ).toBeInTheDocument();
-    expect(
-      view.getByText("Przewodnik portfolio · nie Jakub"),
-    ).toBeInTheDocument();
+    expect(view.getByText("Przewodnik AI po portfolio")).toBeInTheDocument();
     expect(
       view.getByText(/jak łączę inżynierię z designem/i),
     ).toBeInTheDocument();

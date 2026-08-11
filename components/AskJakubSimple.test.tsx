@@ -13,12 +13,37 @@ import AskJakubSimple from "./AskJakubSimple";
 
 const QUESTION = "Which work best shows product thinking?";
 const ANSWER = "The portfolio points to a documented product example.";
+const MOBILE_QUERY = "(max-width: 899px)";
+const ORIGINAL_INNER_WIDTH = window.innerWidth;
+
+function setViewport(width: number) {
+  Object.defineProperty(window, "innerWidth", {
+    configurable: true,
+    value: width,
+  });
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn((query: string) => ({
+      matches: query === MOBILE_QUERY ? width < 900 : false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+}
 
 function renderInEnglish() {
+  if (typeof window.matchMedia !== "function") setViewport(900);
   return render(
-    <LangContext.Provider value={{ lang: "en", setLang: vi.fn() }}>
-      <AskJakubSimple />
-    </LangContext.Provider>,
+    <div data-simple-root>
+      <LangContext.Provider value={{ lang: "en", setLang: vi.fn() }}>
+        <AskJakubSimple />
+      </LangContext.Provider>
+    </div>,
   );
 }
 
@@ -57,7 +82,13 @@ function successfulAskResponse(init?: RequestInit): Response {
 describe("Ask Jakub in Simple view", () => {
   afterEach(() => {
     cleanup();
+    document.body.removeAttribute("style");
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: ORIGINAL_INNER_WIDTH,
+    });
   });
 
   it("server-renders both text triggers but no panel payload", () => {
@@ -84,20 +115,47 @@ describe("Ask Jakub in Simple view", () => {
     );
   });
 
-  it("uses the CSS-only 900px split for the pill and keeps the inline entry", () => {
+  it("enforces mobile modality and restores the exact scroll position", async () => {
+    setViewport(390);
+    vi.spyOn(window, "scrollY", "get").mockReturnValue(427);
+    const scrollTo = vi.fn();
+    vi.stubGlobal("scrollTo", scrollTo);
     const view = renderInEnglish();
-    const pill = view.container.querySelector<HTMLElement>(
-      '[data-ask-jakub-trigger="pill"]',
-    );
-    const inline = view.container.querySelector<HTMLElement>(
-      '[data-ask-jakub-trigger="inline"]',
+    fireEvent.click(
+      view.getAllByRole("button", { name: "Ask about my work" })[0],
     );
 
-    expect(pill).toHaveClass("max-[899px]:hidden");
-    expect(inline).not.toHaveClass("max-[899px]:hidden");
-    expect(view.container).toContainElement(
-      view.container.querySelector("[data-ask-jakub-inline-entry]"),
+    const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+    expect(dialog).toHaveAttribute("aria-modal", "true");
+    expect(document.querySelector("[data-ask-jakub-backdrop]")).not.toBeNull();
+    expect(document.body.style.position).toBe("fixed");
+    expect(document.body.style.top).toBe("-427px");
+    expect(view.container.firstElementChild).toHaveAttribute("inert");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    await waitFor(() =>
+      expect(
+        view.queryByRole("dialog", { name: "Ask Jakub" }),
+      ).not.toBeInTheDocument(),
     );
+    expect(document.body.style.position).toBe("");
+    expect(document.body.style.top).toBe("");
+    expect(view.container.firstElementChild).not.toHaveAttribute("inert");
+    expect(scrollTo).toHaveBeenLastCalledWith(0, 427);
+  });
+
+  it("keeps the 900px side panel non-modal", async () => {
+    setViewport(900);
+    const view = renderInEnglish();
+    fireEvent.click(
+      view.getAllByRole("button", { name: "Ask about my work" })[0],
+    );
+
+    const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+    expect(dialog).not.toHaveAttribute("aria-modal");
+    expect(document.querySelector("[data-ask-jakub-backdrop]")).toBeNull();
+    expect(document.body.style.position).not.toBe("fixed");
   });
 
   it("moves focus into the panel, closes on Escape, and returns focus", async () => {
@@ -116,6 +174,19 @@ describe("Ask Jakub in Simple view", () => {
       expect(
         within(dialog).getByRole("button", { name: "Close" }),
       ).toHaveFocus(),
+    );
+    expect(within(dialog).getByText("AI portfolio guide")).toBeInTheDocument();
+    const composer = within(dialog).getByRole("textbox", {
+      name: "Question about Jakub's work",
+    });
+    const disclosure = document.getElementById(
+      "ask-jakub-simple-panel-disclosure",
+    );
+    expect(disclosure).toHaveTextContent(
+      "Your question goes to a third-party model provider; this conversation is not stored.",
+    );
+    expect(composer.getAttribute("aria-describedby")?.split(" ")).toContain(
+      disclosure?.id,
     );
     expect(fetchSpy).not.toHaveBeenCalled();
 
