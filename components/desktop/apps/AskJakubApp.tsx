@@ -16,9 +16,9 @@ import {
   type AskProblem,
   useAskJakubSession,
 } from "@/features/ask-jakub";
+import { askJakubCopy } from "@/data/ask-jakub";
 import { useLang } from "@/lib/lang-store";
 import { useDesktop } from "../DesktopContext";
-import { askJakubCopy } from "./ask-jakub-copy";
 
 function ProgressiveAnswer({ text }: { text: string }) {
   const reducedMotion = useReducedMotionConfig();

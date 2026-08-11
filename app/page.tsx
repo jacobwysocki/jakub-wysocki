@@ -1,6 +1,7 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import AskJakubSimple from "@/components/AskJakubSimple";
 import Timeline from "@/components/Timeline";
 import UltraStudio from "@/components/UltraStudio";
 import Extras from "@/components/Extras";
@@ -28,6 +29,7 @@ export default async function Home() {
             <main id="main" tabIndex={-1} className="focus:outline-none">
               <Hero />
               <About />
+              <AskJakubSimple />
               <Timeline />
               <UltraStudio />
               <Extras />

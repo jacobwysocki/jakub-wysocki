@@ -8,9 +8,9 @@ import {
   useAskJakubSession,
   type AskProblem,
 } from "@/features/ask-jakub";
+import { askJakubCopy } from "@/data/ask-jakub";
 import { useLang } from "@/lib/lang-store";
 import { useDesktop } from "./DesktopContext";
-import { askJakubCopy } from "./apps/ask-jakub-copy";
 import { ASK_JAKUB_WIDGET_RIGHT, DESKTOP_LAYOUT } from "./desktop-layout";
 
 export default function AskJakubWidget({
