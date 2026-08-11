@@ -8,6 +8,7 @@ export type ModelInput = Readonly<{
   language: Lang;
   question: string;
   history: readonly CompletedTurn[];
+  knowledgeCoverage: "matched" | "nearest";
   knowledge: readonly Readonly<{ id: KnowledgeId; fact: string }>[];
   allowedSuggestionIds: readonly SuggestionId[];
 }>;

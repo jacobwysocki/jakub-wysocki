@@ -8,6 +8,7 @@ import { useT } from "@/lib/lang-store";
 import { ui } from "@/data/ui";
 import { useDesktop } from "./DesktopContext";
 import { AppTile, getAppsFor, type AppConfig } from "./registry";
+import { DESKTOP_LAYOUT } from "./desktop-layout";
 
 function DesktopIcon({
   app,
@@ -64,7 +65,12 @@ export default function DesktopIcons({
       dragMomentum={false}
       dragElastic={0}
       dragConstraints={areaRef}
-      className="absolute right-4 top-4 w-[190px] rounded-[28px] border border-white/20 bg-black/20 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.22)] backdrop-blur-2xl"
+      style={{
+        right: DESKTOP_LAYOUT.edgeInset,
+        top: DESKTOP_LAYOUT.edgeInset,
+        width: DESKTOP_LAYOUT.desktopIcons.width,
+      }}
+      className="absolute rounded-[28px] border border-white/20 bg-black/20 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.22)] backdrop-blur-2xl"
     >
       <div
         onPointerDown={(event) => dragControls.start(event)}

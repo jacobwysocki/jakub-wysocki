@@ -22,6 +22,7 @@ import { validateTerminalAnswer } from "./output";
 import { buildBoundedModelInput } from "./prompt";
 import { ProviderUnavailableError } from "./provider-disabled-adapter";
 import { validateAskRequest } from "./request";
+import { isGenuinelyOffTopic } from "./scope";
 
 export type AnswerOperationResult = Readonly<{
   status: number;
@@ -38,6 +39,18 @@ function unavailableMessage(language: AskRequest["language"]): string {
   return language === "pl"
     ? "Ask Jakub jest teraz niedostępny. Zamiast tego przejrzyj sugerowane pytania o portfolio."
     : "Ask Jakub is currently unavailable. Explore the suggested portfolio questions instead.";
+}
+
+function offTopicMessage(language: AskRequest["language"]): string {
+  return language === "pl"
+    ? "Ten temat jest poza zakresem tego przewodnika po portfolio, ale mogę pomóc poznać udokumentowane doświadczenie, projekty, umiejętności, wykształcenie i opcje kontaktu Jakuba."
+    : "That topic is outside this portfolio guide, but I can help you explore Jakub's documented work, projects, skills, education, and contact options.";
+}
+
+function nearestKnowledgeQuery(language: AskRequest["language"]): string {
+  return language === "pl"
+    ? "Jakub obecna praca doświadczenie projekty umiejętności"
+    : "Jakub current work experience projects skills";
 }
 
 export async function answerAskJakub(
@@ -90,11 +103,12 @@ export async function answerAskJakub(
       phase: "retrieving",
     },
   ];
-  const matches = retrieveKnowledge(request.question, request.language, {
-    limit: ASK_LIMITS.selectedKnowledgeEntries,
-  });
-  const boundedInput = buildBoundedModelInput(request, matches);
-  const modelInput = boundedInput.input;
+  const offTopic = isGenuinelyOffTopic(request.question, request.language);
+  const directMatches = offTopic
+    ? []
+    : retrieveKnowledge(request.question, request.language, {
+        limit: ASK_LIMITS.selectedKnowledgeEntries,
+      });
 
   events.push({
     version: ASK_PROTOCOL_VERSION,
@@ -102,6 +116,40 @@ export async function answerAskJakub(
     type: "phase.changed",
     phase: "composing",
   });
+
+  if (offTopic) {
+    events.push({
+      version: ASK_PROTOCOL_VERSION,
+      requestId: request.requestId,
+      type: "answer.completed",
+      kind: "not-covered",
+      text: offTopicMessage(request.language),
+      evidenceIds: [],
+      suggestionIds: [
+        "suggestion:full-stack-hiring",
+        "suggestion:applied-ai",
+        "suggestion:contact",
+      ],
+    });
+    return { status: 200, events };
+  }
+
+  const usesNearestKnowledge = directMatches.length === 0;
+  const matches = usesNearestKnowledge
+    ? retrieveKnowledge(
+        nearestKnowledgeQuery(request.language),
+        request.language,
+        {
+          limit: ASK_LIMITS.selectedKnowledgeEntries,
+        },
+      )
+    : directMatches;
+  const boundedInput = buildBoundedModelInput(
+    request,
+    matches,
+    usesNearestKnowledge ? "nearest" : "matched",
+  );
+  const modelInput = boundedInput.input;
 
   const deadline =
     options.deadline ??

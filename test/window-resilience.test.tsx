@@ -240,6 +240,52 @@ describe("desktop window resilience", () => {
     });
   });
 
+  it("renders a pointer-down window above the others before title-bar drag starts", () => {
+    const view = render(<WindowWorkspace />);
+    fireEvent.click(view.getByRole("button", { name: "Open About" }));
+    fireEvent.click(view.getByRole("button", { name: "Open Contact" }));
+    const aboutWindow = view.getByRole("dialog", { name: "O mnie" });
+    const contactWindow = view.getByRole("dialog", { name: "Kontakt" });
+    const titleBar = aboutWindow.querySelector("header");
+    let renderedZDuringPointerDown: string | undefined;
+
+    expect(titleBar).not.toBeNull();
+    expect(Number(contactWindow.style.zIndex)).toBeGreaterThan(
+      Number(aboutWindow.style.zIndex),
+    );
+    titleBar?.addEventListener(
+      "pointerdown",
+      () => {
+        renderedZDuringPointerDown = aboutWindow.style.zIndex;
+      },
+      { once: true },
+    );
+
+    fireEvent.pointerDown(titleBar!);
+
+    expect(Number(renderedZDuringPointerDown)).toBeGreaterThan(
+      Number(contactWindow.style.zIndex),
+    );
+    expect(useWindowStore.getState().focusedId).toBe("about");
+  });
+
+  it("raises a window when its body is pressed", () => {
+    const view = render(<WindowWorkspace />);
+    fireEvent.click(view.getByRole("button", { name: "Open About" }));
+    fireEvent.click(view.getByRole("button", { name: "Open Contact" }));
+    const aboutWindow = view.getByRole("dialog", { name: "O mnie" });
+    const contactWindow = view.getByRole("dialog", { name: "Kontakt" });
+    const body = aboutWindow.querySelector("[data-lenis-prevent]");
+
+    expect(body).not.toBeNull();
+    fireEvent.pointerDown(body!);
+
+    expect(Number(aboutWindow.style.zIndex)).toBeGreaterThan(
+      Number(contactWindow.style.zIndex),
+    );
+    expect(useWindowStore.getState().focusedId).toBe("about");
+  });
+
   it("returns focus to the invoking launcher after its window closes", async () => {
     const view = render(<WindowWorkspace />);
     const launcher = view.getByRole("button", { name: "Open About" });

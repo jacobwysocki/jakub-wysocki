@@ -108,7 +108,7 @@ describe("POST /api/ask-jakub", () => {
       kind: "answered",
       text: "Use the Contact view for Jakub's public contact options.",
       knowledgeIds: ["knowledge:contact:email:primary"],
-      suggestionIds: ["suggestion:full-stack-hiring"],
+      suggestionIds: ["suggestion:contact"],
     };
     const fetchProvider = vi.fn(async () =>
       Promise.resolve(
@@ -222,7 +222,7 @@ describe("POST /api/ask-jakub", () => {
         kind: "answered",
         text: "Use the Contact view for Jakub's public contact options.",
         knowledgeIds: ["knowledge:contact:email:primary"],
-        suggestionIds: ["suggestion:full-stack-hiring"],
+        suggestionIds: ["suggestion:contact"],
       },
     ]);
     const response = await createAskJakubRoute(model)(

@@ -400,7 +400,7 @@ Fail verification when:
 
 ### Retrieval
 
-The initial corpus is small. Normalize case/diacritics, expand curated aliases, score topics/keywords, include closely related entries, and cap the selected facts. Measure fixture recall before adding embeddings.
+The initial corpus is small. Normalize case/diacritics and conservative word families, expand curated aliases, score topics/keywords, include closely related entries, and cap the selected facts. The Ask server distinguishes a genuinely off-topic question from a relevant zero-score question; only the latter receives a bounded nearest-facts fallback labelled as such for the model. Measure fixture recall before adding embeddings.
 
 Provider-disabled mode currently exposes the curated discovery surface and a localized unavailable result; it does not synthesize deterministic answers. Spotlight remains the provider-free path to the same Portfolio Knowledge and Evidence Links. A deterministic answer fallback is a future option, not current behavior.
 
@@ -470,8 +470,8 @@ The deep implementation performs:
 
 1. Validate and normalize request.
 2. Bound completed history; treat it as untrusted visitor input, never knowledge.
-3. Retrieve relevant Knowledge Entries deterministically.
-4. Build a localized prompt containing only selected public facts and opaque evidence/suggestion IDs.
+3. Retrieve relevant Knowledge Entries deterministically, or select bounded nearest entries for a relevant zero-score question.
+4. Build a localized prompt containing only selected public facts, their matched/nearest coverage label, and opaque evidence/suggestion IDs.
 5. Ask the provider Adapter for one bounded structured result.
 6. Validate kind, text type/length, evidence membership, scope, and suggestions.
 7. Resolve owned IDs; remove duplicates and enforce limits.
@@ -485,6 +485,7 @@ type ModelInput = Readonly<{
   language: Lang;
   question: string;
   history: readonly CompletedTurn[];
+  knowledgeCoverage: "matched" | "nearest";
   knowledge: readonly Readonly<{ id: string; fact: string }>[];
   allowedSuggestionIds: readonly string[];
 }>;

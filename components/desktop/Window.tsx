@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { flushSync } from "react-dom";
 import {
   animate,
   motion,
@@ -364,7 +365,11 @@ function WindowFrame({
         setInteracting(false);
         commitRect(win.id, { x: x.get(), y: y.get() });
       }}
-      onPointerDownCapture={() => focus(win.id)}
+      onPointerDownCapture={() => {
+        // Drag startuje w tym samym zdarzeniu — warstwa musi trafić do DOM
+        // przed handlerem nagłówka uruchamiającym dragControls.
+        flushSync(() => focus(win.id));
+      }}
       // Esc obsługuje globalny nasłuch w Desktop.tsx — handler tutaj
       // dublował zamknięcie: okno + świeżo sfokusowane następne okno
       style={{ x, y, width: w, height: h, zIndex: win.z }}

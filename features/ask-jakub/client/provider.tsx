@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { suggestedQuestions } from "@/features/portfolio-knowledge";
+import { initialSuggestedQuestions } from "@/features/portfolio-knowledge";
 import type { PortfolioNavigator } from "@/features/portfolio-navigation";
 import { useLang } from "@/lib/lang-store";
 import type { AskSession } from "../session-reducer";
@@ -66,7 +66,7 @@ function LanguageSession({
     () =>
       new AskSessionController(
         language,
-        suggestedQuestions,
+        initialSuggestedQuestions,
         transport,
         navigator,
       ),

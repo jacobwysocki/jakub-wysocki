@@ -7,6 +7,8 @@ assertValidPortfolioKnowledge(portfolioKnowledge);
 export {
   findEvidence,
   findSuggestedQuestion,
+  followUpSuggestedQuestions,
+  initialSuggestedQuestions,
   knowledgeEntries,
   portfolioKnowledge,
   suggestedQuestions,
