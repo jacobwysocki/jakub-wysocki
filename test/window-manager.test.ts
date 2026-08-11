@@ -48,3 +48,47 @@ describe("Window Manager viewport reconciliation", () => {
     });
   });
 });
+
+describe("Window Manager stacking", () => {
+  const area = { w: 1200, h: 800 };
+
+  beforeEach(() => {
+    useWindowStore.setState({ windows: [], focusedId: null, nextZ: 1 });
+  });
+
+  it("raises a focused window above the others without changing array order", () => {
+    const store = useWindowStore.getState();
+    store.open("about", { size: { w: 640, h: 720 }, area });
+    useWindowStore
+      .getState()
+      .open("contact", { size: { w: 480, h: 580 }, area });
+
+    useWindowStore.getState().focus("about");
+
+    const state = useWindowStore.getState();
+    const about = state.windows.find((win) => win.id === "about");
+    const contact = state.windows.find((win) => win.id === "contact");
+
+    expect(state.windows.map((win) => win.id)).toEqual(["about", "contact"]);
+    expect(about?.z).toBeGreaterThan(contact?.z ?? Number.POSITIVE_INFINITY);
+    expect(state.focusedId).toBe("about");
+  });
+
+  it("opens and restores windows at the top of the stack", () => {
+    const store = useWindowStore.getState();
+    store.open("about", { size: { w: 640, h: 720 }, area });
+    useWindowStore
+      .getState()
+      .open("contact", { size: { w: 480, h: 580 }, area });
+
+    let [about, contact] = useWindowStore.getState().windows;
+    expect(contact.z).toBeGreaterThan(about.z);
+
+    useWindowStore.getState().minimize("about");
+    useWindowStore.getState().restore("about");
+    [about, contact] = useWindowStore.getState().windows;
+
+    expect(about.z).toBeGreaterThan(contact.z);
+    expect(useWindowStore.getState().focusedId).toBe("about");
+  });
+});
