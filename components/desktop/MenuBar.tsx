@@ -12,6 +12,7 @@ import { EASE_APPLE } from "@/lib/motion";
 import { useDesktop } from "./DesktopContext";
 import { getApp } from "./registry";
 import { formatMenuBarClock, useClock } from "./useClock";
+import { DESKTOP_LAYOUT } from "./desktop-layout";
 
 function LogoMenu({
   onClose,
@@ -204,7 +205,15 @@ export default function MenuBar() {
   }, []);
 
   return (
-    <header className="absolute inset-x-4 top-3 z-[80] flex h-11 items-center justify-between rounded-2xl border border-white/20 bg-black/25 px-2.5 text-[13px] text-white shadow-[0_14px_45px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+    <header
+      style={{
+        height: DESKTOP_LAYOUT.menuBar.height,
+        left: DESKTOP_LAYOUT.edgeInset,
+        right: DESKTOP_LAYOUT.edgeInset,
+        top: DESKTOP_LAYOUT.menuBar.top,
+      }}
+      className="absolute z-[80] flex items-center justify-between rounded-2xl border border-white/20 bg-black/25 px-2.5 text-[13px] text-white shadow-[0_14px_45px_rgba(0,0,0,0.2)] backdrop-blur-2xl"
+    >
       <div className="flex items-center gap-1">
         <div className="relative">
           {/* Nazwa + chevron zamiast samego monogramu — wyraźna zachęta do kliknięcia */}

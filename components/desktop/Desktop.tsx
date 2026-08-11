@@ -32,6 +32,7 @@ import ContextMenu from "./ContextMenu";
 import MobileDesktop from "./MobileDesktop";
 import NowWidget from "./NowWidget";
 import AskJakubWidget from "./AskJakubWidget";
+import { DESKTOP_WORK_AREA } from "./desktop-layout";
 
 function DesktopFull({
   wallpaperId,
@@ -157,7 +158,11 @@ function DesktopFull({
         {/* Obszar roboczy: poniżej paska menu, powyżej docka */}
         <div
           ref={areaRef}
-          className="absolute inset-x-0 bottom-[104px] top-[68px]"
+          style={{
+            bottom: DESKTOP_WORK_AREA.bottom,
+            top: DESKTOP_WORK_AREA.top,
+          }}
+          className="absolute inset-x-0"
         >
           {/* Tapeta jako warstwa zdarzeń: prawy klik = menu, ikony pulpitu */}
           <div

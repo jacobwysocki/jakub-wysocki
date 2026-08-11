@@ -16,17 +16,18 @@ import { useT } from "@/lib/lang-store";
 import { ui } from "@/data/ui";
 import { useDesktop } from "./DesktopContext";
 import { AppTile, getAppsFor, type AppConfig } from "./registry";
+import { DESKTOP_LAYOUT } from "./desktop-layout";
 
 /**
  * Dock o stałych wymiarach: sloty ikon mają zawsze BASE×BASE, a powiększenie
  * to czysty transform scale (origin: dół) — pasek nie zmienia rozmiaru,
  * rosną wyłącznie ikony, wystając ponad krawędź paska.
  */
-const BASE = 48;
+const BASE = DESKTOP_LAYOUT.dock.launcherSize;
 // Skala trzymana w ryzach (1.24) + lekki lift w górę: sąsiednie ikony
 // nie nachodzą na siebie, a powiększenie wciąż jest wyraźne.
-const MAX_SCALE = 1.2;
-const LIFT = 8;
+const MAX_SCALE = DESKTOP_LAYOUT.dock.maxScale;
+const LIFT = DESKTOP_LAYOUT.dock.lift;
 const RANGE = 80;
 
 /** Magnifikacja: odległość kursora od środka ikony → skala + lift (sprężyna). */
@@ -174,17 +175,31 @@ export default function Dock() {
   return (
     <nav
       aria-label="Dock"
-      className="pointer-events-none absolute inset-x-0 bottom-4 z-[70] flex justify-center"
+      style={{ bottom: DESKTOP_LAYOUT.edgeInset }}
+      className="pointer-events-none absolute inset-x-0 z-[70] flex justify-center"
     >
       <div
         onMouseMove={reduced ? undefined : (e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="pointer-events-auto flex items-center gap-1.5 rounded-[25px] border border-white/20 bg-black/25 px-2.5 py-2 shadow-[0_22px_65px_rgba(0,0,0,0.38)] backdrop-blur-2xl"
+        style={{
+          borderWidth: DESKTOP_LAYOUT.dock.borderWidth,
+          gap: DESKTOP_LAYOUT.dock.gap,
+          paddingBlock: DESKTOP_LAYOUT.dock.paddingBlock,
+          paddingInline: DESKTOP_LAYOUT.dock.paddingInline,
+        }}
+        className="pointer-events-auto flex items-center rounded-[25px] border-white/20 bg-black/25 shadow-[0_22px_65px_rgba(0,0,0,0.38)] backdrop-blur-2xl"
       >
         {dockApps.map((app) => (
           <DockItem key={app.id} app={app} mouseX={mouseX} />
         ))}
-        <div aria-hidden className="mx-1 h-9 w-px bg-white/20" />
+        <div
+          aria-hidden
+          style={{
+            marginInline: DESKTOP_LAYOUT.dock.separatorMarginInline,
+            width: DESKTOP_LAYOUT.dock.separatorWidth,
+          }}
+          className="h-9 bg-white/20"
+        />
         <DockModeSwitch mouseX={mouseX} />
       </div>
     </nav>
