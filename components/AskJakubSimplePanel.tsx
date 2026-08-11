@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { askJakubCopy } from "@/data/ask-jakub";
 import {
   ASK_JAKUB_QUESTION_LIMIT,
@@ -10,6 +11,9 @@ import {
   useAskJakubSession,
 } from "@/features/ask-jakub";
 import { useLang } from "@/lib/lang-store";
+import { useMediaQuery } from "@/lib/useMediaQuery";
+
+const MOBILE_QUERY = "(max-width: 899px)";
 
 type AskJakubSimplePanelProps = Readonly<{
   id: string;
@@ -72,6 +76,7 @@ function RateLimitCountdown({
 
 function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
   const language = useLang();
+  const mobileModal = useMediaQuery(MOBILE_QUERY);
   const session = useAskJakubSession();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [question, setQuestion] = useState("");
@@ -115,6 +120,43 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
     return () => document.removeEventListener("keydown", closeOnEscape, true);
   }, [onClose]);
 
+  useLayoutEffect(() => {
+    if (!mobileModal) return;
+
+    const body = document.body;
+    const simpleRoot =
+      document.querySelector<HTMLElement>("[data-simple-root]");
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const previousBodyStyle = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    const rootWasInert = simpleRoot?.hasAttribute("inert") ?? false;
+
+    // `position: fixed` zachowuje wizualną pozycję strony również na iOS,
+    // gdzie samo `overflow: hidden` potrafi przeskoczyć na początek dokumentu.
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = `-${scrollX}px`;
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    simpleRoot?.setAttribute("inert", "");
+
+    return () => {
+      body.style.position = previousBodyStyle.position;
+      body.style.top = previousBodyStyle.top;
+      body.style.left = previousBodyStyle.left;
+      body.style.width = previousBodyStyle.width;
+      body.style.overflow = previousBodyStyle.overflow;
+      if (simpleRoot && !rootWasInert) simpleRoot.removeAttribute("inert");
+      window.scrollTo(scrollX, scrollY);
+    };
+  }, [mobileModal]);
+
   const submit = () => {
     const result = session.submit(question);
     if (result.accepted) {
@@ -149,17 +191,18 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
     }
   };
 
-  return (
+  const panel = (
     <section
       id={id}
       role="dialog"
+      aria-modal={mobileModal ? true : undefined}
       aria-labelledby={`${id}-title`}
       aria-describedby={`${id}-identity`}
       data-ask-jakub-simple-panel
       data-lenis-prevent
-      // Stały dolny prześwit mieści główne CTA sekcji Contact także przy
-      // niskim viewportcie; strona pod niemodalnym panelem nadal się przewija.
-      className="fixed right-4 top-20 z-40 flex h-[calc(100dvh-10rem)] max-h-[720px] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-card border border-line bg-surface text-ink shadow-lift sm:right-6 sm:top-24 sm:h-[calc(100dvh-11rem)]"
+      // Stały dolny prześwit mieści główne CTA sekcji Contact na szerokim
+      // ekranie; mobilny modal blokuje dokument pod swoim backdropem.
+      className="fixed right-4 top-20 z-40 flex h-[calc(100dvh-10rem)] max-h-[720px] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-card border border-line bg-surface text-ink shadow-lift max-[899px]:z-50 sm:right-6 sm:top-24 sm:h-[calc(100dvh-11rem)]"
     >
       <header className="shrink-0 border-b border-line/80 border-t-[3px] border-t-accent bg-white px-5 pb-4 pt-3">
         <div className="flex items-start justify-between gap-4">
@@ -558,5 +601,20 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
         </p>
       </form>
     </section>
+  );
+
+  if (!mobileModal) return panel;
+
+  return createPortal(
+    <>
+      <div
+        aria-hidden
+        data-ask-jakub-backdrop
+        onClick={onClose}
+        className="fixed inset-0 z-40 bg-black/35 backdrop-blur-[2px]"
+      />
+      {panel}
+    </>,
+    document.body,
   );
 }

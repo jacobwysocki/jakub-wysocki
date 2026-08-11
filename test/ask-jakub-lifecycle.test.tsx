@@ -220,11 +220,17 @@ describe("Ask Jakub Desktop Mode lifecycle", () => {
       right: `${ASK_JAKUB_WIDGET_RIGHT}px`,
       width: `${DESKTOP_LAYOUT.askJakubWidget.width}px`,
     });
-    expect(
-      within(widget).getByRole("textbox", {
-        name: "Question about Jakub's work",
-      }),
-    ).toBeInTheDocument();
+    const composer = within(widget).getByRole("textbox", {
+      name: "Question about Jakub's work",
+    });
+    const disclosure = document.getElementById("ask-jakub-widget-disclosure");
+    expect(composer).toBeInTheDocument();
+    expect(disclosure).toHaveTextContent(
+      "Your question goes to a third-party model provider; this conversation is not stored.",
+    );
+    expect(composer.getAttribute("aria-describedby")?.split(" ")).toContain(
+      disclosure?.id,
+    );
     expect(
       within(widget).getByRole("button", { name: "Open full chat" }),
     ).toBeInTheDocument();
