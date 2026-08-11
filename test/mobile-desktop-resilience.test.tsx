@@ -1,7 +1,49 @@
-import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import MobileDesktop from "@/components/desktop/MobileDesktop";
+import { AskJakubProvider } from "@/features/ask-jakub";
+
+const ASK_QUESTION = "Który projekt najlepiej pokazuje myślenie produktowe?";
+const ASK_ANSWER = "Portfolio wskazuje udokumentowany przykład produktowy.";
+
+function successfulAskResponse(init?: RequestInit): Response {
+  if (typeof init?.body !== "string") {
+    throw new Error("Expected the Ask Jakub request to have a JSON body.");
+  }
+
+  const request = JSON.parse(init.body) as { requestId: string };
+  const events = [
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "request.accepted",
+    },
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "answer.completed",
+      kind: "not-covered",
+      text: ASK_ANSWER,
+      evidenceIds: [],
+      suggestionIds: [],
+    },
+  ];
+
+  return new Response(
+    `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
+    {
+      status: 200,
+      headers: { "content-type": "application/x-ndjson" },
+    },
+  );
+}
 
 describe("Pocket OS app sheets", () => {
   afterEach(() => {
@@ -131,5 +173,52 @@ describe("Pocket OS app sheets", () => {
     expect(dialog.querySelector("[data-lenis-prevent]")).toHaveClass(
       "overflow-hidden",
     );
+  });
+
+  it("opens Ask Jakub from Pocket OS and retains its shared session", async () => {
+    const fetchSpy = vi.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) =>
+        successfulAskResponse(init),
+    );
+    vi.stubGlobal("fetch", fetchSpy);
+    const view = render(
+      <AskJakubProvider>
+        <MobileDesktop wallpaperId="moon" />
+      </AskJakubProvider>,
+    );
+    const launcher = view.getAllByRole("button", {
+      name: "Otwórz: Zapytaj o Jakuba",
+    })[0];
+
+    fireEvent.click(launcher);
+    const firstSheet = await view.findByRole("dialog", {
+      name: "Zapytaj o Jakuba",
+    });
+    const composer = within(firstSheet).getByRole("textbox", {
+      name: "Pytanie o pracę Jakuba",
+    });
+    fireEvent.change(composer, { target: { value: ASK_QUESTION } });
+    fireEvent.keyDown(composer, { key: "Enter" });
+
+    await waitFor(() =>
+      expect(
+        within(firstSheet).getByRole("log", { name: "Rozmowa" }),
+      ).toHaveTextContent(ASK_ANSWER),
+    );
+    expect(fetchSpy).toHaveBeenCalledOnce();
+
+    fireEvent.click(
+      within(firstSheet).getByRole("button", { name: "Zamknij" }),
+    );
+    await waitFor(() => expect(launcher).toHaveFocus());
+    fireEvent.click(launcher);
+
+    const reopenedSheet = await view.findByRole("dialog", {
+      name: "Zapytaj o Jakuba",
+    });
+    expect(
+      within(reopenedSheet).getByRole("log", { name: "Rozmowa" }),
+    ).toHaveTextContent(ASK_ANSWER);
+    expect(fetchSpy).toHaveBeenCalledOnce();
   });
 });

@@ -18,16 +18,16 @@ export const askJakubCopy = {
   latestAnswer: { pl: "Ostatnia odpowiedź", en: "Latest answer" },
   openFullChat: { pl: "Otwórz pełny czat", en: "Open full chat" },
   identity: {
-    pl: "Przewodnik portfolio · nie Jakub",
-    en: "Portfolio guide · not Jakub",
+    pl: "Przewodnik AI po portfolio",
+    en: "AI portfolio guide",
   },
   introduction: {
     pl: "Zapytaj o moją pracę, projekty albo o to, jak łączę inżynierię z designem. Odpowiedzi korzystają z tego portfolio i prowadzą do źródeł.",
     en: "Ask about my work, projects, or how engineering and design connect. Answers use this portfolio and link back to the source.",
   },
   dataDisclosure: {
-    pl: "Gdy odpowiedzi AI są włączone, Twoje pytanie, ukończona historia rozmowy i wybrane publiczne fakty z portfolio są wysyłane do Groq. Ta strona nie zapisuje rozmowy.",
-    en: "When AI answers are enabled, your question, completed chat history, and selected public portfolio facts are sent to Groq. This site does not save the conversation.",
+    pl: "Pytanie trafia do zewnętrznego dostawcy modelu AI; ta rozmowa nie jest zapisywana.",
+    en: "Your question goes to a third-party model provider; this conversation is not stored.",
   },
   suggestionsLabel: { pl: "Możesz zacząć tutaj", en: "Start with a question" },
   composerLabel: {
