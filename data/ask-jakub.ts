@@ -1,5 +1,10 @@
 import type { L10n } from "@/lib/lang";
 
+/**
+ * Wspólny słownik Ask Jakub dla obu prezentacji portfolio.
+ * Widoki wybierają z niego tylko potrzebne teksty; fakty i sugerowane
+ * pytania nadal należą do Portfolio Knowledge.
+ */
 export const askJakubCopy = {
   title: { pl: "Zapytaj o Jakuba", en: "Ask Jakub" },
   widgetLabel: {
@@ -90,5 +95,9 @@ export const askJakubCopy = {
   historicalFailure: {
     pl: "Poprzednia odpowiedź niedostępna.",
     en: "Previous answer unavailable.",
+  },
+  simpleClose: {
+    pl: "Zamknij",
+    en: "Close",
   },
 } as const satisfies Record<string, L10n>;
