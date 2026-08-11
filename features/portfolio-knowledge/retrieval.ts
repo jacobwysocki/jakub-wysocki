@@ -10,6 +10,158 @@ import type {
 const COMBINING_MARKS = /\p{M}+/gu;
 const NON_SEARCH_CHARACTER = /[^a-z0-9]+/g;
 
+const SEARCH_STOP_WORDS = new Set([
+  "a",
+  "about",
+  "albo",
+  "an",
+  "and",
+  "any",
+  "are",
+  "at",
+  "by",
+  "can",
+  "co",
+  "could",
+  "czy",
+  "dla",
+  "do",
+  "does",
+  "for",
+  "from",
+  "go",
+  "had",
+  "has",
+  "have",
+  "he",
+  "her",
+  "him",
+  "his",
+  "i",
+  "in",
+  "is",
+  "it",
+  "jak",
+  "jaka",
+  "jakie",
+  "jaki",
+  "jego",
+  "jej",
+  "jest",
+  "lub",
+  "me",
+  "na",
+  "o",
+  "od",
+  "of",
+  "on",
+  "or",
+  "ona",
+  "oraz",
+  "przy",
+  "sa",
+  "she",
+  "should",
+  "sie",
+  "ta",
+  "ten",
+  "that",
+  "the",
+  "their",
+  "them",
+  "they",
+  "this",
+  "to",
+  "we",
+  "what",
+  "when",
+  "where",
+  "which",
+  "who",
+  "why",
+  "w",
+  "with",
+  "would",
+  "you",
+  "z",
+  "ze",
+]);
+
+/**
+ * A deliberately small word-family map handles common Polish inflections and
+ * English plurals without turning retrieval into an aggressive stemmer.
+ */
+const CANONICAL_TOKEN_FORMS: Readonly<Record<string, string>> = {
+  baz: "baza",
+  baza: "baza",
+  bazach: "baza",
+  bazami: "baza",
+  baze: "baza",
+  bazie: "baza",
+  bazom: "baza",
+  bazy: "baza",
+  bazodanowa: "baza",
+  bazodanowe: "baza",
+  bazodanowego: "baza",
+  bazodanowych: "baza",
+  bazodanowymi: "baza",
+  bazodanowy: "baza",
+  dane: "dane",
+  danych: "dane",
+  danymi: "dane",
+  database: "database",
+  databases: "database",
+  doswiadczenia: "doswiadczenie",
+  doswiadczeniem: "doswiadczenie",
+  doswiadczeniu: "doswiadczenie",
+  migrations: "migration",
+  migracja: "migracja",
+  migracje: "migracja",
+  migracji: "migracja",
+  korporacyjna: "korporacyjny",
+  korporacyjne: "korporacyjny",
+  korporacyjnego: "korporacyjny",
+  korporacyjnych: "korporacyjny",
+  korporacyjnym: "korporacyjny",
+  korporacyjnymi: "korporacyjny",
+  projekt: "projekt",
+  projektach: "projekt",
+  projektami: "projekt",
+  projekcie: "projekt",
+  projektem: "projekt",
+  projekty: "projekt",
+  projektow: "projekt",
+  projektu: "projekt",
+  projects: "project",
+  role: "role",
+  roles: "role",
+  rola: "role",
+  rolach: "role",
+  roli: "role",
+  startup: "startup",
+  startupach: "startup",
+  startupie: "startup",
+  startupow: "startup",
+  startups: "startup",
+  startupu: "startup",
+  system: "system",
+  systemach: "system",
+  systemami: "system",
+  systems: "system",
+  systemow: "system",
+  systemy: "system",
+  technologies: "technology",
+  technologie: "technologia",
+  technologiach: "technologia",
+  technologiami: "technologia",
+  technologii: "technologia",
+  umiejetnosc: "umiejetnosc",
+  umiejetnosciach: "umiejetnosc",
+  umiejetnosci: "umiejetnosc",
+  umiejetnosciami: "umiejetnosc",
+  skills: "skill",
+};
+
 /**
  * Search normalization is deliberately language-independent. It folds Polish
  * diacritics, punctuation, casing, and whitespace while keeping deterministic
@@ -25,6 +177,26 @@ export function normalizeSearchText(value: string): string {
     .replace(NON_SEARCH_CHARACTER, " ")
     .trim()
     .replace(/\s+/g, " ");
+}
+
+function canonicalSearchToken(token: string): string {
+  return CANONICAL_TOKEN_FORMS[token] ?? token;
+}
+
+function searchTokens(value: string): readonly string[] {
+  return normalizeSearchText(value)
+    .split(" ")
+    .filter(Boolean)
+    .filter((token) => !SEARCH_STOP_WORDS.has(token))
+    .map(canonicalSearchToken);
+}
+
+function canonicalSearchText(value: string): string {
+  return normalizeSearchText(value)
+    .split(" ")
+    .filter(Boolean)
+    .map(canonicalSearchToken)
+    .join(" ");
 }
 
 type AliasGroup = Readonly<{
@@ -60,6 +232,85 @@ const aliasGroups: readonly AliasGroup[] = [
     phrases: ["full stack", "fullstack", "end to end"],
     expansion: ["full stack", "fullstack", "frontend", "backend", "end to end"],
     topics: ["engineering", "skills", "hiring"],
+  },
+  {
+    phrases: [
+      "database",
+      "baza",
+      "baza danych",
+      "sql",
+      "sql server",
+      "sybase",
+      "cosmosdb",
+      "sqlite",
+      "model danych",
+      "data model",
+    ],
+    expansion: [
+      "database",
+      "baza danych",
+      "sql",
+      "sql server",
+      "sybase",
+      "migration",
+      "migracja",
+    ],
+    topics: ["engineering", "skills", "experience", "hiring"],
+  },
+  {
+    phrases: [
+      "startup",
+      "start up",
+      "early stage",
+      "mloda firma",
+      "mlodej firmie",
+    ],
+    expansion: [
+      "startup",
+      "co founder",
+      "wspolzalozyciel",
+      "product",
+      "produkt",
+      "Squizzu",
+      "Ultra Studio",
+    ],
+    topics: ["experience", "projects", "hiring"],
+  },
+  {
+    phrases: [
+      "enterprise",
+      "enterprise system",
+      "corporate system",
+      "system korporacyjny",
+      "duzy system",
+    ],
+    expansion: [
+      "enterprise",
+      "system korporacyjny",
+      "large system",
+      "duzy system",
+      "Mandata",
+      "TMS",
+    ],
+    topics: ["engineering", "experience", "hiring"],
+  },
+  {
+    phrases: [
+      "good at",
+      "good with",
+      "skilled",
+      "experience with",
+      "would he",
+      "fit for",
+      "dobry w",
+      "zna sie",
+      "umie",
+      "potrafi",
+      "poradzilby",
+      "sprawdzilby",
+    ],
+    expansion: ["skill", "umiejetnosc", "experience", "doswiadczenie"],
+    topics: ["skills", "experience", "hiring"],
   },
   {
     phrases: [
@@ -130,7 +381,16 @@ const aliasGroups: readonly AliasGroup[] = [
     topics: ["projects"],
   },
   {
-    phrases: ["contact", "email", "e mail", "kontakt", "napisz", "wiadomosc"],
+    phrases: [
+      "contact",
+      "email",
+      "e mail",
+      "kontakt",
+      "napisz",
+      "wiadomosc",
+      "skontaktowac",
+      "skontaktuj",
+    ],
     expansion: ["contact", "email", "kontakt", "message", "wiadomosc"],
     topics: ["contact"],
   },
@@ -150,6 +410,12 @@ function phraseAppears(normalized: string, phrase: string): boolean {
   return ` ${normalized} `.includes(` ${normalizeSearchText(phrase)} `);
 }
 
+function canonicalPhraseAppears(normalized: string, phrase: string): boolean {
+  return ` ${canonicalSearchText(normalized)} `.includes(
+    ` ${canonicalSearchText(phrase)} `,
+  );
+}
+
 export type ExpandedQuery = Readonly<{
   normalized: string;
   tokens: ReadonlySet<string>;
@@ -158,15 +424,21 @@ export type ExpandedQuery = Readonly<{
 
 export function expandSearchAliases(question: string): ExpandedQuery {
   const normalized = normalizeSearchText(question);
-  const tokens = new Set(normalized.split(" ").filter(Boolean));
+  const tokens = new Set(searchTokens(normalized));
   const topics = new Set<AskTopic>();
 
   for (const group of aliasGroups) {
-    if (!group.phrases.some((phrase) => phraseAppears(normalized, phrase))) {
+    if (
+      !group.phrases.some(
+        (phrase) =>
+          phraseAppears(normalized, phrase) ||
+          canonicalPhraseAppears(normalized, phrase),
+      )
+    ) {
       continue;
     }
     for (const expansion of group.expansion) {
-      for (const token of normalizeSearchText(expansion).split(" ")) {
+      for (const token of searchTokens(expansion)) {
         if (token) tokens.add(token);
       }
     }
@@ -192,11 +464,9 @@ function scoreEntry(
 ): RetrievalMatch | undefined {
   const keywordPhrases = normalizedPhrases(entry, lang);
   const keywordTokens = new Set(
-    keywordPhrases.flatMap((phrase) => phrase.split(" ").filter(Boolean)),
+    keywordPhrases.flatMap((phrase) => searchTokens(phrase)),
   );
-  const factTokens = new Set(
-    normalizeSearchText(entry.fact[lang]).split(" ").filter(Boolean),
-  );
+  const factTokens = new Set(searchTokens(entry.fact[lang]));
 
   let score = 0;
   for (const phrase of keywordPhrases) {

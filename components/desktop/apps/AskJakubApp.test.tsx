@@ -313,7 +313,7 @@ describe("Ask Jakub Desktop App", () => {
           kind: "answered",
           text: "Squizzu combines product design with full-stack delivery.",
           evidenceIds: ["evidence:experience:squizzu"],
-          suggestionIds: ["suggestion:squizzu"],
+          suggestionIds: ["suggestion:product-design"],
         };
       },
     ]);
@@ -360,7 +360,9 @@ describe("Ask Jakub Desktop App", () => {
       "Squizzu combines product design with full-stack delivery.",
     );
     expect(
-      view.getByRole("button", { name: "What is Squizzu?" }),
+      view.getByRole("button", {
+        name: "How does Jakub connect product design and engineering?",
+      }),
     ).toBeInTheDocument();
   });
 

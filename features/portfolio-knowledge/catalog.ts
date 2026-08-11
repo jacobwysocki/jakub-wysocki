@@ -712,7 +712,7 @@ export const knowledgeEntries: readonly KnowledgeEntry[] = [
   },
 ];
 
-export const suggestedQuestions: readonly SuggestedQuestion[] = [
+export const initialSuggestedQuestions: readonly SuggestedQuestion[] = [
   {
     id: "suggestion:current-work",
     question: {
@@ -755,6 +755,9 @@ export const suggestedQuestions: readonly SuggestedQuestion[] = [
       "knowledge:role:ultrastudio:highlight:selected-work",
     ],
   },
+];
+
+export const followUpSuggestedQuestions: readonly SuggestedQuestion[] = [
   {
     id: "suggestion:full-stack-hiring",
     question: {
@@ -768,6 +771,72 @@ export const suggestedQuestions: readonly SuggestedQuestion[] = [
       "knowledge:role:mandata:highlight:delivery",
     ],
   },
+  {
+    id: "suggestion:product-design",
+    question: {
+      pl: "Jak Jakub łączy projektowanie produktu z inżynierią?",
+      en: "How does Jakub connect product design and engineering?",
+    },
+    topics: ["design", "engineering", "experience", "projects"],
+    knowledge: [
+      "knowledge:profile:bio",
+      "knowledge:role:mandata:highlight:maps",
+      "knowledge:showcase:squizzu:how",
+    ],
+  },
+  {
+    id: "suggestion:applied-ai",
+    question: {
+      pl: "Które prace najlepiej pokazują praktyczne zastosowanie AI?",
+      en: "Which work best demonstrates applied AI?",
+    },
+    topics: ["ai", "engineering", "experience", "projects"],
+    knowledge: [
+      "knowledge:role:bunzl:highlight:text-to-sql",
+      "knowledge:role:squizzu:highlight:gpt-agents",
+      "knowledge:role:ultrastudio:highlight:seo-agent",
+    ],
+  },
+  {
+    id: "suggestion:database-experience",
+    question: {
+      pl: "Jakie doświadczenie z bazami danych dokumentuje Jakub?",
+      en: "What database experience does Jakub document?",
+    },
+    topics: ["engineering", "skills", "experience", "hiring"],
+    knowledge: [
+      "knowledge:role:mandata:highlight:database-migration",
+      "knowledge:role:northumbria:highlight:identity-cloud",
+      "knowledge:role:bunzl:highlight:text-to-sql",
+    ],
+  },
+  {
+    id: "suggestion:enterprise-work",
+    question: {
+      pl: "Przy jakich systemach korporacyjnych pracował Jakub?",
+      en: "Which enterprise systems has Jakub worked on?",
+    },
+    topics: ["engineering", "experience", "hiring"],
+    knowledge: [
+      "knowledge:role:mandata:summary",
+      "knowledge:role:mandata:highlight:delivery",
+      "knowledge:role:northumbria:highlight:identity-cloud",
+    ],
+  },
+  {
+    id: "suggestion:contact",
+    question: {
+      pl: "Jak można skontaktować się z Jakubem?",
+      en: "How can I contact Jakub?",
+    },
+    topics: ["contact"],
+    knowledge: ["knowledge:contact:email:primary"],
+  },
+];
+
+export const suggestedQuestions: readonly SuggestedQuestion[] = [
+  ...initialSuggestedQuestions,
+  ...followUpSuggestedQuestions,
 ];
 
 export const portfolioKnowledge: PortfolioKnowledgeCatalog = Object.freeze({

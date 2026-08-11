@@ -8,6 +8,7 @@ const input: ModelInput = {
   language: "en",
   question: "What is documented?",
   history: [],
+  knowledgeCoverage: "matched",
   knowledge: [],
   allowedSuggestionIds: [],
 };
