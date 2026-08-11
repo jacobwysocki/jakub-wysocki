@@ -17,7 +17,7 @@ describe("Ask Jakub answer operation", () => {
         kind: "answered",
         text: "The Contact view contains Jakub's public contact options.",
         knowledgeIds: ["knowledge:contact:email:primary"],
-        suggestionIds: ["suggestion:full-stack-hiring"],
+        suggestionIds: ["suggestion:contact"],
       },
     ]);
 
@@ -54,7 +54,7 @@ describe("Ask Jakub answer operation", () => {
           kind: "answered",
           text: "The Contact view contains Jakub's public contact options.",
           evidenceIds: ["evidence:contact"],
-          suggestionIds: ["suggestion:full-stack-hiring"],
+          suggestionIds: ["suggestion:contact"],
         },
       ],
     });
@@ -63,6 +63,131 @@ describe("Ask Jakub answer operation", () => {
       "knowledge:contact:email:primary",
     );
   });
+
+  it.each([
+    {
+      language: "en" as const,
+      question: "Is he any good with databases?",
+      text: "The portfolio does not directly rate Jakub's database expertise. It does document his work on a 1,000+ module Sybase-to-MS SQL Server migration, so that is the closest verified example.",
+    },
+    {
+      language: "pl" as const,
+      question: "Czy sprawdziłby się przy bazach?",
+      text: "Portfolio nie ocenia wprost poziomu Jakuba w bazach danych. Dokumentuje jednak jego udział w migracji ponad 1000 modułów z Sybase do MS SQL Server, więc to najbliższy zweryfikowany przykład.",
+    },
+  ])(
+    "answers a relevant $language knowledge gap from the nearest verified evidence",
+    async ({ language, question, text }) => {
+      const model = createScriptedModel([
+        {
+          kind: "answered",
+          text,
+          knowledgeIds: ["knowledge:role:mandata:highlight:database-migration"],
+          suggestionIds: ["suggestion:database-experience"],
+        },
+      ]);
+
+      const result = await answerAskJakub(
+        { ...validAskRequest, language, question },
+        model,
+      );
+
+      expect(model.inputs).toHaveLength(1);
+      expect(model.inputs[0].knowledgeCoverage).toBe("matched");
+      expect(model.inputs[0].knowledge.map(({ id }) => id)).toContain(
+        "knowledge:role:mandata:highlight:database-migration",
+      );
+      expect(model.inputs[0].allowedSuggestionIds).toContain(
+        "suggestion:database-experience",
+      );
+      expect(model.inputs[0].allowedSuggestionIds).not.toContain(
+        "suggestion:current-work",
+      );
+      expect(result.events.at(-1)).toMatchObject({
+        type: "answer.completed",
+        kind: "answered",
+        text,
+        evidenceIds: ["evidence:experience:mandata"],
+        suggestionIds: ["suggestion:database-experience"],
+      });
+    },
+  );
+
+  it("labels a zero-score portfolio question and supplies nearest verified facts", async () => {
+    const model = createScriptedModel([
+      (input) => {
+        expect(input.knowledgeCoverage).toBe("nearest");
+        expect(input.knowledge.length).toBeGreaterThan(0);
+        expect(input.allowedSuggestionIds.length).toBeGreaterThan(0);
+        const nearest = input.knowledge[0];
+        const suggestionId = input.allowedSuggestionIds[0];
+        if (!nearest || !suggestionId)
+          throw new Error("Missing nearest fallback");
+        return {
+          kind: "answered",
+          text: `Portfolio nie dokumentuje, jak Jakub radzi sobie z konfliktami. Najbliższy zweryfikowany kontekst: ${nearest.fact}`,
+          knowledgeIds: [nearest.id],
+          suggestionIds: [suggestionId],
+        };
+      },
+    ]);
+
+    const result = await answerAskJakub(
+      {
+        ...validAskRequest,
+        language: "pl",
+        question: "Czy bywa konfliktowy?",
+      },
+      model,
+    );
+
+    expect(model.inputs).toHaveLength(1);
+    expect(result.status).toBe(200);
+    expect(result.events.at(-1)).toMatchObject({
+      type: "answer.completed",
+      kind: "answered",
+      evidenceIds: expect.arrayContaining([
+        expect.stringMatching(/^evidence:/),
+      ]),
+    });
+  });
+
+  it.each([
+    {
+      language: "en" as const,
+      question: "What's the weather?",
+      text: "That topic is outside this portfolio guide, but I can help you explore Jakub's documented work, projects, skills, education, and contact options.",
+    },
+    {
+      language: "pl" as const,
+      question: "Jaka jest pogoda?",
+      text: "Ten temat jest poza zakresem tego przewodnika po portfolio, ale mogę pomóc poznać udokumentowane doświadczenie, projekty, umiejętności, wykształcenie i opcje kontaktu Jakuba.",
+    },
+  ])(
+    "redirects an off-topic $language question without invoking the model",
+    async ({ language, question, text }) => {
+      const model = createScriptedModel([]);
+
+      const result = await answerAskJakub(
+        { ...validAskRequest, language, question },
+        model,
+      );
+
+      expect(model.inputs).toHaveLength(0);
+      expect(result.events.at(-1)).toMatchObject({
+        type: "answer.completed",
+        kind: "not-covered",
+        text,
+      });
+      expect(result.events.at(-1)).toMatchObject({
+        suggestionIds: [
+          "suggestion:full-stack-hiring",
+          "suggestion:applied-ai",
+          "suggestion:contact",
+        ],
+      });
+    },
+  );
 
   it.each([
     {
@@ -299,7 +424,7 @@ describe("Ask Jakub answer operation", () => {
           kind: "answered",
           text: "Squizzu demonstrates React, product design, and applied AI.",
           knowledgeIds: ["knowledge:role:squizzu:summary"],
-          suggestionIds: ["suggestion:squizzu"],
+          suggestionIds: ["suggestion:applied-ai"],
         };
       },
     ]);
@@ -515,17 +640,16 @@ describe("Ask Jakub answer operation", () => {
     const model = createScriptedModel([
       {
         kind: "answered",
-        text: "The Contact view contains Jakub's public contact options.",
+        text: "Bunzl documents a conversational text-to-SQL interface.",
         knowledgeIds: [
-          "knowledge:contact:email:primary",
-          "knowledge:contact:email:primary",
+          "knowledge:role:bunzl:highlight:text-to-sql",
+          "knowledge:role:bunzl:highlight:text-to-sql",
         ],
         suggestionIds: [
-          "suggestion:current-work",
-          "suggestion:current-work",
-          "suggestion:venor",
-          "suggestion:squizzu",
-          "suggestion:ultra-studio",
+          "suggestion:applied-ai",
+          "suggestion:applied-ai",
+          "suggestion:database-experience",
+          "suggestion:product-design",
           "suggestion:full-stack-hiring",
         ],
       },
@@ -534,18 +658,18 @@ describe("Ask Jakub answer operation", () => {
     const result = await answerAskJakub(
       {
         ...validAskRequest,
-        question: "How can I contact Jakub by email?",
+        question: "What did Jakub build with text-to-SQL at Bunzl?",
       },
       model,
     );
 
     expect(result.events.at(-1)).toMatchObject({
       type: "answer.completed",
-      evidenceIds: ["evidence:contact"],
+      evidenceIds: ["evidence:experience:bunzl"],
       suggestionIds: [
-        "suggestion:current-work",
-        "suggestion:venor",
-        "suggestion:squizzu",
+        "suggestion:applied-ai",
+        "suggestion:database-experience",
+        "suggestion:product-design",
       ],
     });
   });

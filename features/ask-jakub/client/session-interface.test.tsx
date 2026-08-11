@@ -253,7 +253,7 @@ describe("Ask Jakub session Interface", () => {
           kind: "answered",
           text: "Squizzu łączy rozwój produktu, React i zastosowania AI.",
           evidenceIds: ["evidence:experience:squizzu"],
-          suggestionIds: ["suggestion:squizzu"],
+          suggestionIds: ["suggestion:product-design"],
         };
       },
     ]);
@@ -290,8 +290,84 @@ describe("Ask Jakub session Interface", () => {
       ],
     });
     expect(result.current.suggestions.map(({ id }) => id)).toEqual([
-      "suggestion:squizzu",
+      "suggestion:product-design",
     ]);
+  });
+
+  it("never repeats shown or asked suggestions across follow-up answers", async () => {
+    const transport = createScriptedAskTransport([
+      async function* (request) {
+        yield {
+          version: 1,
+          requestId: request.requestId,
+          type: "request.accepted",
+        };
+        yield {
+          version: 1,
+          requestId: request.requestId,
+          type: "answer.completed",
+          kind: "answered",
+          text: "Verified engineering and design evidence.",
+          evidenceIds: ["evidence:about"],
+          suggestionIds: ["suggestion:product-design", "suggestion:applied-ai"],
+        };
+      },
+      async function* (request) {
+        yield {
+          version: 1,
+          requestId: request.requestId,
+          type: "request.accepted",
+        };
+        yield {
+          version: 1,
+          requestId: request.requestId,
+          type: "answer.completed",
+          kind: "answered",
+          text: "Verified applied AI evidence.",
+          evidenceIds: ["evidence:experience:bunzl"],
+          suggestionIds: [
+            "suggestion:product-design",
+            "suggestion:applied-ai",
+            "suggestion:database-experience",
+          ],
+        };
+      },
+    ]);
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AskJakubTestProvider transport={transport}>
+        {children}
+      </AskJakubTestProvider>
+    );
+    const { result } = renderHook(() => useAskJakubSession(), { wrapper });
+    const initiallyShown = result.current.suggestions.map(({ id }) => id);
+
+    act(() => {
+      result.current.submit(
+        "How does Jakub connect product design and engineering?",
+      );
+    });
+    await waitFor(() => expect(result.current.phase).toBe("ready"));
+
+    const firstFollowUps = result.current.suggestions.map(({ id }) => id);
+    expect(firstFollowUps).toEqual(["suggestion:applied-ai"]);
+    expect(firstFollowUps.filter((id) => initiallyShown.includes(id))).toEqual(
+      [],
+    );
+
+    const askedFollowUp = result.current.suggestions[0];
+    expect(askedFollowUp).toBeDefined();
+    act(() => {
+      result.current.submit(askedFollowUp?.question.en ?? "");
+    });
+    await waitFor(() => expect(result.current.phase).toBe("ready"));
+
+    const secondFollowUps = result.current.suggestions.map(({ id }) => id);
+    expect(secondFollowUps).toEqual(["suggestion:database-experience"]);
+    expect(
+      secondFollowUps.filter((id) =>
+        [...initiallyShown, ...firstFollowUps].includes(id),
+      ),
+    ).toEqual([]);
   });
 
   it("cancels idempotently, retries without a duplicate question, and ignores the late answer", async () => {
@@ -510,7 +586,7 @@ describe("Ask Jakub session Interface", () => {
     expect(result.current.canSubmit).toBe(true);
     expect(result.current.canCancel).toBe(false);
     expect(result.current.canRetry).toBe(false);
-    expect(result.current.suggestions).toHaveLength(5);
+    expect(result.current.suggestions).toHaveLength(4);
 
     await act(async () => {
       lateAnswer.resolve();
@@ -990,7 +1066,7 @@ describe("Ask Jakub session Interface", () => {
     );
     const { result } = renderHook(() => useAskJakubSession(), { wrapper });
 
-    expect(result.current.suggestions).toHaveLength(5);
+    expect(result.current.suggestions).toHaveLength(4);
     act(() => {
       result.current.submit("Czy przewodnik działa?");
     });
@@ -1025,11 +1101,11 @@ describe("Ask Jakub session Interface", () => {
             "evidence:education:degree",
           ],
           suggestionIds: [
-            "suggestion:current-work",
-            "suggestion:current-work",
-            "suggestion:venor",
-            "suggestion:squizzu",
-            "suggestion:ultra-studio",
+            "suggestion:full-stack-hiring",
+            "suggestion:full-stack-hiring",
+            "suggestion:product-design",
+            "suggestion:applied-ai",
+            "suggestion:database-experience",
           ],
         };
       },
@@ -1057,9 +1133,9 @@ describe("Ask Jakub session Interface", () => {
       "evidence:experience:squizzu",
     ]);
     expect(result.current.suggestions.map(({ id }) => id)).toEqual([
-      "suggestion:current-work",
-      "suggestion:venor",
-      "suggestion:squizzu",
+      "suggestion:full-stack-hiring",
+      "suggestion:product-design",
+      "suggestion:applied-ai",
     ]);
   });
 

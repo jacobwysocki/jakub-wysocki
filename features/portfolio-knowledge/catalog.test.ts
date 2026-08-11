@@ -10,6 +10,7 @@ import { resolvePortfolioLocation } from "@/features/portfolio-navigation/locati
 import {
   findEvidence,
   findSuggestedQuestion,
+  initialSuggestedQuestions,
   portfolioKnowledge,
   validatePortfolioKnowledge,
 } from "./index";
@@ -107,9 +108,10 @@ describe("Portfolio Knowledge catalog", () => {
   });
 
   it("prioritizes the four questions visitors most need first", () => {
-    expect(portfolioKnowledge.suggestions).toHaveLength(5);
+    expect(initialSuggestedQuestions).toHaveLength(4);
+    expect(portfolioKnowledge.suggestions).toHaveLength(10);
     expect(
-      portfolioKnowledge.suggestions.slice(0, 4).map((suggestion) => ({
+      initialSuggestedQuestions.map((suggestion) => ({
         id: suggestion.id,
         pl: suggestion.question.pl,
         en: suggestion.question.en,

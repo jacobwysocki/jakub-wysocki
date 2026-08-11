@@ -21,6 +21,7 @@ const modelInput: ModelInput = {
       text: "I can only use the supplied portfolio facts.",
     },
   ],
+  knowledgeCoverage: "matched",
   knowledge: [
     {
       id: "knowledge:experience:nomtek",
@@ -86,8 +87,19 @@ describe("Groq model Adapter", () => {
     expect(body.stream).toBe(false);
     expect(body.messages.map(({ role }) => role)).toEqual(["system", "user"]);
     expect(body.messages[0].content).toContain("supplied Portfolio Knowledge");
+    expect(body.messages[0].content).toContain(
+      "Every factual statement about Jakub must be directly supported",
+    );
+    expect(body.messages[0].content).toContain(
+      "Never turn related evidence into an unsupported conclusion",
+    );
+    expect(body.messages[0].content).toContain("explicitly name the gap");
+    expect(body.messages[0].content).toContain("knowledgeCoverage");
     expect(body.messages[1].content).toContain(modelInput.question);
     expect(body.messages[1].content).toContain(modelInput.history[0].text);
+    expect(body.messages[1].content).toContain(
+      '\"knowledgeCoverage\":\"matched\"',
+    );
     expect(body.response_format).toMatchObject({
       type: "json_schema",
       json_schema: {

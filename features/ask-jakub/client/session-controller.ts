@@ -1,6 +1,7 @@
 import {
   findEvidence,
   findSuggestedQuestion,
+  normalizeSearchText,
   type SuggestedQuestion,
 } from "@/features/portfolio-knowledge";
 import type { PortfolioNavigator } from "@/features/portfolio-navigation";
@@ -121,6 +122,7 @@ export class AskSessionController {
   private sequence = 0;
   private abortController: AbortController | null = null;
   private retryTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly shownSuggestionIds = new Set<string>();
 
   constructor(
     language: Lang,
@@ -128,6 +130,9 @@ export class AskSessionController {
     private readonly transport: AskTransport,
     private navigator: PortfolioNavigator,
   ) {
+    for (const suggestion of initialSuggestions) {
+      this.shownSuggestionIds.add(suggestion.id);
+    }
     this.state = createInitialAskSessionState({
       sessionId: localId("session", ++this.sequence),
       language,
@@ -261,6 +266,10 @@ export class AskSessionController {
     this.clearRetryTimer();
     this.abortController?.abort();
     this.abortController = null;
+    this.shownSuggestionIds.clear();
+    for (const suggestion of this.initialSuggestions) {
+      this.shownSuggestionIds.add(suggestion.id);
+    }
     this.dispatch({
       type: "session.cleared",
       sessionId: localId("session", ++this.sequence),
@@ -425,6 +434,11 @@ export class AskSessionController {
           }
           const suggestions = ownedSuggestions
             .filter((suggestion) => suggestion !== undefined)
+            .filter(
+              (suggestion) =>
+                !this.shownSuggestionIds.has(suggestion.id) &&
+                !this.wasSuggestionAsked(suggestion),
+            )
             .slice(0, 3);
           terminal = {
             type: "completed",
@@ -470,6 +484,9 @@ export class AskSessionController {
         );
         return;
       }
+      for (const suggestion of terminal.suggestions) {
+        this.shownSuggestionIds.add(suggestion.id);
+      }
       this.dispatch({
         type: "answer.completed",
         requestId: request.requestId,
@@ -495,6 +512,20 @@ export class AskSessionController {
       }
       this.failCurrent(request.requestId, generation, "unavailable");
     }
+  }
+
+  private wasSuggestionAsked(suggestion: SuggestedQuestion): boolean {
+    const expected = new Set(
+      (["pl", "en"] as const).map((language) =>
+        normalizeSearchText(suggestion.question[language]),
+      ),
+    );
+    return this.state.transcript.some(
+      (turn) =>
+        turn.role === "portfolio-visitor" &&
+        turn.delivery === "complete" &&
+        expected.has(normalizeSearchText(turn.text)),
+    );
   }
 
   private failCurrent(

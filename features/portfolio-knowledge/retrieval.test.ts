@@ -44,6 +44,16 @@ describe("Portfolio Knowledge retrieval", () => {
     expect(retrieveKnowledge("React", "en", { limit: 100 })).toHaveLength(10);
   });
 
+  it("retrieves database evidence for a Polish inflected question", () => {
+    const actual = retrieveKnowledge("Bazodanowymi kompetencjami?", "pl", {
+      limit: 6,
+    }).map((match) => match.entry.id);
+
+    expect(actual).toContain(
+      "knowledge:role:mandata:highlight:database-migration",
+    );
+  });
+
   it.each([
     {
       question: "Jakie pasje ma Jakbub?",
@@ -109,14 +119,13 @@ describe("Portfolio Knowledge retrieval", () => {
     "retrieves mapped facts for every %s Suggested Question",
     (lang) => {
       const misses = portfolioKnowledge.suggestions.flatMap((suggestion) => {
-        const actual = new Set(
-          retrieveKnowledge(suggestion.question[lang], lang, {
-            limit: RETRIEVAL_FIXTURE_LIMIT,
-          }).map((match) => match.entry.id),
-        );
+        const retrieved = retrieveKnowledge(suggestion.question[lang], lang, {
+          limit: RETRIEVAL_FIXTURE_LIMIT,
+        }).map((match) => match.entry.id);
+        const actual = new Set(retrieved);
         return suggestion.knowledge.some((id) => actual.has(id))
           ? []
-          : [suggestion.id];
+          : [`${suggestion.id}: ${retrieved.join(", ")}`];
       });
 
       expect(misses).toEqual([]);
