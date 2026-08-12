@@ -29,11 +29,13 @@ export default async function Home() {
             <main id="main" tabIndex={-1} className="focus:outline-none">
               <Hero />
               <About />
-              <AskJakubSimple />
               <Timeline />
               <UltraStudio />
               <Extras />
               <Contact />
+              {/* Pływający przycisk, nie treść — stoi na końcu, żeby czytnik
+                  ekranu nie ogłaszał go w środku toku sekcji. */}
+              <AskJakubSimple />
             </main>
             <Footer />
           </>
