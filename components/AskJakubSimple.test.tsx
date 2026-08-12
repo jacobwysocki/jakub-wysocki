@@ -91,7 +91,7 @@ describe("Ask Jakub in Simple view", () => {
     });
   });
 
-  it("server-renders both text triggers but no panel payload", () => {
+  it("server-renders one text trigger but no panel payload", () => {
     const html = renderToStaticMarkup(
       <LangContext.Provider value={{ lang: "en", setLang: vi.fn() }}>
         <AskJakubSimple />
@@ -99,15 +99,12 @@ describe("Ask Jakub in Simple view", () => {
     );
     const document = new DOMParser().parseFromString(html, "text/html");
 
-    expect(
-      document.querySelectorAll('[data-ask-jakub-trigger="inline"]'),
-    ).toHaveLength(1);
-    expect(
-      document.querySelectorAll('[data-ask-jakub-trigger="pill"]'),
-    ).toHaveLength(1);
-    expect(document.body.textContent).toContain(
-      "Looking for something specific?",
-    );
+    // Jedno wejście na każdej szerokości. Wkładka między sekcjami odpadła,
+    // więc pigułka nie może się już chować pod breakpointem.
+    const triggers = document.querySelectorAll("[data-ask-jakub-trigger]");
+    expect(triggers).toHaveLength(1);
+    expect(triggers[0].getAttribute("data-ask-jakub-trigger")).toBe("pill");
+    expect(triggers[0].className).not.toContain("899");
     expect(document.body.textContent).toContain("Ask about my work");
     expect(document.querySelector("[data-ask-jakub-simple-panel]")).toBeNull();
     expect(document.body.textContent).not.toContain(
@@ -162,12 +159,10 @@ describe("Ask Jakub in Simple view", () => {
     const fetchSpy = vi.fn();
     vi.stubGlobal("fetch", fetchSpy);
     const view = renderInEnglish();
-    const inline = view.getAllByRole("button", {
-      name: "Ask about my work",
-    })[0];
+    const trigger = view.getByRole("button", { name: "Ask about my work" });
 
-    inline.focus();
-    fireEvent.click(inline);
+    trigger.focus();
+    fireEvent.click(trigger);
 
     const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
     await waitFor(() =>
@@ -197,21 +192,19 @@ describe("Ask Jakub in Simple view", () => {
         view.queryByRole("dialog", { name: "Ask Jakub" }),
       ).not.toBeInTheDocument(),
     );
-    expect(inline).toHaveFocus();
+    expect(trigger).toHaveFocus();
   });
 
-  it("keeps one session when the inline trigger hands off to the pill", async () => {
+  it("keeps one session across close and reopen", async () => {
     const fetchSpy = vi.fn(
       async (_input: RequestInfo | URL, init?: RequestInit) =>
         successfulAskResponse(init),
     );
     vi.stubGlobal("fetch", fetchSpy);
     const view = renderInEnglish();
-    const [inline, pill] = view.getAllByRole("button", {
-      name: "Ask about my work",
-    });
+    const trigger = view.getByRole("button", { name: "Ask about my work" });
 
-    fireEvent.click(inline);
+    fireEvent.click(trigger);
     const firstDialog = await view.findByRole("dialog", {
       name: "Ask Jakub",
     });
@@ -234,7 +227,7 @@ describe("Ask Jakub in Simple view", () => {
         view.queryByRole("dialog", { name: "Ask Jakub" }),
       ).not.toBeInTheDocument(),
     );
-    fireEvent.click(pill);
+    fireEvent.click(trigger);
 
     const reopenedDialog = await view.findByRole("dialog", {
       name: "Ask Jakub",
