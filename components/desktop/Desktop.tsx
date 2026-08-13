@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { AskJakubProvider } from "@/features/ask-jakub";
 import {
@@ -48,6 +49,9 @@ function DesktopFull({
   const open = useWindowStore((s) => s.open);
   const setMode = useModeStore((s) => s.setMode);
   const [ctxMenu, setCtxMenu] = useState<Point | null>(null);
+  const [frontWidget, setFrontWidget] = useState<"now" | "ask-jakub">(
+    "ask-jakub",
+  );
   const [selections, setSelections] = useState<AppLaunchSelections>(
     () => new Map(),
   );
@@ -128,6 +132,10 @@ function DesktopFull({
     [openApp, openLocation, selectionFor, setMode],
   );
 
+  const raiseWidget = useCallback((widget: "now" | "ask-jakub") => {
+    flushSync(() => setFrontWidget(widget));
+  }, []);
+
   // Esc: najpierw zamyka menu kontekstowe, potem aktywne okno
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -166,6 +174,9 @@ function DesktopFull({
         >
           {/* Tapeta jako warstwa zdarzeń: prawy klik = menu, ikony pulpitu */}
           <div
+            // Widgety porządkują się tylko między sobą; z-index: 0 zamyka je
+            // we wspólnym kontekście poniżej wszystkich okien.
+            style={{ zIndex: 0 }}
             className="absolute inset-0"
             onContextMenu={(e) => {
               e.preventDefault();
@@ -173,8 +184,17 @@ function DesktopFull({
             }}
           >
             <DesktopIcons areaRef={areaRef} />
-            <NowWidget areaRef={areaRef} />
-            <AskJakubWidget areaRef={areaRef} hidden={askJakubWindowVisible} />
+            <NowWidget
+              areaRef={areaRef}
+              onRaise={() => raiseWidget("now")}
+              zIndex={frontWidget === "now" ? 2 : 1}
+            />
+            <AskJakubWidget
+              areaRef={areaRef}
+              hidden={askJakubWindowVisible}
+              onRaise={() => raiseWidget("ask-jakub")}
+              zIndex={frontWidget === "ask-jakub" ? 2 : 1}
+            />
           </div>
 
           <AnimatePresence>

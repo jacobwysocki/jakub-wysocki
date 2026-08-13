@@ -16,9 +16,13 @@ import { ASK_JAKUB_WIDGET_RIGHT, DESKTOP_LAYOUT } from "./desktop-layout";
 export default function AskJakubWidget({
   areaRef,
   hidden,
+  onRaise,
+  zIndex,
 }: {
   areaRef: React.RefObject<HTMLDivElement | null>;
   hidden: boolean;
+  onRaise: () => void;
+  zIndex: number;
 }) {
   const dragControls = useDragControls();
   const desktop = useDesktop();
@@ -67,13 +71,15 @@ export default function AskJakubWidget({
       inert={hidden ? true : undefined}
       hidden={hidden}
       onContextMenu={(event) => event.stopPropagation()}
+      onPointerDownCapture={onRaise}
       onPointerDown={(event) => event.stopPropagation()}
       style={{
         bottom: DESKTOP_LAYOUT.edgeInset,
         right: ASK_JAKUB_WIDGET_RIGHT,
         width: DESKTOP_LAYOUT.askJakubWidget.width,
+        zIndex,
       }}
-      className="absolute z-[1] overflow-hidden rounded-[28px] border border-white/20 bg-black/30 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl max-[899px]:hidden"
+      className="absolute overflow-hidden rounded-[28px] border border-white/20 bg-black/30 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl max-[899px]:hidden"
     >
       <div
         onPointerDown={(event) => dragControls.start(event)}

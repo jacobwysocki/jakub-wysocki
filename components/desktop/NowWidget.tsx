@@ -21,8 +21,12 @@ const focusTech = [".NET", "Node.js", "React", "Next.js", "AI / ML", "UI / UX"];
 
 export default function NowWidget({
   areaRef,
+  onRaise,
+  zIndex,
 }: {
   areaRef: React.RefObject<HTMLDivElement | null>;
+  onRaise: () => void;
+  zIndex: number;
 }) {
   const dragControls = useDragControls();
   const { openApp } = useDesktop();
@@ -37,10 +41,12 @@ export default function NowWidget({
       dragElastic={0}
       dragConstraints={areaRef}
       aria-label={t(copy.now)}
+      onPointerDownCapture={onRaise}
       style={{
         bottom: DESKTOP_LAYOUT.edgeInset,
         left: DESKTOP_LAYOUT.edgeInset,
         width: DESKTOP_LAYOUT.nowWidget.width,
+        zIndex,
       }}
       className="absolute overflow-hidden rounded-[28px] border border-white/20 bg-black/25 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-2xl"
     >

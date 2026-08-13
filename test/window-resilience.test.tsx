@@ -240,6 +240,64 @@ describe("desktop window resilience", () => {
     });
   });
 
+  it("moves a short-work-area window down only while its title bar stays reachable", async () => {
+    const size = { w: 800, h: 300 };
+    useWindowStore.getState().open("about", {
+      size: { w: 640, h: 720 },
+      area: size,
+    });
+    const view = render(<WindowArea size={size} />);
+    const dialog = view.getByRole("dialog", { name: "O mnie" });
+    const titleBar = dialog.querySelector("header");
+    const initialY = useWindowStore.getState().windows[0].rect.y;
+
+    expect(titleBar).not.toBeNull();
+    fireEvent.pointerDown(titleBar!, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      buttons: 1,
+      clientX: 200,
+      clientY: 20,
+    });
+    fireEvent.pointerMove(window, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      buttons: 1,
+      clientX: 200,
+      clientY: 1000,
+    });
+    await act(
+      () =>
+        new Promise<void>((resolve) =>
+          window.requestAnimationFrame(() => resolve()),
+        ),
+    );
+    fireEvent.pointerUp(window, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      clientX: 200,
+      clientY: 1000,
+    });
+
+    await waitFor(() =>
+      expect(useWindowStore.getState().windows[0].rect.y).toBe(256),
+    );
+    expect(useWindowStore.getState().windows[0].rect.y).toBeGreaterThan(
+      initialY,
+    );
+
+    size.h = 240;
+    act(() => ResizeObserverFixture.instances[0].emit());
+
+    expect(useWindowStore.getState().windows[0].rect).toMatchObject({
+      y: 8,
+      h: 224,
+    });
+  });
+
   it("renders a pointer-down window above the others before title-bar drag starts", () => {
     const view = render(<WindowWorkspace />);
     fireEvent.click(view.getByRole("button", { name: "Open About" }));

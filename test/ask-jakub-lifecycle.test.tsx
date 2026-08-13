@@ -237,6 +237,52 @@ describe("Ask Jakub Desktop Mode lifecycle", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it("raises the dragged desktop widget while keeping widgets below windows", async () => {
+    const view = renderInEnglish(<Desktop />);
+    const nowWidget = view.getByRole("complementary", { name: "Now" });
+    const askWidget = view.getByRole("complementary", {
+      name: "Ask Jakub quick chat",
+    });
+    const widgetLayer = nowWidget.parentElement;
+    const nowDragHandle = nowWidget.firstElementChild;
+    const askDragHandle = askWidget.firstElementChild;
+    let raisedZDuringPointerDown: string | undefined;
+
+    expect(widgetLayer).toBe(askWidget.parentElement);
+    expect(nowDragHandle).not.toBeNull();
+    expect(askDragHandle).not.toBeNull();
+    nowDragHandle?.addEventListener(
+      "pointerdown",
+      () => {
+        raisedZDuringPointerDown = nowWidget.style.zIndex;
+      },
+      { once: true },
+    );
+
+    fireEvent.pointerDown(nowDragHandle!);
+
+    expect(Number(raisedZDuringPointerDown)).toBeGreaterThan(
+      Number(askWidget.style.zIndex),
+    );
+    expect(Number(nowWidget.style.zIndex)).toBeGreaterThan(
+      Number(askWidget.style.zIndex),
+    );
+
+    fireEvent.pointerDown(askDragHandle!);
+
+    expect(Number(askWidget.style.zIndex)).toBeGreaterThan(
+      Number(nowWidget.style.zIndex),
+    );
+
+    fireEvent.click(view.getByRole("button", { name: "About Me" }));
+    const aboutWindow = await view.findByRole("dialog", { name: "About Me" });
+
+    expect(widgetLayer).toHaveStyle({ zIndex: "0" });
+    expect(Number(aboutWindow.style.zIndex)).toBeGreaterThan(
+      Number(widgetLayer?.style.zIndex),
+    );
+  });
+
   it("yields to the full App and returns focus when its window closes", async () => {
     installSuccessfulAskRoute();
     const view = renderInEnglish(<Desktop />);
