@@ -25,6 +25,7 @@ import { EASE_APPLE } from "@/lib/motion";
 
 const MIN_W = 360;
 const MIN_H = 260;
+const TITLE_BAR_H = 44;
 
 type Dir = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
 
@@ -360,6 +361,15 @@ function WindowFrame({
       dragMomentum={false}
       dragElastic={0}
       dragConstraints={areaRef as React.RefObject<HTMLDivElement>}
+      onMeasureDragConstraints={(constraints) => ({
+        ...constraints,
+        // Rama może wyjść poza dół, ale cały nagłówek pozostaje dostępny.
+        top: 0,
+        bottom: Math.max(
+          0,
+          (areaRef.current?.clientHeight ?? TITLE_BAR_H) - TITLE_BAR_H,
+        ),
+      })}
       onDragStart={() => setInteracting(true)}
       onDragEnd={() => {
         setInteracting(false);
