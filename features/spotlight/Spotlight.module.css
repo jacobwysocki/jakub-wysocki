@@ -1,0 +1,92 @@
+.desktopTrigger {
+  border: 1px solid var(--spotlight-trigger-rest-boundary);
+  background-color: var(--spotlight-trigger-rest-surface);
+  color: var(--spotlight-trigger-rest-foreground);
+}
+
+.desktopTrigger:hover,
+.desktopTrigger[aria-expanded="true"] {
+  border-color: var(--spotlight-trigger-hover-boundary);
+  background-color: var(--spotlight-trigger-hover-surface);
+  color: var(--spotlight-trigger-hover-foreground);
+}
+
+.desktopTrigger:active {
+  border-color: var(--spotlight-trigger-active-boundary);
+  background-color: var(--spotlight-trigger-active-surface);
+  color: var(--spotlight-trigger-active-foreground);
+}
+
+.desktopTrigger:focus-visible {
+  box-shadow: 0 0 0 2px var(--spotlight-trigger-focus-inner);
+  outline: 2px solid var(--spotlight-trigger-focus-outer);
+  outline-offset: 2px;
+}
+
+.dialog {
+  border-color: var(--spotlight-dialog-boundary);
+  background-color: var(--spotlight-dialog-surface);
+  color: var(--spotlight-dialog-foreground);
+}
+
+.searchIcon,
+.secondaryText,
+.resultArrow {
+  color: var(--spotlight-dialog-secondary);
+}
+
+.searchInput {
+  color: var(--spotlight-dialog-foreground);
+  caret-color: var(--spotlight-dialog-accent);
+}
+
+.searchInput::placeholder {
+  color: var(--spotlight-dialog-secondary);
+  opacity: 1;
+}
+
+.searchInput:focus-visible,
+.closeButton:focus-visible,
+.result:focus-visible {
+  outline: 2px solid var(--spotlight-dialog-accent);
+  outline-offset: 2px;
+}
+
+.searchInput:focus-visible {
+  border-radius: 4px;
+  outline-offset: 3px;
+}
+
+.closeButton {
+  background-color: rgb(29 29 31 / 0.05);
+  color: var(--spotlight-dialog-secondary);
+}
+
+.closeButton:hover {
+  background-color: rgb(29 29 31 / 0.12);
+  color: var(--spotlight-dialog-foreground);
+}
+
+.kindBadge {
+  background-color: var(--spotlight-dialog-accent);
+  color: var(--spotlight-dialog-accent-foreground);
+}
+
+.resultSelected,
+.result:hover {
+  background-color: var(--spotlight-dialog-selection-surface);
+  box-shadow: inset 0 0 0 2px var(--spotlight-dialog-selection-boundary);
+}
+
+.result:hover .resultArrow {
+  color: var(--spotlight-dialog-accent);
+}
+
+.emptyState {
+  border-color: var(--spotlight-dialog-empty-boundary);
+  color: var(--spotlight-dialog-secondary);
+}
+
+.navigationProblem {
+  color: var(--spotlight-dialog-accent);
+}

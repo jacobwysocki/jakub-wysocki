@@ -7,9 +7,14 @@ import { ArrowRight, Search, X } from "lucide-react";
 import { useDesktop } from "@/components/desktop/DesktopContext";
 import { useLang } from "@/lib/lang-store";
 import { EASE_APPLE } from "@/lib/motion";
+import {
+  spotlightDialogVariables,
+  spotlightTriggerVariables,
+} from "./appearance";
 import { spotlightCopy, spotlightKindCopy } from "./copy";
 import { searchSpotlight } from "./search";
 import type { SpotlightResult } from "./contract";
+import styles from "./Spotlight.module.css";
 
 export type SpotlightProps = Readonly<{
   variant: "desktop" | "mobile";
@@ -139,11 +144,14 @@ export default function Spotlight({
         disabled={disabled}
         data-window-return="true"
         aria-label={copy(spotlightCopy.open)}
+        aria-expanded={open}
+        aria-haspopup="dialog"
         title={copy(spotlightCopy.open)}
         onClick={(event) => openDialog(event.currentTarget)}
+        style={variant === "desktop" ? spotlightTriggerVariables : undefined}
         className={
           variant === "desktop"
-            ? "flex h-7 items-center gap-1 rounded-lg px-1.5 text-white/80 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            ? `${styles.desktopTrigger} flex h-7 items-center gap-1 rounded-lg px-1.5 transition-colors`
             : "flex h-8 w-8 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:pointer-events-none disabled:opacity-40"
         }
       >
@@ -212,14 +220,15 @@ export default function Spotlight({
                         first.focus({ preventScroll: true });
                       }
                     }}
-                    className="w-full max-w-2xl overflow-hidden rounded-[24px] border border-white/60 bg-[#f5f5f7]/95 text-ink shadow-[0_32px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl"
+                    style={spotlightDialogVariables}
+                    className={`${styles.dialog} w-full max-w-2xl overflow-hidden rounded-[24px] border shadow-[0_32px_100px_rgba(0,0,0,0.42)] backdrop-blur-2xl`}
                   >
                     <div className="flex items-center gap-3 border-b border-line/70 px-4 py-3">
                       <Search
                         size={19}
                         strokeWidth={1.8}
                         aria-hidden
-                        className="shrink-0 text-muted"
+                        className={`${styles.searchIcon} shrink-0`}
                       />
                       <input
                         ref={inputRef}
@@ -258,20 +267,22 @@ export default function Spotlight({
                             activate(selected);
                           }
                         }}
-                        className="min-w-0 flex-1 bg-transparent text-[17px] font-medium outline-none placeholder:text-muted/70"
+                        className={`${styles.searchInput} min-w-0 flex-1 bg-transparent text-[17px] font-medium outline-none`}
                       />
                       <button
                         type="button"
                         aria-label={copy(spotlightCopy.close)}
                         onClick={() => closeDialog()}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/5 text-muted transition-colors hover:bg-black/10 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        className={`${styles.closeButton} flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors`}
                       >
                         <X size={16} aria-hidden />
                       </button>
                     </div>
 
                     <div className="px-3 pb-3 pt-2">
-                      <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
+                      <p
+                        className={`${styles.secondaryText} px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em]`}
+                      >
                         {copy(
                           query.trim()
                             ? spotlightCopy.results
@@ -297,10 +308,8 @@ export default function Spotlight({
                                 aria-selected={active}
                                 onMouseEnter={() => setActiveIndex(index)}
                                 onClick={() => activate(result)}
-                                className={`group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent ${
-                                  active
-                                    ? "bg-white shadow-sm"
-                                    : "hover:bg-white/65"
+                                className={`${styles.result} group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors ${
+                                  active ? styles.resultSelected : ""
                                 }`}
                               >
                                 <span className="min-w-0 flex-1">
@@ -308,18 +317,22 @@ export default function Spotlight({
                                     <span className="truncate text-[14px] font-semibold">
                                       {result.title}
                                     </span>
-                                    <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-accent">
+                                    <span
+                                      className={`${styles.kindBadge} shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em]`}
+                                    >
                                       {spotlightKindCopy[result.kind][lang]}
                                     </span>
                                   </span>
-                                  <span className="mt-0.5 block truncate text-[11.5px] text-muted">
+                                  <span
+                                    className={`${styles.secondaryText} mt-0.5 block truncate text-[11.5px]`}
+                                  >
                                     {result.context}
                                   </span>
                                 </span>
                                 <ArrowRight
                                   size={15}
                                   aria-hidden
-                                  className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
+                                  className={`${styles.resultArrow} shrink-0 transition-transform group-hover:translate-x-0.5`}
                                 />
                               </button>
                             );
@@ -329,7 +342,7 @@ export default function Spotlight({
                         <p
                           id="spotlight-results"
                           role="status"
-                          className="rounded-2xl border border-dashed border-line px-5 py-8 text-center text-[13px] text-muted"
+                          className={`${styles.emptyState} rounded-2xl border border-dashed px-5 py-8 text-center text-[13px]`}
                         >
                           {copy(spotlightCopy.noResults)}
                         </p>
@@ -337,7 +350,7 @@ export default function Spotlight({
                       {navigationProblem ? (
                         <p
                           role="alert"
-                          className="px-2 pt-2 text-[12px] text-accent"
+                          className={`${styles.navigationProblem} px-2 pt-2 text-[12px]`}
                         >
                           {copy(spotlightCopy.unavailable)}
                         </p>
