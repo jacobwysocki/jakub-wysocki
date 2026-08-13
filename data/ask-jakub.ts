@@ -100,4 +100,8 @@ export const askJakubCopy = {
     pl: "Zamknij",
     en: "Close",
   },
+  simpleNavigationUnavailable: {
+    pl: "To źródło nie ma celu w prostym widoku.",
+    en: "This source has no destination in Simple view.",
+  },
 } as const satisfies Record<string, L10n>;

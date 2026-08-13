@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { createPortal } from "react-dom";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { askJakubCopy } from "@/data/ask-jakub";
 import {
   ASK_JAKUB_QUESTION_LIMIT,
@@ -10,6 +17,11 @@ import {
   type AskProblem,
   useAskJakubSession,
 } from "@/features/ask-jakub";
+import {
+  resolvePortfolioLocation,
+  type PortfolioLocation,
+  type PortfolioNavigator,
+} from "@/features/portfolio-navigation";
 import { useLang } from "@/lib/lang-store";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 
@@ -21,14 +33,85 @@ type AskJakubSimplePanelProps = Readonly<{
   onClose: () => void;
 }>;
 
+type SimpleViewNavigatorOptions = Readonly<{
+  closePanel: () => void;
+  reportUnavailable: () => void;
+}>;
+
+function simpleViewAnchorId(location: PortfolioLocation, href: string) {
+  // Ask Jakub nie ma własnej sekcji w liniowym widoku. `#about` jest
+  // technicznym fallbackiem bez JS, ale nie udajemy, że to ten sam cel.
+  if (location.area === "ask-jakub") return undefined;
+  return href.startsWith("/#") ? href.slice(2) : undefined;
+}
+
+function createSimpleViewNavigator({
+  closePanel,
+  reportUnavailable,
+}: SimpleViewNavigatorOptions): PortfolioNavigator {
+  return {
+    open(location) {
+      const resolved = resolvePortfolioLocation(location);
+      const anchorId = resolved
+        ? simpleViewAnchorId(location, resolved.href)
+        : undefined;
+      const destination = anchorId ? document.getElementById(anchorId) : null;
+
+      if (!resolved || !destination) {
+        reportUnavailable();
+        return { opened: false, reason: "invalid-location" };
+      }
+
+      closePanel();
+      // Następna klatka wypada po odmontowaniu modala. Na telefonie cleanup
+      // zdąży wtedy zdjąć `inert` i `position: fixed` przed właściwym skokiem.
+      window.requestAnimationFrame(() => {
+        if (!destination.isConnected) return;
+        window.history.pushState(null, "", resolved.href);
+        destination.setAttribute("tabindex", "-1");
+        destination.scrollIntoView({ block: "start" });
+        destination.focus({ preventScroll: true });
+      });
+
+      return { opened: true, target: resolved };
+    },
+  };
+}
+
 /**
- * Provider pozostaje zamontowany po pierwszym otwarciu. Dzięki temu oba
- * wejścia prowadzą do jednej sesji, a samo zamknięcie panelu jej nie kasuje.
+ * Provider pozostaje zamontowany po pierwszym otwarciu, więc zamknięcie
+ * panelu nie kasuje sesji.
  */
-export default function AskJakubSimplePanel(props: AskJakubSimplePanelProps) {
+export default function AskJakubSimplePanel({
+  id,
+  open,
+  onClose,
+}: AskJakubSimplePanelProps) {
+  const [navigationUnavailable, setNavigationUnavailable] = useState(false);
+  const closePanel = useCallback(() => {
+    setNavigationUnavailable(false);
+    onClose();
+  }, [onClose]);
+  const navigator = useMemo(
+    () =>
+      createSimpleViewNavigator({
+        closePanel,
+        reportUnavailable: () => setNavigationUnavailable(true),
+      }),
+    [closePanel],
+  );
+
   return (
-    <AskJakubProvider>
-      {props.open ? <PanelContent {...props} /> : null}
+    <AskJakubProvider navigator={navigator}>
+      {open ? (
+        <PanelContent
+          id={id}
+          open={open}
+          onClose={closePanel}
+          portfolioNavigator={navigator}
+          navigationUnavailable={navigationUnavailable}
+        />
+      ) : null}
     </AskJakubProvider>
   );
 }
@@ -74,7 +157,15 @@ function RateLimitCountdown({
   );
 }
 
-function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
+function PanelContent({
+  id,
+  onClose,
+  portfolioNavigator,
+  navigationUnavailable,
+}: AskJakubSimplePanelProps & {
+  portfolioNavigator: PortfolioNavigator;
+  navigationUnavailable: boolean;
+}) {
   const language = useLang();
   const mobileModal = useMediaQuery(MOBILE_QUERY);
   const session = useAskJakubSession();
@@ -105,6 +196,22 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
     composerProblem?.code === "question-too-long"
       ? composerProblem
       : null;
+  const openLocation = (
+    event: React.MouseEvent,
+    location: PortfolioLocation,
+  ) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    event.preventDefault();
+    portfolioNavigator.open(location);
+  };
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -245,6 +352,14 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
+        {navigationUnavailable && (
+          <p
+            role="alert"
+            className="sticky top-0 z-10 mb-4 border-l-2 border-accent bg-surface py-2 pl-3 text-[12px] font-medium leading-relaxed text-ink/70"
+          >
+            {copy("simpleNavigationUnavailable")}
+          </p>
+        )}
         {session.transcript.length === 0 ? (
           <div>
             <p className="text-[15px] leading-relaxed text-ink/75">
@@ -385,12 +500,18 @@ function PanelContent({ id, onClose }: AskJakubSimplePanelProps) {
                           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
                             <Link
                               href="/#engineering"
+                              onClick={(event) =>
+                                openLocation(event, { area: "experience" })
+                              }
                               className="text-[11px] font-semibold text-ink underline decoration-line underline-offset-4 hover:text-accent"
                             >
                               {copy("viewExperience")}
                             </Link>
                             <Link
                               href="/#contact"
+                              onClick={(event) =>
+                                openLocation(event, { area: "contact" })
+                              }
                               className="text-[11px] font-semibold text-ink underline decoration-line underline-offset-4 hover:text-accent"
                             >
                               {copy("contactJakub")}

@@ -47,6 +47,25 @@ function renderInEnglish() {
   );
 }
 
+function renderInEnglishWithTargets(...targetIds: string[]) {
+  if (typeof window.matchMedia !== "function") setViewport(900);
+  return render(
+    <div data-simple-root>
+      {targetIds.map((targetId) => (
+        <section
+          key={targetId}
+          id={targetId}
+          tabIndex={-1}
+          aria-label={`${targetId} target`}
+        />
+      ))}
+      <LangContext.Provider value={{ lang: "en", setLang: vi.fn() }}>
+        <AskJakubSimple />
+      </LangContext.Provider>
+    </div>,
+  );
+}
+
 function successfulAskResponse(init?: RequestInit): Response {
   if (typeof init?.body !== "string") {
     throw new Error("Expected the Ask Jakub request to have a JSON body.");
@@ -74,6 +93,74 @@ function successfulAskResponse(init?: RequestInit): Response {
     `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
     {
       status: 200,
+      headers: { "content-type": "application/x-ndjson" },
+    },
+  );
+}
+
+function groundedAskResponse(
+  init?: RequestInit,
+  evidenceId = "evidence:experience:squizzu",
+): Response {
+  if (typeof init?.body !== "string") {
+    throw new Error("Expected the Ask Jakub request to have a JSON body.");
+  }
+
+  const request = JSON.parse(init.body) as { requestId: string };
+  const events = [
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "request.accepted",
+    },
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "answer.completed",
+      kind: "answered",
+      text: ANSWER,
+      evidenceIds: [evidenceId],
+      suggestionIds: [],
+    },
+  ];
+
+  return new Response(
+    `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
+    {
+      status: 200,
+      headers: { "content-type": "application/x-ndjson" },
+    },
+  );
+}
+
+function unavailableAskResponse(init?: RequestInit): Response {
+  if (typeof init?.body !== "string") {
+    throw new Error("Expected the Ask Jakub request to have a JSON body.");
+  }
+
+  const request = JSON.parse(init.body) as { requestId: string };
+  const events = [
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "request.accepted",
+    },
+    {
+      version: 1,
+      requestId: request.requestId,
+      type: "answer.failed",
+      problem: {
+        code: "unavailable",
+        message: "Provider unavailable.",
+        retryable: true,
+      },
+    },
+  ];
+
+  return new Response(
+    `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
+    {
+      status: 503,
       headers: { "content-type": "application/x-ndjson" },
     },
   );
@@ -153,6 +240,197 @@ describe("Ask Jakub in Simple view", () => {
     expect(dialog).not.toHaveAttribute("aria-modal");
     expect(document.querySelector("[data-ask-jakub-backdrop]")).toBeNull();
     expect(document.body.style.position).not.toBe("fixed");
+  });
+
+  it.each([390, 768])(
+    "keeps the complete mobile interaction chain working at %ipx",
+    async (width) => {
+      setViewport(width);
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(427);
+      const scrollTo = vi.fn();
+      vi.stubGlobal("scrollTo", scrollTo);
+      const fetchSpy = vi.fn(
+        async (_input: RequestInfo | URL, init?: RequestInit) =>
+          groundedAskResponse(init),
+      );
+      vi.stubGlobal("fetch", fetchSpy);
+      const view = renderInEnglish();
+      const trigger = view.getByRole("button", { name: "Ask about my work" });
+
+      expect(view.container.firstElementChild).not.toHaveAttribute("inert");
+      fireEvent.click(trigger);
+
+      let dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+      expect(document.body.style.position).toBe("fixed");
+      expect(view.container.firstElementChild).toHaveAttribute("inert");
+
+      const suggestions = within(dialog).getByRole("region", {
+        name: "Start with a question",
+      });
+      fireEvent.click(within(suggestions).getAllByRole("button")[0]);
+      await waitFor(() =>
+        expect(
+          within(dialog).getByRole("log", { name: "Conversation" }),
+        ).toHaveTextContent(ANSWER),
+      );
+      expect(fetchSpy).toHaveBeenCalledOnce();
+
+      fireEvent.click(
+        within(dialog).getByRole("button", { name: "Clear conversation" }),
+      );
+      dialog = view.getByRole("dialog", { name: "Ask Jakub" });
+      const composer = within(dialog).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      });
+      fireEvent.change(composer, { target: { value: QUESTION } });
+      expect(composer).toHaveValue(QUESTION);
+      fireEvent.keyDown(composer, { key: "Enter" });
+
+      await waitFor(() =>
+        expect(
+          within(dialog).getByRole("log", { name: "Conversation" }),
+        ).toHaveTextContent(ANSWER),
+      );
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+
+      fireEvent.click(within(dialog).getByRole("button", { name: "Close" }));
+      await waitFor(() =>
+        expect(
+          view.queryByRole("dialog", { name: "Ask Jakub" }),
+        ).not.toBeInTheDocument(),
+      );
+      expect(document.body.style.position).toBe("");
+      expect(view.container.firstElementChild).not.toHaveAttribute("inert");
+      expect(scrollTo).toHaveBeenLastCalledWith(0, 427);
+    },
+  );
+
+  it.each([390, 768, 900])(
+    "closes the panel before scrolling and focusing owned evidence at %ipx",
+    async (width) => {
+      setViewport(width);
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(427);
+      const scrollTo = vi.fn();
+      vi.stubGlobal("scrollTo", scrollTo);
+      const fetchSpy = vi.fn(
+        async (_input: RequestInfo | URL, init?: RequestInit) =>
+          groundedAskResponse(init),
+      );
+      vi.stubGlobal("fetch", fetchSpy);
+      const view = renderInEnglishWithTargets("engineering");
+      const target = view.getByRole("region", {
+        name: "engineering target",
+      });
+      const scrollIntoView = vi.fn();
+      target.scrollIntoView = scrollIntoView;
+
+      fireEvent.click(view.getByRole("button", { name: "Ask about my work" }));
+      const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+      const composer = within(dialog).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      });
+      fireEvent.change(composer, { target: { value: QUESTION } });
+      fireEvent.keyDown(composer, { key: "Enter" });
+
+      const evidence = await within(dialog).findByRole("link", {
+        name: "Squizzu — experience",
+      });
+      fireEvent.click(evidence);
+
+      await waitFor(() =>
+        expect(
+          view.queryByRole("dialog", { name: "Ask Jakub" }),
+        ).not.toBeInTheDocument(),
+      );
+      await waitFor(() =>
+        expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" }),
+      );
+      expect(document.body.style.position).toBe("");
+      expect(view.container.firstElementChild).not.toHaveAttribute("inert");
+      expect(target).toHaveFocus();
+      if (width < 900) {
+        expect(scrollTo).toHaveBeenLastCalledWith(0, 427);
+        expect(scrollTo.mock.invocationCallOrder[0]).toBeLessThan(
+          scrollIntoView.mock.invocationCallOrder[0],
+        );
+      }
+    },
+  );
+
+  it.each([390, 768])(
+    "uses the same mobile navigation path for failure-state portfolio links at %ipx",
+    async (width) => {
+      setViewport(width);
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(427);
+      const scrollTo = vi.fn();
+      vi.stubGlobal("scrollTo", scrollTo);
+      const fetchSpy = vi.fn(
+        async (_input: RequestInfo | URL, init?: RequestInit) =>
+          unavailableAskResponse(init),
+      );
+      vi.stubGlobal("fetch", fetchSpy);
+      const view = renderInEnglishWithTargets("engineering");
+      const target = view.getByRole("region", {
+        name: "engineering target",
+      });
+      const scrollIntoView = vi.fn();
+      target.scrollIntoView = scrollIntoView;
+
+      fireEvent.click(view.getByRole("button", { name: "Ask about my work" }));
+      const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+      const composer = within(dialog).getByRole("textbox", {
+        name: "Question about Jakub's work",
+      });
+      fireEvent.change(composer, { target: { value: QUESTION } });
+      fireEvent.keyDown(composer, { key: "Enter" });
+      fireEvent.click(
+        await within(dialog).findByRole("link", { name: "View experience" }),
+      );
+
+      await waitFor(() =>
+        expect(
+          view.queryByRole("dialog", { name: "Ask Jakub" }),
+        ).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(scrollIntoView).toHaveBeenCalledOnce());
+      expect(document.body.style.position).toBe("");
+      expect(target).toHaveFocus();
+      expect(scrollTo.mock.invocationCallOrder[0]).toBeLessThan(
+        scrollIntoView.mock.invocationCallOrder[0],
+      );
+    },
+  );
+
+  it("announces an unavailable Simple-view destination instead of jumping to the wrong section", async () => {
+    setViewport(900);
+    const fetchSpy = vi.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) =>
+        groundedAskResponse(init, "evidence:ask-jakub"),
+    );
+    vi.stubGlobal("fetch", fetchSpy);
+    const view = renderInEnglishWithTargets("about");
+    const about = view.getByRole("region", { name: "about target" });
+    const scrollIntoView = vi.fn();
+    about.scrollIntoView = scrollIntoView;
+
+    fireEvent.click(view.getByRole("button", { name: "Ask about my work" }));
+    const dialog = await view.findByRole("dialog", { name: "Ask Jakub" });
+    const composer = within(dialog).getByRole("textbox", {
+      name: "Question about Jakub's work",
+    });
+    fireEvent.change(composer, { target: { value: QUESTION } });
+    fireEvent.keyDown(composer, { key: "Enter" });
+    fireEvent.click(
+      await within(dialog).findByRole("link", {
+        name: "Ask Jakub — portfolio guide",
+      }),
+    );
+
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "This source has no destination in Simple view.",
+    );
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 
   it("moves focus into the panel, closes on Escape, and returns focus", async () => {
