@@ -1,15 +1,103 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" source(none);
 
-:root {
-  --color-surface: #fbfbfd;
-  --color-ink: #1d1d1f;
-  --color-muted: #86868b;
-  --color-line: #d2d2d7;
-  --color-accent: #c2410c;
-  --color-accent-bright: #ff6a3d;
+/*
+ * Źródła klas wskazane jawnie (source(none) wyłącza auto-detekcję), żeby
+ * skan nie zahaczał o docs/, test/ ani README — tam bywają fragmenty kodu,
+ * które wyglądają jak klasy. Lista odpowiada content z tailwind.config.ts
+ * sprzed migracji + features/, którego stara konfiguracja nie obejmowała:
+ * Spotlight tracił przez to disabled:opacity-40, disabled:pointer-events-none,
+ * pt-2 i xl:inline. Nowy katalog z klasami = nowy wpis tutaj.
+ */
+@source "../app";
+@source "../components";
+@source "../data";
+@source "../features";
+
+/*
+ * Design tokens — jedyne źródło prawdy dla kolorów, typografii i ruchu.
+ * @theme emituje te zmienne na :root, więc reguły niżej (body, ::selection,
+ * :focus-visible) czytają je bezpośrednio — koniec lustrzanych kopii
+ * z czasów tailwind.config.ts.
+ */
+@theme {
+  --color-surface: #fbfbfd; /* jasne tło */
+  --color-ink: #1d1d1f; /* tekst główny */
+  --color-muted: #86868b; /* tekst drugorzędny */
+  --color-line: #d2d2d7; /* obramowania / separatory */
+  --color-accent: #c2410c; /* akcent na jasnym tle */
+  --color-accent-bright: #ff6a3d; /* akcent na ciemnym tle */
+
+  --font-sans:
+    "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+    var(--font-inter), "Helvetica Neue", sans-serif;
+
+  /* Skala typograficzna z briefu — clamp() desktop → mobile */
+  /*
+   * text-display: rozmiar i tracking są tu związane z układem hero, nie
+   * dobrane swobodnie. Kolumny hero są proporcjonalne (minmax(0, …)), więc
+   * najdłuższe nierozrywalne słowo nagłówka musi się w swojej kolumnie
+   * zmieścić — a jest nim polskie „oprogramowanie.", ponad dwa razy
+   * dłuższe od angielskiego „software.". Zmierzone: przy 72px i zerowym
+   * trackingu ma 524px przy kolumnie 534px. Podnosząc rozmiar albo
+   * rozluźniając tracking, sprawdź ten zapas ponownie.
+   * 6vw zamiast 6.5vw: przy 6.5vw słowo nie mieściło się w zakresie
+   * szerokości 768–1008px, gdzie font rośnie szybciej niż kolumna.
+   */
+  --text-display: clamp(40px, 6vw, 72px);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: 0em;
+  --text-display--font-weight: 700;
+  --text-h2: clamp(36px, 5vw, 64px);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 700;
+  --text-h3: clamp(22px, 3vw, 32px);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 600;
+  --text-body: clamp(17px, 1.5vw, 19px);
+  --text-body--line-height: 1.5;
+  --text-caption: 13px;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.06em;
+  --text-caption--font-weight: 500;
+
+  /* max-w-content / max-w-prose */
+  --container-content: 1120px;
+  --container-prose: 680px;
+
+  --radius-card: 20px;
+
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.08);
+  --shadow-lift: 0 24px 60px rgba(0, 0, 0, 0.12);
+
   --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/*
+ * v4 ma wbudowane, statyczne max-w-prose (65ch), którego nie przebija ani
+ * token --container-prose, ani @utility o tej samej nazwie (obie deklaracje
+ * lądują w jednej regule, wbudowana ostatnia). Nadpisanie zwykłą regułą
+ * dopisaną do warstwy utilities wygrywa porządkiem źródła — bez niego
+ * kolumny tekstu zwęziłyby się z 680px do ~65ch. Uwaga: to nadpisanie nie
+ * obejmie wariantów (md:max-w-prose itp.) — dziś żaden nie istnieje.
+ */
+@layer utilities {
+  .max-w-prose {
+    max-width: var(--container-prose);
+  }
+}
+
+/*
+ * Preflight v4 daje przyciskom cursor: default (jak natywne UI). Ten pulpit
+ * udaje jednak stronę WWW z klikalnym wszystkim — przywracamy zachowanie
+ * v3, na którym polega każdy button bez własnej klasy cursor-*.
+ */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 html {

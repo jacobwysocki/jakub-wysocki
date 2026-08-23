@@ -605,7 +605,7 @@ export default function AskJakubApp() {
                 event.preventDefault();
                 submit();
               }}
-              className="max-h-32 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-[14px] leading-5 text-ink outline-none placeholder:text-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="max-h-32 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-[14px] leading-5 text-ink outline-hidden placeholder:text-muted/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             />
             <button
               type="submit"

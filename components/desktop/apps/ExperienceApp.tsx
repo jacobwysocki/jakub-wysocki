@@ -248,7 +248,7 @@ export default function ExperienceApp() {
   return (
     <div
       ref={rootRef}
-      className="flex h-full outline-none"
+      className="flex h-full outline-hidden"
       tabIndex={0}
       onKeyDown={onKeyDown}
     >

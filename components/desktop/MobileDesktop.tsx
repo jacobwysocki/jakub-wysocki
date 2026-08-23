@@ -261,7 +261,7 @@ export default function MobileDesktop({
                         : `${desktopApps.length} apps · tap to open`}
                     </p>
                   </div>
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-white/20 bg-white/10 shadow-inner">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-white/20 bg-white/10 inset-shadow-sm">
                     <AppWindowMac size={25} strokeWidth={1.5} aria-hidden />
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function MobileDesktop({
                         launchApp({ appId: app.id });
                       }}
                       aria-label={`${t(ui.desktop.openApp)}: ${t(app.title)}`}
-                      className="group flex min-w-0 flex-col items-center gap-2 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
+                      className="group flex min-w-0 flex-col items-center gap-2 rounded-xl outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
                       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
@@ -333,7 +333,7 @@ export default function MobileDesktop({
                     launchApp({ appId: app.id });
                   }}
                   aria-label={`${t(ui.desktop.openApp)}: ${t(app.title)}`}
-                  className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 sm:h-12 sm:w-12"
+                  className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 sm:h-12 sm:w-12"
                   whileTap={reduced ? undefined : { scale: 0.84 }}
                 >
                   <AppTile
@@ -427,7 +427,7 @@ export default function MobileDesktop({
                     <span className="w-8" aria-hidden />
                   )}
                   <div className="flex min-w-0 items-center gap-2">
-                    <AppTile appId={topApp.id} className="h-6 w-6 shadow-sm" />
+                    <AppTile appId={topApp.id} className="h-6 w-6 shadow-xs" />
                     <span className="truncate text-[14px] font-semibold text-ink">
                       {t(topApp.title)}
                     </span>

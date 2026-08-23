@@ -176,7 +176,7 @@ function MenuLangSwitch() {
       type="button"
       aria-label="Język / Language"
       onClick={() => setLang(lang === "pl" ? "en" : "pl")}
-      className="rounded px-1.5 py-0.5 text-[11.5px] font-bold uppercase tracking-wide transition-colors hover:bg-white/15"
+      className="rounded-sm px-1.5 py-0.5 text-[11.5px] font-bold uppercase tracking-wide transition-colors hover:bg-white/15"
     >
       {lang}
     </button>

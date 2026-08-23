@@ -209,7 +209,7 @@ export default function StudioApp() {
               aria-pressed={tab === id}
               className={`rounded-[7px] px-3 py-[3px] text-[12px] font-semibold transition-all duration-200 ${
                 tab === id
-                  ? "bg-white text-ink shadow-sm ring-1 ring-black/[0.06]"
+                  ? "bg-white text-ink shadow-xs ring-1 ring-black/[0.06]"
                   : "text-muted hover:text-ink"
               }`}
             >

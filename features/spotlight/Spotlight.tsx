@@ -152,7 +152,7 @@ export default function Spotlight({
         className={
           variant === "desktop"
             ? `${styles.desktopTrigger} flex h-7 items-center gap-1 rounded-lg px-1.5 transition-colors`
-            : "flex h-8 w-8 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:pointer-events-none disabled:opacity-40"
+            : "flex h-8 w-8 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white disabled:pointer-events-none disabled:opacity-40"
         }
       >
         <Search size={variant === "desktop" ? 14 : 15} aria-hidden />
@@ -267,7 +267,7 @@ export default function Spotlight({
                             activate(selected);
                           }
                         }}
-                        className={`${styles.searchInput} min-w-0 flex-1 bg-transparent text-[17px] font-medium outline-none`}
+                        className={`${styles.searchInput} min-w-0 flex-1 bg-transparent text-[17px] font-medium outline-hidden`}
                       />
                       <button
                         type="button"
@@ -308,7 +308,7 @@ export default function Spotlight({
                                 aria-selected={active}
                                 onMouseEnter={() => setActiveIndex(index)}
                                 onClick={() => activate(result)}
-                                className={`${styles.result} group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors ${
+                                className={`${styles.result} group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-hidden transition-colors ${
                                   active ? styles.resultSelected : ""
                                 }`}
                               >

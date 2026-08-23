@@ -121,7 +121,7 @@ export default function CaseShowcase({ project }: { project: FeaturedCase }) {
           {/* Gradient dociążający dół, żeby tekst kroków był czytelny */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"
+            className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent"
           />
           <div className="absolute left-8 top-8 md:left-16 md:top-12">
             <p className="text-caption uppercase text-white/50">

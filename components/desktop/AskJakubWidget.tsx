@@ -112,7 +112,7 @@ export default function AskJakubWidget({
               <button
                 type="button"
                 onClick={session.cancel}
-                className="shrink-0 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[9px] font-semibold text-white/75 transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="shrink-0 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[9px] font-semibold text-white/75 transition-colors hover:bg-white/15 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
               >
                 {copy("cancel")}
               </button>
@@ -127,7 +127,7 @@ export default function AskJakubWidget({
               <button
                 type="button"
                 onClick={session.retry}
-                className="mt-2 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[10px] font-semibold text-white/80 transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="mt-2 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[10px] font-semibold text-white/80 transition-colors hover:bg-white/15 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
               >
                 {copy("retry")}
               </button>
@@ -142,7 +142,7 @@ export default function AskJakubWidget({
               <button
                 type="button"
                 onClick={session.retry}
-                className="mt-2 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[10px] font-semibold text-white/80 transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="mt-2 rounded-xl border border-white/15 bg-white/10 px-2.5 py-1.5 text-[10px] font-semibold text-white/80 transition-colors hover:bg-white/15 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
               >
                 {copy("retry")}
               </button>
@@ -199,7 +199,7 @@ export default function AskJakubWidget({
               setSubmissionProblem(null);
             }}
             placeholder={copy("composerPlaceholder")}
-            className="h-9 min-w-0 flex-1 select-text bg-transparent px-2 text-[12px] text-white outline-none placeholder:text-white/35"
+            className="h-9 min-w-0 flex-1 select-text bg-transparent px-2 text-[12px] text-white outline-hidden placeholder:text-white/35"
           />
           <button
             type="submit"
@@ -232,7 +232,7 @@ export default function AskJakubWidget({
         type="button"
         data-app-launcher="ask-jakub"
         onClick={() => desktop.openLocation({ area: "ask-jakub" })}
-        className="mt-3 flex w-full items-center justify-between rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        className="mt-3 flex w-full items-center justify-between rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-[11px] font-semibold text-white/80 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
       >
         {copy("openFullChat")}
         <Maximize2 size={14} strokeWidth={1.8} aria-hidden />

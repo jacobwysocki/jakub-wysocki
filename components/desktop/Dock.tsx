@@ -100,7 +100,7 @@ function DockItem({
       onClick={onClick}
       aria-label={isOpen ? `${title} (${t(ui.desktop.windowOpen)})` : title}
       style={{ width: BASE, height: BASE }}
-      className="group relative shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
+      className="group relative shrink-0 outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
     >
       <span className={tooltipClass} aria-hidden>
         {title}
@@ -139,7 +139,7 @@ function DockModeSwitch({ mouseX }: { mouseX: MotionValue<number> }) {
       onClick={switchToSimple}
       aria-label={t(ui.mode.switchToSimple)}
       style={{ width: BASE, height: BASE }}
-      className="group relative shrink-0 outline-none"
+      className="group relative shrink-0 outline-hidden"
     >
       <span className={tooltipClass} aria-hidden>
         {t(ui.mode.toSimple)}

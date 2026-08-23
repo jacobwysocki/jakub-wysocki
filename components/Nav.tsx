@@ -148,7 +148,7 @@ export default function Nav() {
                     aria-hidden
                     className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
                   >
-                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                    <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
                   </span>
                   <AppWindowMac
                     size={14}
@@ -283,7 +283,7 @@ export default function Nav() {
                   >
                     <span
                       aria-hidden
-                      className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+                      className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
                     />
                     <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 sm:h-12 sm:w-12">
                       <AppWindowMac

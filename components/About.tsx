@@ -93,7 +93,7 @@ function Portrait() {
       {missing ? (
         <div
           aria-hidden
-          className="flex h-full w-full items-center justify-center bg-gradient-to-b from-white to-surface"
+          className="flex h-full w-full items-center justify-center bg-linear-to-b from-white to-surface"
         >
           <span className="text-[64px] font-bold tracking-tight text-ink/10">
             JW

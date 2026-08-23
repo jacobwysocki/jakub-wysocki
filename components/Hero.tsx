@@ -230,7 +230,7 @@ export default function Hero() {
    * (196 i 193 px w kolumnie 342 px); przy okazji rośnie pole dotyku.
    */
   const pill =
-    "group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3 text-center text-[16px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:w-auto sm:py-3.5 sm:text-left";
+    "group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3 text-center text-[16px] font-semibold focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:w-auto sm:py-3.5 sm:text-left";
 
   /** Warstwa wypełnienia: skalowanie od lewej krawędzi, przycięte do pigułki. */
   const sweep =
@@ -415,7 +415,7 @@ export default function Hero() {
         transition={{ delay: 1.6, duration: 0.8 }}
       >
         <motion.span
-          className="block h-12 w-px bg-gradient-to-b from-ink/0 via-ink/35 to-ink/0"
+          className="block h-12 w-px bg-linear-to-b from-ink/0 via-ink/35 to-ink/0"
           animate={
             reduced
               ? undefined

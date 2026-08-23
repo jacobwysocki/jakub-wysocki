@@ -693,7 +693,7 @@ function PanelContent({
               event.preventDefault();
               submit();
             }}
-            className="max-h-28 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-1 py-2.5 text-[14px] leading-5 text-ink outline-none placeholder:text-muted/70"
+            className="max-h-28 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-1 py-2.5 text-[14px] leading-5 text-ink outline-hidden placeholder:text-muted/70"
           />
           <button
             type="submit"

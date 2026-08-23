@@ -28,7 +28,7 @@ function DesktopIcon({
       onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => onOpen({ x: e.clientX, y: e.clientY })}
       aria-label={`${t(app.title)}, ${t(ui.desktop.openWindowHint)}`}
-      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl p-2 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
+      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl p-2 outline-hidden transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
         active ? "bg-white/20 ring-1 ring-white/30" : "hover:bg-white/10"
       }`}
     >

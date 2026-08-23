@@ -249,7 +249,7 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
       aria-pressed={tab === value}
       className={`rounded-[7px] px-3 py-[3px] text-[12px] font-semibold transition-all duration-200 ${
         tab === value
-          ? "bg-white text-ink shadow-sm ring-1 ring-black/[0.06]"
+          ? "bg-white text-ink shadow-xs ring-1 ring-black/[0.06]"
           : "text-muted hover:text-ink"
       }`}
     >

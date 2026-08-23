@@ -23,8 +23,8 @@ export default function LangSwitch({
     tone === "dark" ? "border-white/20 bg-white/10" : "border-ink/15 bg-ink/5";
   const active =
     tone === "dark"
-      ? "bg-white text-ink shadow-sm"
-      : "bg-ink text-white shadow-sm";
+      ? "bg-white text-ink shadow-xs"
+      : "bg-ink text-white shadow-xs";
   const idle =
     tone === "dark"
       ? "text-white/60 hover:text-white"

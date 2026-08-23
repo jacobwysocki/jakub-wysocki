@@ -383,7 +383,7 @@ function WindowFrame({
       // Esc obsługuje globalny nasłuch w Desktop.tsx — handler tutaj
       // dublował zamknięcie: okno + świeżo sfokusowane następne okno
       style={{ x, y, width: w, height: h, zIndex: win.z }}
-      className={`absolute left-0 top-0 outline-none ${
+      className={`absolute left-0 top-0 outline-hidden ${
         win.minimized ? "pointer-events-none" : ""
       }`}
     >
@@ -422,7 +422,7 @@ function WindowFrame({
             onMaximize={() => toggleMaximize(win.id)}
           />
           <span className="pointer-events-none flex min-w-0 items-center gap-2">
-            <AppTile appId={app.id} className="h-5 w-5 shrink-0 shadow-sm" />
+            <AppTile appId={app.id} className="h-5 w-5 shrink-0 shadow-xs" />
             <span
               className={`truncate text-[12.5px] font-semibold ${
                 focused ? "text-ink/80" : "text-ink/40"

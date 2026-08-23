@@ -43,7 +43,7 @@ const glyph = (Icon: LucideIcon, color = "#FFFFFF") => (
   <Icon
     aria-hidden
     strokeWidth={2}
-    className="h-[52%] w-[52%] drop-shadow-sm"
+    className="h-[52%] w-[52%] drop-shadow-xs"
     style={{ color }}
   />
 );
@@ -65,7 +65,7 @@ const staticAdapters = {
   studio: {
     tile: {
       bg: "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
-      glyph: <UltraStudioLogo className="h-[34%] w-[66%] drop-shadow-sm" />,
+      glyph: <UltraStudioLogo className="h-[34%] w-[66%] drop-shadow-xs" />,
     },
     Content: StudioApp,
   },
