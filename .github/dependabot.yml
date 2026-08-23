@@ -9,8 +9,8 @@ updates:
     groups:
       development-dependencies:
         dependency-type: development
-    # Dwie migracje, nie bumpy — i obie wciągane po cichu do zbiorczego PR-a
-    # grupy dev, przez co cała grupa nie przechodziła bramki i blokowała
+    # Zablokowane majory, nie zwykłe bumpy — wciągane po cichu do zbiorczego
+    # PR-a grupy dev, przez co cała grupa nie przechodziła bramki i blokowała
     # kilkanaście nieszkodliwych aktualizacji naraz.
     #
     # TypeScript 7: eslint-config-next ciągnie typescript-eslint, którego peer
@@ -18,14 +18,16 @@ updates:
     # naprawić w tym repo — czekamy na upstream
     # (github.com/typescript-eslint/typescript-eslint/issues/10940).
     #
-    # Tailwind 4: przepisanie konfiguracji na CSS-first. Do zrobienia świadomie,
-    # z przejrzeniem stylów, a nie przez merge zielonego PR-a.
+    # (Wpis dla tailwindcss zdjęty po migracji na Tailwind 4 / CSS-first.)
     #
-    # Zdejmij wpis, kiedy któraś z tych rzeczy przestanie być prawdą.
+    # Zdejmij wpis, kiedy jego powód przestanie być prawdą.
     ignore:
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
-      - dependency-name: tailwindcss
+      # eslint-plugin-react latest (7.37.5) predates ESLint 10 —
+      # typescript-eslint-style upstream block; remove when a compatible
+      # release ships.
+      - dependency-name: eslint
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
