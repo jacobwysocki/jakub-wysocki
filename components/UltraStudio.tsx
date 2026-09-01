@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import {
@@ -91,7 +92,23 @@ export default function UltraStudio() {
       {/* Dowód drugi: Squizzu. Zdanie otwierające jest częścią tego
           komponentu, żeby cały rozdział miał jeden rytm i żeby nazwa
           projektu padała raz, a nie dwa razy z rzędu. */}
-      <CaseSplit project={squizzuCase} lead={caseBridge.line} />
+      <CaseSplit
+        project={squizzuCase}
+        lead={caseBridge.line}
+        caseHref="/work/squizzu"
+      />
+
+      {/* Zamknięcie rozdziału: sekcja jest pokazem, pełne narracje procesu
+          żyją pod /work — stąd jedne drzwi na końcu zamiast kopii treści. */}
+      <Reveal className="mx-auto mt-16 max-w-content px-6 text-center md:mt-24">
+        <Link
+          href="/work"
+          className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
+        >
+          {t(ui.actions.allCaseStudies)}
+          <ArrowUpRight size={15} aria-hidden />
+        </Link>
+      </Reveal>
 
       <AnimatePresence>
         {openProject && (

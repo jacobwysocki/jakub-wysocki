@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   motion,
   useMotionValueEvent,
@@ -309,10 +310,13 @@ function ProductWindow({
 export default function CaseSplit({
   project,
   lead,
+  caseHref,
 }: {
   project: FeaturedCase;
   /** Zdanie otwierające rozdział; pełni tu rolę nagłówka case'a */
   lead: L10n;
+  /** Adres pełnego case study; sekcja jest zwiastunem, nie kopią. */
+  caseHref?: string;
 }) {
   const reduced = useReducedMotion();
   // Przypięcie kolumny ma sens tylko tam, gdzie obie kolumny stoją obok
@@ -426,16 +430,29 @@ export default function CaseSplit({
                     objectClass="object-center"
                   />
                 </div>
-                {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
-                  >
-                    {t(project.linkLabel ?? ui.actions.openSite)}
-                    <ArrowUpRight size={15} aria-hidden />
-                  </a>
+                {(caseHref || project.link) && (
+                  <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                    {caseHref && (
+                      <Link
+                        href={caseHref}
+                        className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
+                      >
+                        {t(ui.actions.viewCaseStudy)}
+                        <ArrowUpRight size={15} aria-hidden />
+                      </Link>
+                    )}
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
+                      >
+                        {t(project.linkLabel ?? ui.actions.openSite)}
+                        <ArrowUpRight size={15} aria-hidden />
+                      </a>
+                    )}
+                  </div>
                 )}
               </>
             )}

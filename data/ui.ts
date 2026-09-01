@@ -67,6 +67,11 @@ export const ui = {
     openDesktop: { pl: "Uruchom OS", en: "Launch OS" },
     visitStudio: { pl: "Zobacz ultrastud.io", en: "Visit ultrastud.io" },
     viewWork: { pl: "Zobacz projekty", en: "View work" },
+    viewCaseStudy: { pl: "Zobacz case study", en: "Read the case study" },
+    allCaseStudies: {
+      pl: "Wszystkie case studies",
+      en: "All case studies",
+    },
   },
   a11y: {
     skipToContent: { pl: "Przejdź do treści", en: "Skip to content" },
