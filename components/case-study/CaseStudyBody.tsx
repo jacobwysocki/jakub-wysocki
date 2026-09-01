@@ -58,6 +58,7 @@ const sectionCopy = {
 
 function MediaFigure({ media }: { media: CaseMedia }) {
   const lang = useLang();
+  const callouts = media.callouts ?? [];
   return (
     <figure>
       {media.kind === "video" ? (
@@ -70,6 +71,28 @@ function MediaFigure({ media }: { media: CaseMedia }) {
           aria-label={media.alt[lang]}
           className="w-full rounded-2xl shadow-soft"
         />
+      ) : callouts.length ? (
+        // Znaczniki żyją nad obrazem jako warstwa danych, nie wypalone
+        // w bitmapie: zostają dwujęzyczne i ostre przy każdej skali.
+        <div className="relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={media.src}
+            alt={media.alt[lang]}
+            loading="lazy"
+            className="w-full rounded-2xl shadow-soft"
+          />
+          {callouts.map((callout, index) => (
+            <span
+              key={callout.note.en}
+              aria-hidden
+              className="absolute flex h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.35)] ring-2 ring-white"
+              style={{ left: `${callout.x}%`, top: `${callout.y}%` }}
+            >
+              {index + 1}
+            </span>
+          ))}
+        </div>
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -79,6 +102,24 @@ function MediaFigure({ media }: { media: CaseMedia }) {
           className="w-full rounded-2xl shadow-soft"
         />
       )}
+      {callouts.length ? (
+        <ol className="mt-3 space-y-1.5">
+          {callouts.map((callout, index) => (
+            <li
+              key={callout.note.en}
+              className="flex gap-2 text-[12.5px] leading-snug text-ink/75"
+            >
+              <span
+                aria-hidden
+                className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent text-[9.5px] font-bold text-white"
+              >
+                {index + 1}
+              </span>
+              {callout.note[lang]}
+            </li>
+          ))}
+        </ol>
+      ) : null}
       {media.caption ? (
         <figcaption className="mt-2.5 text-[12.5px] leading-snug text-muted">
           {media.caption[lang]}

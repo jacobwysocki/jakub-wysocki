@@ -40,12 +40,20 @@ export function parseProjectId(value: string): ProjectId | null {
   return PROJECT_ID_ALIASES[value] ?? null;
 }
 
+/**
+ * Wyróżnik projektowy wskazany na kadrze: pozycja w procentach szerokości
+ * i wysokości obrazu, żeby znacznik trzymał się miejsca przy każdej skali.
+ */
+export type CaseCallout = { x: number; y: number; note: L10n };
+
 /** Jedno odwołanie do materiału wizualnego; lustrzane wobec wzorca z cases.ts. */
 export type CaseMedia = {
   src: string;
   alt: L10n;
   kind?: "image" | "video" | "diagram";
   caption?: L10n;
+  /** Numerowane znaczniki na kadrze plus legenda pod nim. */
+  callouts?: CaseCallout[];
 };
 
 /** Decyzja projektowa wraz z uzasadnieniem: podstawowa jednostka case'a UX. */
@@ -573,9 +581,43 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             en: "The Venor panel with the evidence drawer open: a 73/100 campaign score, qualification confidence of 0.84 reported separately, a “needs checking” badge and quoted signals. Demo data: fictional companies.",
           },
           caption: {
-            pl: "Szuflada dowodów: wynik, którego można się doczepić, pewność danych osobno, sygnały zacytowane, niepewność oznaczona. Kadry z danych pokazowych (fikcyjne firmy).",
-            en: "The evidence drawer: a score you can interrogate, with data confidence reported separately, signals quoted and uncertainty flagged. Captured on demo data (fictional companies).",
+            pl: "Szuflada dowodów. Kadry z danych pokazowych (fikcyjne firmy).",
+            en: "The evidence drawer. Captured on demo data (fictional companies).",
           },
+          callouts: [
+            {
+              x: 29.5,
+              y: 13.5,
+              note: {
+                pl: "Kolejka „na dziś”: zaległe, bieżące i sprawy bez następnego kroku w jednym rzucie oka.",
+                en: "The today queue: overdue, due and no-next-step items in one glance.",
+              },
+            },
+            {
+              x: 61.3,
+              y: 51.8,
+              note: {
+                pl: "Niepewność dostaje plakietkę, nie przypis: wynik do sprawdzenia mówi to wprost.",
+                en: "Uncertainty gets a badge, not a footnote: a score that needs checking says so upfront.",
+              },
+            },
+            {
+              x: 86.5,
+              y: 59,
+              note: {
+                pl: "Pewność danych raportowana osobno od wyniku, żeby liczba nie udawała wiedzy.",
+                en: "Data confidence is reported apart from the score, so the number does not pretend to be knowledge.",
+              },
+            },
+            {
+              x: 59.5,
+              y: 68,
+              note: {
+                pl: "Każdy wniosek cytuje sygnał, z którego wyrósł.",
+                en: "Every conclusion quotes the signal it grew from.",
+              },
+            },
+          ],
         },
         {
           src: "/projects/venor/app/panel-ranking.png",
@@ -585,9 +627,35 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             en: "The Venor lead ranking: companies scored 92, 86 and 78 out of 100 with A/B bands and contact actions; campaign filters above. Demo data: fictional companies.",
           },
           caption: {
-            pl: "Ranking per kampania: liczba nigdy nie występuje sama; obok zawsze stoi pasmo priorytetu i następna akcja. Dane pokazowe.",
-            en: "Per-campaign ranking: a number never stands alone; a priority band and the next action always sit beside it. Demo data.",
+            pl: "Ranking leadów. Dane pokazowe.",
+            en: "The lead ranking. Demo data.",
           },
+          callouts: [
+            {
+              x: 28,
+              y: 23,
+              note: {
+                pl: "Osobne priorytety dla każdej kampanii zamiast jednego globalnego rankingu.",
+                en: "Separate priorities per campaign instead of one global ranking.",
+              },
+            },
+            {
+              x: 73,
+              y: 66,
+              note: {
+                pl: "Liczba nigdy nie stoi sama: obok pasmo priorytetu i rekomendacja działania.",
+                en: "A number never stands alone: a priority band and a recommended action sit beside it.",
+              },
+            },
+            {
+              x: 89,
+              y: 69.3,
+              note: {
+                pl: "Akcje przy wierszu: z rankingu prosto do kontaktu, bez zmiany widoku.",
+                en: "Actions on the row: from the ranking straight to contact, without switching views.",
+              },
+            },
+          ],
         },
         {
           src: "/projects/venor/app/mini-audit.png",
@@ -597,9 +665,35 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             en: "A one-page mini-audit PDF generated in the browser: a site frame, a 92/100 change-potential score, observations, technical metrics, experience ratings and a recommended talking point. Demo data.",
           },
           caption: {
-            pl: "Mini-audyt składany w całości po stronie klienta (bez endpointu i bez Chromium na serwerze), ze stopką, która uczciwie nazywa materiał orientacyjnym. Dane pokazowe.",
-            en: "The mini-audit assembled entirely client-side (no endpoint, no server Chromium), with a footer that honestly calls the material indicative. Demo data.",
+            pl: "Mini-audyt składany w całości po stronie klienta, bez endpointu i bez Chromium na serwerze. Dane pokazowe.",
+            en: "The mini-audit assembled entirely client-side, with no endpoint and no server Chromium. Demo data.",
           },
+          callouts: [
+            {
+              x: 80,
+              y: 24,
+              note: {
+                pl: "Wynik nazwany uczciwie: potencjał zmiany, nie gotowość zakupowa firmy.",
+                en: "The score named honestly: change potential, not the company's purchase readiness.",
+              },
+            },
+            {
+              x: 4.2,
+              y: 49,
+              note: {
+                pl: "Trzy obserwacje zamiast ściany metryk.",
+                en: "Three observations instead of a wall of metrics.",
+              },
+            },
+            {
+              x: 90,
+              y: 70.3,
+              note: {
+                pl: "Audyt kończy się rekomendowanym punktem rozmowy, a stopka nazywa materiał orientacyjnym.",
+                en: "The audit ends in a recommended talking point, and the footer calls the material indicative.",
+              },
+            },
+          ],
         },
       ],
     },
