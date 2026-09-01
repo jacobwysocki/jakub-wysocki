@@ -38,6 +38,7 @@ const sectionCopy = {
   discovery: { pl: "Rozpoznanie", en: "Discovery" },
   architecture: { pl: "Architektura", en: "Architecture" },
   process: { pl: "Proces", en: "Process" },
+  iterationsTitle: { pl: "Iteracje", en: "Iterations" },
   decisions: { pl: "Decyzje projektowe", en: "Design decisions" },
   solution: { pl: "Rozwiązanie", en: "The solution" },
   outcome: { pl: "Wynik", en: "Outcome" },
@@ -474,6 +475,43 @@ export default function CaseStudyBody({
                   <MediaFigure key={media.src} media={media} />
                 ))}
               </div>
+            ) : null}
+            {study.process.iterations ? (
+              <>
+                <SubHeading>{sectionCopy.iterationsTitle[lang]}</SubHeading>
+                <Prose>{study.process.iterations.note[lang]}</Prose>
+                <ol className="mt-5 grid gap-4 sm:grid-cols-2">
+                  {study.process.iterations.frames.map((frame, index) => (
+                    <li key={`${frame.src}-${index}`} className="min-w-0">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line/70">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={frame.src}
+                          alt={frame.alt[lang]}
+                          loading="lazy"
+                          className="h-full w-full object-cover object-top"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute left-2 top-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white ring-2 ring-white"
+                        >
+                          {index + 1}
+                        </span>
+                      </div>
+                      {frame.note || frame.final ? (
+                        <p className="mt-2 text-[12.5px] leading-snug text-ink/75">
+                          {frame.note?.[lang]}
+                          {frame.final ? (
+                            <span className="ml-1 font-semibold text-accent">
+                              · {sectionCopy.finalTag[lang]}
+                            </span>
+                          ) : null}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ol>
+              </>
             ) : null}
           </>
         ) : null}
