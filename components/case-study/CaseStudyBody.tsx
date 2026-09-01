@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { useInView, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import CountUp from "@/components/CountUp";
 import { GithubIcon } from "@/components/logos";
 import { useLang } from "@/lib/lang-store";
 import type { CaseMedia, CaseMetric, UxCaseStudy } from "@/data/case-studies";
@@ -132,49 +133,118 @@ function MediaFigure({ media }: { media: CaseMedia }) {
 }
 
 /**
+ * Animowany licznik figury wyniku. Warstwa wizualna startuje w HTML od
+ * prawdziwej wartości, zeruje się dopiero po hydratacji i rośnie po wejściu
+ * w viewport; równoległy tekst sr-only trzyma stałą, sformatowaną wartość,
+ * więc czytniki ekranu i roboty renderujące JS nigdy nie czytają zera.
+ */
+function AnimatedFigure({
+  target,
+  suffix,
+  lang,
+}: {
+  target: number;
+  suffix: string;
+  lang: "pl" | "en";
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const reduced = useReducedMotion();
+  const [display, setDisplay] = useState(target);
+  const [armed, setArmed] = useState(false);
+  const format = (n: number) =>
+    n.toLocaleString(lang === "pl" ? "pl-PL" : "en-GB");
+
+  useEffect(() => {
+    if (reduced) return;
+    setArmed(true);
+    setDisplay(0);
+  }, [reduced]);
+
+  useEffect(() => {
+    if (!armed || !inView) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / 1800, 1);
+      setDisplay(Math.round(target * (1 - Math.pow(1 - t, 4))));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [armed, inView, target]);
+
+  return (
+    <span ref={ref}>
+      <span
+        aria-hidden
+        className="inline-block whitespace-nowrap tabular-nums"
+        style={{ minWidth: `${format(target).length + suffix.length}ch` }}
+      >
+        {format(display)}
+        {suffix}
+      </span>
+      <span className="sr-only">
+        {format(target)}
+        {suffix}
+      </span>
+    </span>
+  );
+}
+
+/**
  * Wynik jako figura, nie wiersz tekstu. Metryka z polem `from` opowiada
- * drogę: wyszarzony punkt startu, akcentowa strzałka i licznik rosnący do
- * wartości docelowej (CountUp startuje od prawdziwej liczby w HTML, więc
- * boty i czytniki nigdy nie widzą zera). Jedna zmierzona liczba to jedna
- * figura; wykresu z jednego punktu uczciwie zrobić się nie da.
+ * drogę: wyszarzony punkt startu, akcentowa strzałka i wartość docelowa.
+ * Jedna zmierzona liczba to jedna figura; wykresu z jednego punktu uczciwie
+ * zrobić się nie da. Wartość bez cyfr (np. beta → live) zostaje statyczną
+ * drogą bez licznika. DOM trzyma porządek dt → dd (wymóg listy definicji),
+ * a wartość idzie nad etykietę odwróconą kolumną flex.
  */
 function MetricFigure({ metric }: { metric: CaseMetric }) {
   const lang = useLang();
-  const target = Number.parseInt(metric.value.replace(/\D/g, ""), 10);
+  const digits = metric.value.replace(/\D/g, "");
+  const target = digits ? Number.parseInt(digits, 10) : null;
   const suffix = metric.value.includes("+") ? "+" : "";
+  const journey = metric.from !== undefined;
 
-  if (metric.from === undefined || Number.isNaN(target)) {
-    return (
-      <div className="min-w-[180px] rounded-2xl border border-line/70 bg-black/[0.02] px-6 py-5">
+  return (
+    <div
+      className={`flex flex-col-reverse rounded-2xl border border-line/70 bg-black/[0.02] ${
+        journey
+          ? "w-full min-w-0 px-6 py-5 sm:w-auto sm:min-w-[260px] sm:px-7 sm:py-6"
+          : "min-w-[160px] px-6 py-5"
+      }`}
+    >
+      <dt
+        className={`text-[12.5px] leading-snug text-muted ${journey ? "mt-2" : "mt-0.5"}`}
+      >
+        {metric.label[lang]}
+      </dt>
+      {journey ? (
+        <dd className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="text-[20px] font-semibold tracking-tight text-muted sm:text-[22px]">
+            {metric.from}
+          </span>
+          <ArrowRight
+            size={20}
+            strokeWidth={2.5}
+            aria-hidden
+            className="self-center text-accent"
+          />
+          <span className="sr-only">{lang === "pl" ? "do" : "to"}</span>
+          <span className="text-[clamp(34px,8vw,54px)] font-bold leading-none tracking-tight text-ink">
+            {target !== null ? (
+              <AnimatedFigure target={target} suffix={suffix} lang={lang} />
+            ) : (
+              metric.value
+            )}
+          </span>
+        </dd>
+      ) : (
         <dd className="text-[30px] font-bold tracking-tight text-ink">
           {metric.value}
         </dd>
-        <dt className="mt-0.5 text-[12.5px] leading-snug text-muted">
-          {metric.label[lang]}
-        </dt>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-w-[260px] rounded-2xl border border-line/70 bg-black/[0.02] px-7 py-6">
-      <dd className="flex items-baseline gap-3">
-        <span className="text-[22px] font-semibold tracking-tight text-muted">
-          {metric.from}
-        </span>
-        <ArrowRight
-          size={22}
-          strokeWidth={2.5}
-          aria-hidden
-          className="translate-y-[2px] self-center text-accent"
-        />
-        <span className="text-[46px] font-bold leading-none tracking-tight text-ink sm:text-[54px]">
-          <CountUp value={target} suffix={suffix} duration={1.8} />
-        </span>
-      </dd>
-      <dt className="mt-2 text-[12.5px] leading-snug text-muted">
-        {metric.label[lang]}
-      </dt>
+      )}
     </div>
   );
 }
