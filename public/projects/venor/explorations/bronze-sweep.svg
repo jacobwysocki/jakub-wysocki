@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Bronze Sweep</title>
+  <path fill="currentColor" d="M6 16 C6 22 28 51 34 51 C40 51 59 25 59 19 C59 13 56 10 52 13 C48 16 39 39 34 39 C29 39 19 12 15 10 C11 8 6 10 6 16 Z"/>
+  <circle cx="34" cy="26" r="4" fill="#3157F6"/>
+</svg>
