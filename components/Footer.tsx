@@ -96,7 +96,11 @@ function FooterLink({
 }
 
 /** Stopka: kolumny linków + wiersz statusu systemu. */
-export default function Footer() {
+export default function Footer({
+  linkSectionsToHome = false,
+}: {
+  linkSectionsToHome?: boolean;
+}) {
   const t = useT();
   const lang = useLang();
   const lenis = useLenis();
@@ -127,8 +131,12 @@ export default function Footer() {
             {navLinks.map((link) => (
               <FooterLink
                 key={link.href}
-                href={link.href}
-                onClick={(e) => handleAnchor(e, link.href)}
+                href={linkSectionsToHome ? `/${link.href}` : link.href}
+                onClick={
+                  linkSectionsToHome
+                    ? undefined
+                    : (e) => handleAnchor(e, link.href)
+                }
               >
                 {t(link.label)}
               </FooterLink>

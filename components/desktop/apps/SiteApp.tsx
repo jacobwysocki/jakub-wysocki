@@ -9,7 +9,9 @@ import {
   Lock,
   RotateCw,
 } from "lucide-react";
+import CaseWindowContent from "@/components/case-study/CaseWindowContent";
 import { GithubIcon } from "@/components/logos";
+import { findCaseStudy } from "@/data/case-studies";
 import type { ShowcaseSite } from "@/data/showcase";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
@@ -204,15 +206,16 @@ function Overview({
 }
 
 /**
- * Aplikacja projektu: zakładka Przegląd (opis + technologie) i Na żywo
- * (mini-przeglądarka ze skalowanym iframe'em w układzie desktopowym).
+ * Aplikacja projektu: opublikowany case + Na żywo; bez opublikowanego case'a
+ * zachowuje Przegląd + Na żywo. Podgląd skaluje desktopowy iframe do okna.
  */
 export default function SiteApp({ site }: { site: ShowcaseSite }) {
   const { selectionFor } = useDesktop();
   const { focused, interacting } = useWindowChrome();
   const t = useT();
-  // Na dotyku/małym ekranie (sheet) nie osadzamy — przegląd z linkiem
+  // Na dotyku/małym ekranie (sheet) nie osadzamy — treść ma własny link.
   const isSmall = useMediaQuery("(max-width: 767px)");
+  const caseStudy = findCaseStudy(site.slug);
   const launchSelection = selectionFor(`site:${site.slug}`);
   const launchView =
     launchSelection?.area === "showcase" &&
@@ -220,29 +223,42 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
     launchSelection.view
       ? launchSelection.view
       : undefined;
+  // Kanoniczne "overview" wskazuje dziś na scalony case; kontrakt lokacji
+  // zostaje stabilny, mimo że okno nie pokazuje już osobnej zakładki Overview.
+  const launchTab =
+    launchView === "overview" && caseStudy ? ("case" as const) : launchView;
   const [view, setView] = useState(() => ({
     launchSelection,
-    tab: launchView ?? ("overview" as "overview" | "live"),
+    tab: launchTab ?? (caseStudy ? ("case" as const) : ("overview" as const)),
   }));
   const [loaded, setLoaded] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
-  if (launchView && view.launchSelection !== launchSelection) {
-    setView({ launchSelection, tab: launchView });
+  if (launchTab && view.launchSelection !== launchSelection) {
+    setView({ launchSelection, tab: launchTab });
   }
 
   const tab = view.tab;
-  const selectTab = (nextTab: "overview" | "live") =>
+  const selectTab = (nextTab: "case" | "overview" | "live") =>
     setView({ launchSelection, tab: nextTab });
 
   if (isSmall || !site.embed) {
-    return <Overview site={site} />;
+    if (!caseStudy) return <Overview site={site} />;
+    return (
+      <div className="h-full overflow-y-auto overscroll-contain">
+        <CaseWindowContent
+          study={caseStudy}
+          icon={<SiteTile site={site} />}
+          tech={site.overview.tech}
+        />
+      </div>
+    );
   }
 
   const toolbarBtn =
     "flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-black/[0.06] hover:text-ink";
 
-  const segment = (value: "overview" | "live", label: string) => (
+  const segment = (value: "case" | "overview" | "live", label: string) => (
     <button
       type="button"
       onClick={() => selectTab(value)}
@@ -262,7 +278,9 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
       {/* Pasek narzędzi: segmenty zakładek + adres + akcje */}
       <div className="flex h-11 shrink-0 select-none items-center gap-1.5 border-b border-black/[0.06] px-2.5">
         <div className="flex items-center gap-0.5 rounded-[9px] bg-black/[0.05] p-[3px]">
-          {segment("overview", t(ui.desktop.overviewTab))}
+          {caseStudy
+            ? segment("case", t(ui.desktop.caseTab))
+            : segment("overview", t(ui.desktop.overviewTab))}
           {segment("live", t(ui.desktop.liveTab))}
         </div>
 
@@ -326,7 +344,16 @@ export default function SiteApp({ site }: { site: ShowcaseSite }) {
         </a>
       </div>
 
-      {tab === "overview" ? (
+      {tab === "case" && caseStudy ? (
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <CaseWindowContent
+            study={caseStudy}
+            icon={<SiteTile site={site} />}
+            tech={site.overview.tech}
+            onOpenLive={() => selectTab("live")}
+          />
+        </div>
+      ) : tab === "overview" && !caseStudy ? (
         <div className="min-h-0 flex-1 overflow-y-auto">
           <Overview site={site} onOpenLive={() => selectTab("live")} />
         </div>

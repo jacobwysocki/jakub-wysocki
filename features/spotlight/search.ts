@@ -33,6 +33,7 @@ function resultKind(location: PortfolioLocation): SpotlightResultKind {
       return "experience";
     case "education":
       return "education";
+    case "project":
     case "studio":
     case "personal-project":
     case "showcase":
@@ -66,6 +67,8 @@ function appRootLocation(location: PortfolioLocation): PortfolioLocation {
       return { area: "experience" };
     case "education":
       return { area: "education" };
+    case "project":
+      return location;
     case "studio":
       return { area: "studio" };
     case "showcase":

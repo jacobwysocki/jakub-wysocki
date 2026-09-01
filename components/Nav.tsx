@@ -21,7 +21,11 @@ import { useAnchorNav } from "@/components/SmoothScrollProvider";
  * (kreska + rozmycie), nie kolor tekstu. Skip link jest pierwszym elementem
  * paska, bo to pierwszy przystanek klawiatury na stronie.
  */
-export default function Nav() {
+export default function Nav({
+  linkSectionsToHome = false,
+}: {
+  linkSectionsToHome?: boolean;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
@@ -62,6 +66,12 @@ export default function Nav() {
     setMenuOpen(false);
     anchor(e, href);
   };
+  const sectionHref = (href: string) =>
+    linkSectionsToHome ? `/${href}` : href;
+  const handleSectionLink = (e: React.MouseEvent, href: string) => {
+    setMenuOpen(false);
+    if (!linkSectionsToHome) anchor(e, href);
+  };
 
   return (
     <>
@@ -98,8 +108,8 @@ export default function Nav() {
             className="mx-auto flex h-16 max-w-content items-center justify-between gap-3 px-4 sm:px-6"
           >
             <a
-              href="#top"
-              onClick={(e) => handleAnchor(e, "#top")}
+              href={linkSectionsToHome ? "/" : "#top"}
+              onClick={(e) => handleSectionLink(e, "#top")}
               className="shrink-0 text-[15px] font-semibold tracking-tight text-ink"
             >
               {site.name}
@@ -110,8 +120,8 @@ export default function Nav() {
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <a
-                      href={link.href}
-                      onClick={(e) => handleAnchor(e, link.href)}
+                      href={sectionHref(link.href)}
+                      onClick={(e) => handleSectionLink(e, link.href)}
                       className="block w-28 rounded-full py-1.5 text-center text-[13px] font-medium text-ink/80 transition-colors duration-300 hover:bg-black/5 hover:text-ink"
                     >
                       <StableText l10n={link.label} className="mx-auto block" />
@@ -240,8 +250,8 @@ export default function Nav() {
                         }}
                       >
                         <a
-                          href={link.href}
-                          onClick={(e) => handleAnchor(e, link.href)}
+                          href={sectionHref(link.href)}
+                          onClick={(e) => handleSectionLink(e, link.href)}
                           className="group flex items-center gap-4 py-[clamp(0.65rem,2vh,1.25rem)]"
                         >
                           <span className="w-6 text-[10px] font-semibold tabular-nums text-accent-bright">

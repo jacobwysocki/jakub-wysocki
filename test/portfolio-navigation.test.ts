@@ -1,11 +1,20 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import {
+  PROJECT_IDS,
+  caseStudies,
+  findCaseStudy,
+  type ProjectId,
+  type UxCaseStudy,
+} from "@/data/case-studies";
 import { allRoles } from "@/data/experience";
 import { personalProjects } from "@/data/personal";
 import { studioProjects } from "@/data/projects";
 import { showcase } from "@/data/showcase";
 import {
   PortfolioNavigator,
+  decodePortfolioPathname,
+  encodePortfolioLocation,
   resolvePortfolioLocation,
   type AppLaunchPayload,
   type AppId,
@@ -15,8 +24,40 @@ import {
 import { reduceLaunchSelections } from "@/features/portfolio-navigation/launch-selection";
 import { useWindowStore } from "@/lib/window-store";
 
+const originalCaseStudies = { ...caseStudies };
+
+function caseStudyFixture(slug: ProjectId): UxCaseStudy {
+  const copy = { pl: `Test ${slug}`, en: `Test ${slug}` };
+  return {
+    slug,
+    client: slug,
+    tag: copy,
+    role: copy,
+    gradient: "linear-gradient(#000, #fff)",
+    cover: null,
+    problem: copy,
+    decisions: [],
+    solution: { summary: copy, media: [] },
+  };
+}
+
+function publishCaseStudy(projectId: ProjectId) {
+  caseStudies[projectId] = caseStudyFixture(projectId);
+}
+
+function publishedHref(value: string, fallback: PortfolioHref): PortfolioHref {
+  const study = findCaseStudy(value);
+  return study ? `/work/${study.slug}` : fallback;
+}
+
+afterEach(() => {
+  for (const projectId of PROJECT_IDS) delete caseStudies[projectId];
+  Object.assign(caseStudies, originalCaseStudies);
+});
+
 describe("Portfolio Location resolution", () => {
   it("covers every frozen location area", () => {
+    publishCaseStudy("printly");
     const fixtures: readonly [PortfolioLocation, string, PortfolioHref][] = [
       [{ area: "ask-jakub" }, "ask-jakub", "/#about"],
       [{ area: "about" }, "about", "/#about"],
@@ -28,8 +69,13 @@ describe("Portfolio Location resolution", () => {
       ],
       [{ area: "education" }, "education", "/#engineering"],
       [{ area: "education", itemId: "languages" }, "education", "/#extras"],
+      [
+        { area: "project", projectId: "printly" },
+        "project:printly",
+        "/work/printly",
+      ],
       [{ area: "studio" }, "studio", "/#studio"],
-      [{ area: "studio", projectSlug: "printly" }, "studio", "/#studio"],
+      [{ area: "studio", projectSlug: "printly" }, "studio", "/work/printly"],
       [
         { area: "personal-project", projectId: "interactive-os" },
         "info",
@@ -38,17 +84,17 @@ describe("Portfolio Location resolution", () => {
       [
         { area: "personal-project", projectId: "venor" },
         "venor",
-        "/#personal-projects",
+        publishedHref("venor", "/#personal-projects"),
       ],
       [
         { area: "showcase", slug: "squizzu", view: "overview" },
         "site:squizzu",
-        "/#studio",
+        publishedHref("squizzu", "/#studio"),
       ],
       [
         { area: "showcase", slug: "drone-path", view: "live" },
         "site:drone-path",
-        "/#engineering",
+        publishedHref("drone-path", "/#engineering"),
       ],
       [{ area: "contact" }, "contact", "/#contact"],
       [{ area: "portfolio-info" }, "info", "/#personal-projects"],
@@ -60,6 +106,127 @@ describe("Portfolio Location resolution", () => {
         href,
       });
     }
+  });
+
+  it("maps each published project to its current Desktop destination", () => {
+    const targets = [
+      ["squizzu", "site:squizzu"],
+      ["ultra-studio", "studio"],
+      ["venor", "venor"],
+      ["alumed", "project:alumed"],
+      ["printly", "project:printly"],
+      ["drone-path", "site:drone-path"],
+    ] as const satisfies readonly [ProjectId, AppId][];
+
+    for (const [projectId, appId] of targets) {
+      publishCaseStudy(projectId);
+      const location: PortfolioLocation = { area: "project", projectId };
+      expect(resolvePortfolioLocation(location)).toEqual({
+        launch: { appId, selection: location },
+        href: `/work/${projectId}`,
+      });
+    }
+  });
+
+  it("fails closed when a project identity has no published record", () => {
+    delete caseStudies.printly;
+
+    expect(
+      resolvePortfolioLocation({ area: "project", projectId: "printly" }),
+    ).toBeUndefined();
+    expect(
+      encodePortfolioLocation({ area: "project", projectId: "printly" }),
+    ).toBeUndefined();
+    expect(decodePortfolioPathname("/work/printly")).toBeUndefined();
+  });
+
+  it("upgrades legacy hrefs without changing their Desktop launch payloads", () => {
+    for (const projectId of [
+      "ultra-studio",
+      "venor",
+      "squizzu",
+      "drone-path",
+    ] as const) {
+      publishCaseStudy(projectId);
+    }
+
+    const fixtures: readonly [
+      PortfolioLocation,
+      AppLaunchPayload,
+      PortfolioHref,
+    ][] = [
+      [
+        { area: "studio", projectSlug: "ultrastudio-site" },
+        {
+          appId: "studio",
+          selection: { area: "studio", projectSlug: "ultrastudio-site" },
+        },
+        "/work/ultra-studio",
+      ],
+      [
+        { area: "personal-project", projectId: "venor" },
+        {
+          appId: "venor",
+          selection: { area: "personal-project", projectId: "venor" },
+        },
+        "/work/venor",
+      ],
+      [
+        { area: "showcase", slug: "squizzu", view: "live" },
+        {
+          appId: "site:squizzu",
+          selection: { area: "showcase", slug: "squizzu", view: "live" },
+        },
+        "/work/squizzu",
+      ],
+      [
+        { area: "showcase", slug: "drone-path", view: "overview" },
+        {
+          appId: "site:drone-path",
+          selection: {
+            area: "showcase",
+            slug: "drone-path",
+            view: "overview",
+          },
+        },
+        "/work/drone-path",
+      ],
+    ];
+
+    for (const [location, launch, href] of fixtures) {
+      expect(resolvePortfolioLocation(location)).toEqual({ launch, href });
+    }
+  });
+
+  it("round-trips canonical project paths and normalizes the legacy alias", () => {
+    publishCaseStudy("ultra-studio");
+    const location: PortfolioLocation = {
+      area: "project",
+      projectId: "ultra-studio",
+    };
+
+    const href = encodePortfolioLocation(location);
+    expect(href).toBe("/work/ultra-studio");
+    expect(decodePortfolioPathname(href)).toEqual(location);
+    expect(decodePortfolioPathname("/work/ultrastudio-site")).toEqual(location);
+    expect(
+      resolvePortfolioLocation({
+        area: "project",
+        projectId: "ultrastudio-site",
+      }),
+    ).toMatchObject({ href: "/work/ultra-studio" });
+  });
+
+  it("rejects malformed and non-project pathnames in the URL codec", () => {
+    publishCaseStudy("squizzu");
+
+    expect(decodePortfolioPathname("/work/squizzu/extra")).toBeUndefined();
+    expect(decodePortfolioPathname("/work/squizzu/")).toBeUndefined();
+    expect(decodePortfolioPathname("/#studio")).toBeUndefined();
+    expect(decodePortfolioPathname("/work/%E0%A4%A")).toBeUndefined();
+    expect(
+      decodePortfolioPathname({ pathname: "/work/squizzu" }),
+    ).toBeUndefined();
   });
 
   it("keeps canonical identity collections resolvable", () => {
@@ -100,6 +267,8 @@ describe("Portfolio Location resolution", () => {
       { area: "ask-jakub", roleId: "mandata" },
       { area: "experience", roleId: "missing" },
       { area: "education", itemId: "missing" },
+      { area: "project", projectId: "missing" },
+      { area: "project", projectId: "squizzu", view: "live" },
       { area: "studio", projectSlug: "missing" },
       { area: "personal-project", projectId: "missing" },
       { area: "showcase", slug: "missing" },

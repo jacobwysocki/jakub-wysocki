@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { hobbies } from "@/data/education";
 import { allRoles } from "@/data/experience";
+import type { ProjectId } from "@/data/case-studies";
 import { personalProjects } from "@/data/personal";
 import { studioProjects } from "@/data/projects";
 import { showcase } from "@/data/showcase";
@@ -62,6 +63,27 @@ describe("Portfolio Knowledge catalog", () => {
       );
     }
   });
+
+  it.each([
+    ["evidence:studio:squizzu", "squizzu"],
+    ["evidence:studio:ultrastudio-site", "ultra-studio"],
+    ["evidence:personal-project:venor", "venor"],
+    ["evidence:studio:alumed", "alumed"],
+    ["evidence:studio:printly", "printly"],
+    ["evidence:showcase:squizzu:overview", "squizzu"],
+    ["evidence:showcase:squizzu:live", "squizzu"],
+    ["evidence:showcase:drone-path:overview", "drone-path"],
+    ["evidence:showcase:drone-path:live", "drone-path"],
+  ] as const satisfies readonly [string, ProjectId][])(
+    "keeps %s stable while targeting the canonical %s case study",
+    (evidenceId, projectId) => {
+      expect(findEvidence(evidenceId)).toMatchObject({
+        id: evidenceId,
+        location: { area: "project", projectId },
+        href: `/work/${projectId}`,
+      });
+    },
+  );
 
   it("keeps direct contact values, phone, and environment sentinels out", async () => {
     const environmentSentinel = "PRIVATE_ENV_SENTINEL_92beaf";

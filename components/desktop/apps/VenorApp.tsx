@@ -1,18 +1,43 @@
 "use client";
 
-import { Radar } from "lucide-react";
+import CaseWindowContent from "@/components/case-study/CaseWindowContent";
+import { VenorMark } from "@/components/logos";
+import { findCaseStudy } from "@/data/case-studies";
 import { venor } from "@/data/personal";
 import { useT } from "@/lib/lang-store";
 import VenorPipeline from "@/components/VenorPipeline";
 
+const venorTech =
+  venor.techGroups?.flatMap((group) => group.items) ?? venor.tech;
+
 /**
  * Venor — wewnętrzny system prospectingu Ultra Studio.
  *
- * Ten sam materiał, co karta w prostym widoku, przełożony na gramatykę okna:
- * jasna treść, a mapa systemu w ciemnym bloku, jak dysertacja w Edukacji.
- * Treść czyta z data/personal.ts, więc oba tryby nie mają jak się rozjechać.
+ * Opublikowany case dostaje jedną prezentację okienkową; stary przegląd jest
+ * wyłącznie bezpiecznym fallbackiem dla nieopublikowanego rekordu.
  */
 export default function VenorApp() {
+  const study = findCaseStudy("venor");
+
+  if (study) {
+    return (
+      <CaseWindowContent
+        study={study}
+        icon={
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[24%] bg-[#F7ECF1] text-[#171216]">
+            <VenorMark className="h-7 w-7" />
+          </span>
+        }
+        tech={venorTech}
+      />
+    );
+  }
+
+  return <VenorOverview />;
+}
+
+/** Dotychczasowa treść okna: etykieta, highlights, mapa systemu, stack. */
+function VenorOverview() {
   const t = useT();
 
   return (
@@ -21,8 +46,8 @@ export default function VenorApp() {
           on, punkty i granica dzieliły jedną krawędź lewą: inaczej nagłówek
           jest wcięty o szerokość ikony, a reszta nie. */}
       <div className="flex items-center gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[24%] bg-accent/10 text-accent">
-          <Radar size={24} strokeWidth={1.7} aria-hidden />
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[24%] bg-[#F7ECF1] text-[#171216]">
+          <VenorMark className="h-7 w-7" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">

@@ -1,3 +1,8 @@
+import {
+  caseStudies,
+  parseProjectId,
+  type ProjectId,
+} from "@/data/case-studies";
 import { showcase } from "@/data/showcase";
 import type { L10n } from "@/lib/lang";
 
@@ -14,7 +19,19 @@ export const STATIC_APP_IDS = [
 
 export type StaticAppId = (typeof STATIC_APP_IDS)[number];
 export type ShowcaseAppId = `site:${string}`;
-export type AppId = StaticAppId | ShowcaseAppId;
+export type ProjectAppId = `project:${ProjectId}`;
+export type AppId = StaticAppId | ShowcaseAppId | ProjectAppId;
+
+/**
+ * Projekty z własną aplikacją case study. Squizzu, Ultra Studio, Venor i
+ * Drone Simulation mają już okna (site:…, studio, venor), więc rejestrujemy
+ * tylko brakujące; nowy wpis wolno dodać wyłącznie dla opublikowanego
+ * rekordu w data/case-studies.ts.
+ */
+const PROJECT_APP_PROJECTS = [
+  "alumed",
+  "printly",
+] as const satisfies readonly ProjectId[];
 
 export type AppCatalogSurface =
   "desktopIcon" | "desktopDock" | "mobileGrid" | "mobileDock";
@@ -63,6 +80,33 @@ const showcaseEntries: readonly AppCatalogEntry[] = showcase.map(
 
 const afterShowcaseOrder = 20 + showcaseEntries.length * 10;
 
+/**
+ * Case studies bez własnego okna dostają je tutaj. Ikona i siatka mobilna —
+ * tak, dock — nie: dock zostaje kuratorowany, żeby nie urósł ponad szerokość,
+ * którą desktop-layout uznaje za rozsądną.
+ */
+const projectEntries: readonly AppCatalogEntry[] = PROJECT_APP_PROJECTS.map(
+  (projectId, index) => {
+    const study = caseStudies[projectId];
+    if (!study) {
+      throw new Error(`Unpublished case study in App Catalog: ${projectId}`);
+    }
+    return {
+      id: `project:${projectId}` as ProjectAppId,
+      title: same(study.client),
+      size: { w: 880, h: 720 },
+      placement: {
+        desktopIcon: afterShowcaseOrder + 1 + index,
+        desktopDock: null,
+        mobileGrid: afterShowcaseOrder + 1 + index,
+        mobileDock: null,
+      },
+      scroll: true,
+      visitorVisible: true,
+    };
+  },
+);
+
 const catalogEntries: readonly AppCatalogEntry[] = [
   {
     id: "ask-jakub",
@@ -97,6 +141,7 @@ const catalogEntries: readonly AppCatalogEntry[] = [
     scroll: true,
     visitorVisible: true,
   },
+  ...projectEntries,
   {
     id: "experience",
     title: { pl: "Doświadczenie", en: "Experience" },
@@ -187,6 +232,16 @@ export function parseAppId(value: unknown): AppId | undefined {
   if (typeof value !== "string") return undefined;
   if ((STATIC_APP_IDS as readonly string[]).includes(value)) {
     return value as StaticAppId;
+  }
+  if (value.startsWith("project:")) {
+    const projectId = parseProjectId(value.slice("project:".length));
+    if (
+      projectId &&
+      (PROJECT_APP_PROJECTS as readonly ProjectId[]).includes(projectId)
+    ) {
+      return `project:${projectId}`;
+    }
+    return undefined;
   }
   if (!value.startsWith("site:")) return undefined;
   const slug = value.slice("site:".length);

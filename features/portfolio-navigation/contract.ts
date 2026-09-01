@@ -1,3 +1,5 @@
+import type { ProjectId } from "@/data/case-studies";
+
 /**
  * A presentation-independent address for a meaningful place in the portfolio.
  *
@@ -13,6 +15,7 @@ export type PortfolioLocation =
       itemId?:
         "degree" | "dissertation" | "bootcamp" | "certifications" | "languages";
     }
+  | { area: "project"; projectId: ProjectId }
   | { area: "studio"; projectSlug?: string }
   | { area: "personal-project"; projectId: string }
   | { area: "showcase"; slug: string; view?: "overview" | "live" }

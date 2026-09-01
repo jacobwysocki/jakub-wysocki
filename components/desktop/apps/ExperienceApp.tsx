@@ -81,7 +81,7 @@ function SidebarRow({
 /** Panel detalu wybranej roli — jedna firma na ekran, jak karta w CV. */
 function RoleDetail({ role }: { role: Role }) {
   const t = useT();
-  const { openApp } = useDesktop();
+  const { openLocation } = useDesktop();
   const isStudio = role.id === "ultrastudio";
 
   return (
@@ -144,7 +144,9 @@ function RoleDetail({ role }: { role: Role }) {
       {isStudio && (
         <button
           type="button"
-          onClick={() => openApp("studio")}
+          onClick={() =>
+            openLocation({ area: "project", projectId: "ultra-studio" })
+          }
           className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-ink/90"
         >
           Ultra Studio

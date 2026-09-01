@@ -18,9 +18,14 @@ import WindowFrame from "@/components/desktop/Window";
 import ContextMenu from "@/components/desktop/ContextMenu";
 import { useWindowStore } from "@/lib/window-store";
 
+const openLocation = vi.fn<DesktopApi["openLocation"]>(() => ({
+  opened: false,
+  reason: "invalid-location",
+}));
+
 const desktopApi: DesktopApi = {
   openApp: vi.fn(),
-  openLocation: () => ({ opened: false, reason: "invalid-location" }),
+  openLocation,
   selectionFor: () => undefined,
   switchToSimple: vi.fn(),
 };
@@ -88,6 +93,7 @@ function ContextMenuWorkspace() {
 
 describe("Desktop menus", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     useWindowStore.setState({ windows: [], focusedId: null, nextZ: 1 });
   });
 
@@ -124,6 +130,22 @@ describe("Desktop menus", () => {
     expect(items.at(-1)).toHaveFocus();
     fireEvent.keyDown(items.at(-1)!, { key: "Home" });
     expect(items[0]).toHaveFocus();
+  });
+
+  it("opens Ultra Studio through its canonical project location", () => {
+    const view = renderMenuBar();
+    fireEvent.click(view.getByRole("button", { name: "Menu główne" }));
+    fireEvent.click(
+      within(view.getByRole("menu", { name: "Menu główne" })).getByRole(
+        "menuitem",
+        { name: "Ultra Studio" },
+      ),
+    );
+
+    expect(openLocation).toHaveBeenCalledWith({
+      area: "project",
+      projectId: "ultra-studio",
+    });
   });
 
   it("dismisses the logo menu outside and returns focus to its trigger", async () => {

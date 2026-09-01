@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
+import { PROJECT_IDS, findCaseStudy } from "@/data/case-studies";
 import { FACTS_UPDATED, SITE_URL, person } from "@/data/site";
+import { encodePortfolioLocation } from "@/features/portfolio-navigation";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Data utrzymywana ręcznie, nie `new Date()`. Ta trasa jest statyczna, więc
@@ -23,6 +25,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Portret zgłoszony jawnie: to ten sam plik, co Person.image w JSON-LD.
   // Bez tego jedyną ścieżką do niego jest zoptymalizowany /_next/image.
   const portrait = [`${SITE_URL}${person.portrait}`];
+
+  const caseStudyEntries: MetadataRoute.Sitemap = PROJECT_IDS.flatMap(
+    (projectId) => {
+      const study = findCaseStudy(projectId);
+      const href = study
+        ? encodePortfolioLocation({ area: "project", projectId })
+        : undefined;
+      if (!study || study.slug !== projectId || !href) return [];
+
+      return [
+        {
+          url: `${SITE_URL}${href}`,
+          lastModified,
+          changeFrequency: "monthly" as const,
+          priority: 0.8,
+        },
+      ];
+    },
+  );
 
   return [
     {
@@ -49,5 +70,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: entityAlternates,
       images: portrait,
     },
+    {
+      // Indeks case studies: adres wysyłany rekruterom.
+      url: `${SITE_URL}/work`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    ...caseStudyEntries,
   ];
 }

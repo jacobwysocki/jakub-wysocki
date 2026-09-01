@@ -86,7 +86,7 @@ describe("Spotlight discovery", () => {
         itemId: "certifications",
       },
     ],
-    ["Printly", "en", { area: "studio", projectSlug: "printly" }],
+    ["Printly", "en", { area: "project", projectId: "printly" }],
     ["napisz", "pl", { area: "contact" }],
   ] as const)(
     "resolves %s through Portfolio Knowledge to its semantic destination",
@@ -104,6 +104,51 @@ describe("Spotlight discovery", () => {
       ),
     ).toBe(true);
   });
+
+  it.each([
+    ["Squizzu", "squizzu", "app:site:squizzu"],
+    ["Ultra Studio", "ultra-studio", "app:studio"],
+    ["Venor", "venor", "app:venor"],
+    ["Alumed", "alumed", "app:project:alumed"],
+    ["Printly", "printly", "app:project:printly"],
+    ["Drone Simulation", "drone-path", "app:site:drone-path"],
+  ] as const)(
+    "finds the %s app by name in both languages",
+    (query, projectId, resultId) => {
+      for (const lang of ["pl", "en"] as const) {
+        expect(searchSpotlight(query, lang)[0]).toMatchObject({
+          id: resultId,
+          location: { area: "project", projectId },
+        });
+      }
+    },
+  );
+
+  it.each([
+    ["od zera do 1000 użytkowników", "pl", "squizzu"],
+    ["zero to 1,000 users", "en", "squizzu"],
+    ["marka i nowa strona własnego studia we Framerze", "pl", "ultra-studio"],
+    [
+      "studio's own brand and new website built in Framer",
+      "en",
+      "ultra-studio",
+    ],
+    ["wagi kampanii walidowane do sumy 1", "pl", "venor"],
+    ["campaign weights validated to sum to 1", "en", "venor"],
+    ["klinika premium ładuje się błyskawicznie", "pl", "alumed"],
+    ["premium clinic loads instantly", "en", "alumed"],
+    ["klienci gubili się przed finalizacją zamówienia", "pl", "printly"],
+    ["customers getting lost before completing an order", "en", "printly"],
+    ["najmniejsza flota bez kolizji w powietrzu", "pl", "drone-path"],
+    ["smallest fleet without mid-air collisions", "en", "drone-path"],
+  ] as const)(
+    "finds canonical project %s from owned %s vocabulary",
+    (query, lang, projectId) => {
+      expect(
+        searchSpotlight(query, lang).map((result) => result.location),
+      ).toContainEqual({ area: "project", projectId });
+    },
+  );
 
   it("keeps every visitor-visible Desktop App backed by a semantic destination", () => {
     const visibleApps = AppCatalog.all().filter((app) => app.visitorVisible);

@@ -39,6 +39,12 @@ describe("App Catalog Interface", () => {
     expect(parseAppId("missing")).toBeUndefined();
     expect(parseAppId(null)).toBeUndefined();
     expect(AppCatalog.find("site:missing")).toBeUndefined();
+    // Aplikację case study ma tylko projekt bez innego własnego okna.
+    expect(parseAppId("project:alumed")).toBe("project:alumed");
+    expect(parseAppId("project:printly")).toBe("project:printly");
+    expect(parseAppId("project:squizzu")).toBeUndefined();
+    expect(parseAppId("project:ultrastudio-site")).toBeUndefined();
+    expect(parseAppId("project:missing")).toBeUndefined();
   });
 
   it("owns ordered placement for every desktop and mobile surface", () => {
@@ -49,8 +55,12 @@ describe("App Catalog Interface", () => {
       "studio",
       "contact",
     ]);
+    // Dock jest kuratorowany: aplikacje case study mają ikonę na pulpicie,
+    // ale nie poszerzają docka ponad jego dotychczasowy skład.
     expect(AppCatalog.on("desktopDock").map((app) => app.id)).toEqual(
-      AppCatalog.on("desktopIcon").map((app) => app.id),
+      AppCatalog.on("desktopIcon")
+        .map((app) => app.id)
+        .filter((id) => !id.startsWith("project:")),
     );
     expect(AppCatalog.on("mobileGrid").map((app) => app.id)).toEqual(
       AppCatalog.on("desktopIcon").map((app) => app.id),
@@ -88,7 +98,7 @@ describe("App Catalog Interface", () => {
     const visible = AppCatalog.all().filter((app) => app.visitorVisible);
 
     expect(PUBLIC_DESKTOP_APP_COUNT).toBe(visible.length);
-    expect(PUBLIC_DESKTOP_APP_COUNT).toBe(9);
+    expect(PUBLIC_DESKTOP_APP_COUNT).toBe(11);
     expect(visible.map((app) => app.id)).not.toContain("info");
   });
 });

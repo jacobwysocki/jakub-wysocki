@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import {
   useCallback,
@@ -19,6 +20,7 @@ import {
 } from "@/features/ask-jakub";
 import {
   resolvePortfolioLocation,
+  type PortfolioHref,
   type PortfolioLocation,
   type PortfolioNavigator,
 } from "@/features/portfolio-navigation";
@@ -35,6 +37,7 @@ type AskJakubSimplePanelProps = Readonly<{
 
 type SimpleViewNavigatorOptions = Readonly<{
   closePanel: () => void;
+  navigatePath: (href: PortfolioHref) => void;
   reportUnavailable: () => void;
 }>;
 
@@ -47,17 +50,29 @@ function simpleViewAnchorId(location: PortfolioLocation, href: string) {
 
 function createSimpleViewNavigator({
   closePanel,
+  navigatePath,
   reportUnavailable,
 }: SimpleViewNavigatorOptions): PortfolioNavigator {
   return {
     open(location) {
       const resolved = resolvePortfolioLocation(location);
-      const anchorId = resolved
-        ? simpleViewAnchorId(location, resolved.href)
-        : undefined;
+      if (!resolved) {
+        reportUnavailable();
+        return { opened: false, reason: "invalid-location" };
+      }
+
+      if (!resolved.href.startsWith("/#")) {
+        closePanel();
+        // Pozwól cleanupowi mobilnego modala zdjąć blokadę body przed
+        // zmianą trasy. Router zachowuje nawigację po stronie klienta.
+        window.requestAnimationFrame(() => navigatePath(resolved.href));
+        return { opened: true, target: resolved };
+      }
+
+      const anchorId = simpleViewAnchorId(location, resolved.href);
       const destination = anchorId ? document.getElementById(anchorId) : null;
 
-      if (!resolved || !destination) {
+      if (!destination) {
         reportUnavailable();
         return { opened: false, reason: "invalid-location" };
       }
@@ -87,6 +102,7 @@ export default function AskJakubSimplePanel({
   open,
   onClose,
 }: AskJakubSimplePanelProps) {
+  const router = useRouter();
   const [navigationUnavailable, setNavigationUnavailable] = useState(false);
   const closePanel = useCallback(() => {
     setNavigationUnavailable(false);
@@ -96,9 +112,10 @@ export default function AskJakubSimplePanel({
     () =>
       createSimpleViewNavigator({
         closePanel,
+        navigatePath: (href) => router.push(href),
         reportUnavailable: () => setNavigationUnavailable(true),
       }),
-    [closePanel],
+    [closePanel, router],
   );
 
   return (

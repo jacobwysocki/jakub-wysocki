@@ -4,6 +4,7 @@ import { personalProjects, type PersonalProject } from "@/data/personal";
 import { studioProjects, type StudioProject } from "@/data/projects";
 import { showcase, type ShowcaseSite } from "@/data/showcase";
 import { contactInfo, entityProfiles, person } from "@/data/site";
+import { parseProjectId } from "@/data/case-studies";
 import { PUBLIC_DESKTOP_APP_COUNT } from "@/features/portfolio-navigation/app-catalog";
 import type { PortfolioLocation } from "@/features/portfolio-navigation/contract";
 import { resolvePortfolioLocation } from "@/features/portfolio-navigation/locations";
@@ -41,6 +42,23 @@ function evidenceLink(
     throw new Error(`Invalid Portfolio Knowledge evidence location: ${id}`);
   }
   return { id, label, location, href: resolved.href };
+}
+
+function projectLocation(
+  value: string,
+): Extract<PortfolioLocation, { area: "project" }> | undefined {
+  const projectId = parseProjectId(value);
+  return projectId ? { area: "project", projectId } : undefined;
+}
+
+function requiredProjectLocation(
+  value: string,
+): Extract<PortfolioLocation, { area: "project" }> {
+  const location = projectLocation(value);
+  if (!location) {
+    throw new Error(`Missing canonical project identity: ${value}`);
+  }
+  return location;
 }
 
 const roleMetadata = {
@@ -180,19 +198,23 @@ const evidenceLinks: readonly EvidenceLink[] = [
         pl: `${project.client} — projekt studia`,
         en: `${project.client} — studio project`,
       },
-      { area: "studio", projectSlug: project.slug },
+      requiredProjectLocation(project.slug),
     ),
   ),
-  ...personalProjects.map((project) =>
-    evidenceLink(
+  ...personalProjects.map((project) => {
+    const canonicalLocation = projectLocation(project.id);
+    return evidenceLink(
       `evidence:personal-project:${project.id}`,
       {
         pl: `${project.name} — projekt osobisty`,
         en: `${project.name} — personal project`,
       },
-      { area: "personal-project", projectId: project.id },
-    ),
-  ),
+      canonicalLocation ?? {
+        area: "personal-project",
+        projectId: project.id,
+      },
+    );
+  }),
   ...showcase.flatMap((site) => [
     evidenceLink(
       `evidence:showcase:${site.slug}:overview`,
@@ -200,11 +222,7 @@ const evidenceLinks: readonly EvidenceLink[] = [
         pl: `${site.name} — przegląd`,
         en: `${site.name} — overview`,
       },
-      {
-        area: "showcase",
-        slug: site.slug,
-        view: "overview",
-      },
+      requiredProjectLocation(site.slug),
     ),
     evidenceLink(
       `evidence:showcase:${site.slug}:live`,
@@ -212,7 +230,7 @@ const evidenceLinks: readonly EvidenceLink[] = [
         pl: `${site.name} — wersja live`,
         en: `${site.name} — live view`,
       },
-      { area: "showcase", slug: site.slug, view: "live" },
+      requiredProjectLocation(site.slug),
     ),
   ]),
   evidenceLink(

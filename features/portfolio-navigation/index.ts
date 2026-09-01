@@ -11,6 +11,8 @@ export {
   type StaticAppId,
 } from "./app-catalog";
 export {
+  decodePortfolioPathname,
+  encodePortfolioLocation,
   resolvePortfolioLocation,
   type AppLaunchPayload,
   type PortfolioHref,

@@ -26,7 +26,7 @@ const EDUCATION_ITEM_IDS = [
  */
 export default function EducationApp() {
   const t = useT();
-  const { openApp, selectionFor } = useDesktop();
+  const { openLocation, selectionFor } = useDesktop();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const launchSelection = selectionFor("education");
   const launchItemId =
@@ -153,7 +153,9 @@ export default function EducationApp() {
         <div className="mt-5 flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => openApp("site:drone-path")}
+            onClick={() =>
+              openLocation({ area: "project", projectId: "drone-path" })
+            }
             className="flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-[12.5px] font-semibold text-ink transition-colors hover:bg-white/85"
           >
             {t(ui.actions.openDroneSim)}
