@@ -35,9 +35,15 @@ function CardCover({ study }: { study: UxCaseStudy }) {
         className="flex h-full w-full items-center justify-center"
         style={{ background: study.gradient }}
       >
-        <span className="select-none text-[28px] font-bold tracking-tight text-white/90">
-          {study.client}
-        </span>
+        {study.brand?.lockup.dark ? (
+          // Marka z opublikowanym lockupem pokazuje znak, nie sam napis.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={study.brand.lockup.dark} alt="" className="h-9 w-auto" />
+        ) : (
+          <span className="select-none text-[28px] font-bold tracking-tight text-white/90">
+            {study.client}
+          </span>
+        )}
       </div>
     );
   }

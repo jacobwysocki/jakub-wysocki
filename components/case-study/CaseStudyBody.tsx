@@ -58,6 +58,7 @@ const sectionCopy = {
 
 function MediaFigure({ media }: { media: CaseMedia }) {
   const lang = useLang();
+  const callouts = media.callouts ?? [];
   return (
     <figure>
       {media.kind === "video" ? (
@@ -71,14 +72,54 @@ function MediaFigure({ media }: { media: CaseMedia }) {
           className="w-full rounded-2xl shadow-soft"
         />
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={media.src}
-          alt={media.alt[lang]}
-          loading="lazy"
-          className="w-full rounded-2xl shadow-soft"
-        />
+        // Znaczniki i wygaszenie żyją nad obrazem jako warstwa danych,
+        // nie wypalone w bitmapie: zostają dwujęzyczne i ostre w każdej skali.
+        <div className="relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={media.src}
+            alt={media.alt[lang]}
+            loading="lazy"
+            className="w-full rounded-2xl shadow-soft"
+          />
+          {media.excerpt ? (
+            // Dół kadru rozpływa się zamiast urywać: to górna część
+            // strony, która w oryginale biegnie dalej.
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-28 rounded-b-2xl bg-gradient-to-t from-white via-white/70 to-transparent"
+            />
+          ) : null}
+          {callouts.map((callout, index) => (
+            <span
+              key={callout.note.en}
+              aria-hidden
+              className="absolute flex h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.35)] ring-2 ring-white"
+              style={{ left: `${callout.x}%`, top: `${callout.y}%` }}
+            >
+              {index + 1}
+            </span>
+          ))}
+        </div>
       )}
+      {callouts.length ? (
+        <ol className="mt-3 space-y-1.5">
+          {callouts.map((callout, index) => (
+            <li
+              key={callout.note.en}
+              className="flex gap-2 text-[12.5px] leading-snug text-ink/75"
+            >
+              <span
+                aria-hidden
+                className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent text-[9.5px] font-bold text-white"
+              >
+                {index + 1}
+              </span>
+              {callout.note[lang]}
+            </li>
+          ))}
+        </ol>
+      ) : null}
       {media.caption ? (
         <figcaption className="mt-2.5 text-[12.5px] leading-snug text-muted">
           {media.caption[lang]}
@@ -149,7 +190,7 @@ function BrandChapter({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={brand.lockup.light}
-            alt={`${client} — logo`}
+            alt={`${client}: logo`}
             className="h-9 w-auto"
           />
         </div>
@@ -161,7 +202,7 @@ function BrandChapter({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={brand.lockup.dark}
-              alt={`${client} — ${sectionCopy.logoDark[lang]}`}
+              alt={`${client}: ${sectionCopy.logoDark[lang]}`}
               className="h-9 w-auto"
             />
           </div>
@@ -355,9 +396,19 @@ export default function CaseStudyBody({
             className="flex h-52 w-full items-center justify-center rounded-2xl"
             style={{ background: study.gradient }}
           >
-            <span className="select-none text-[34px] font-bold tracking-tight text-white/90">
-              {study.client}
-            </span>
+            {study.brand?.lockup.dark ? (
+              // Marka z opublikowanym lockupem pokazuje znak, nie sam napis.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={study.brand.lockup.dark}
+                alt=""
+                className="h-10 w-auto"
+              />
+            ) : (
+              <span className="select-none text-[34px] font-bold tracking-tight text-white/90">
+                {study.client}
+              </span>
+            )}
           </div>
         )}
       </div>

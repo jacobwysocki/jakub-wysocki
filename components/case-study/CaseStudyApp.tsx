@@ -1,7 +1,9 @@
 "use client";
 
-import { HeartPulse, Printer, type LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import { HeartPulse } from "lucide-react";
 import CaseWindowContent from "@/components/case-study/CaseWindowContent";
+import { PrintlyMark } from "@/components/logos";
 import {
   caseStudies,
   parseProjectId,
@@ -9,9 +11,10 @@ import {
 } from "@/data/case-studies";
 import { studioProjects } from "@/data/projects";
 
-const PROJECT_GLYPHS: Partial<Record<ProjectId, LucideIcon>> = {
-  alumed: HeartPulse,
-  printly: Printer,
+/** Znaki jak na kafelkach pulpitu: prawdziwy logotyp, gdy klient go ma. */
+const PROJECT_GLYPHS: Partial<Record<ProjectId, ReactNode>> = {
+  alumed: <HeartPulse size={24} strokeWidth={2} aria-hidden />,
+  printly: <PrintlyMark className="h-[22px] w-[22px]" />,
 };
 
 /**
@@ -27,7 +30,7 @@ export default function CaseStudyApp({ projectId }: { projectId: ProjectId }) {
   const study = caseStudies[projectId];
   if (!study) return null;
 
-  const Icon = PROJECT_GLYPHS[projectId];
+  const glyph = PROJECT_GLYPHS[projectId];
   const project = studioProjects.find(
     (candidate) => parseProjectId(candidate.slug) === projectId,
   );
@@ -36,13 +39,13 @@ export default function CaseStudyApp({ projectId }: { projectId: ProjectId }) {
     <CaseWindowContent
       study={study}
       icon={
-        Icon ? (
+        glyph ? (
           <span
             aria-hidden
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[24%] text-white shadow-soft"
             style={{ background: study.gradient }}
           >
-            <Icon size={24} strokeWidth={2} />
+            {glyph}
           </span>
         ) : undefined
       }

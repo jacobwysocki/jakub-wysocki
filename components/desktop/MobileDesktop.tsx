@@ -297,7 +297,9 @@ export default function MobileDesktop({
                         appId={app.id}
                         className="h-14 w-14 shadow-[0_10px_26px_rgba(0,0,0,0.32)] transition-transform duration-300 group-focus-visible:-translate-y-1"
                       />
-                      <span className="line-clamp-2 max-w-full text-center text-[10.5px] font-medium leading-[1.15] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.65)]">
+                      {/* Jak na pulpicie: bez dzielenia wyrazów clamp ucinał
+                          w poziomie pojedyncze długie słowo („Doświadczenie"). */}
+                      <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [text-shadow:0_1px_4px_rgba(0,0,0,0.65)]">
                         {t(app.title)}
                       </span>
                     </motion.button>
