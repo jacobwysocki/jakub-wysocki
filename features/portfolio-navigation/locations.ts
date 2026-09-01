@@ -1,10 +1,15 @@
+import {
+  findCaseStudy,
+  parseProjectId,
+  type ProjectId,
+} from "@/data/case-studies";
 import { allRoles } from "@/data/experience";
 import { interactiveOs, personalProjects, venor } from "@/data/personal";
 import { studioProjects } from "@/data/projects";
 import { parseAppId, type AppId } from "./app-catalog";
 import type { PortfolioLocation } from "./contract";
 
-export type PortfolioHref = `/#${string}`;
+export type PortfolioHref = `/#${string}` | `/work/${ProjectId}`;
 
 export type AppLaunchPayload = Readonly<{
   appId: AppId;
@@ -59,7 +64,34 @@ function personalProjectAppId(projectId: string): AppId | undefined {
   return undefined;
 }
 
+function publishedProjectHref(value: string): `/work/${ProjectId}` | undefined {
+  const projectId = parseProjectId(value);
+  if (!projectId) return undefined;
+
+  const study = findCaseStudy(projectId);
+  return study?.slug === projectId ? `/work/${projectId}` : undefined;
+}
+
+function projectAppId(projectId: ProjectId): AppId {
+  switch (projectId) {
+    case "squizzu":
+      return "site:squizzu";
+    case "ultra-studio":
+      return "studio";
+    case "venor":
+      return "venor";
+    case "alumed":
+      return "project:alumed";
+    case "printly":
+      return "project:printly";
+    case "drone-path":
+      return "site:drone-path";
+  }
+}
+
 function showcaseFallback(slug: string): PortfolioHref | undefined {
+  const publishedHref = publishedProjectHref(slug);
+  if (publishedHref) return publishedHref;
   if (slug === "squizzu") return "/#studio";
   if (slug === "drone-path") return "/#engineering";
   return undefined;
@@ -122,6 +154,19 @@ export function resolvePortfolioLocation(
       return withSelection("education", location, href);
     }
 
+    case "project": {
+      if (!hasOnlyKeys(value, ["area", "projectId"])) return undefined;
+      const rawProjectId = optionalString(value, "projectId");
+      if (!rawProjectId) return undefined;
+
+      const projectId = parseProjectId(rawProjectId);
+      const href = projectId ? publishedProjectHref(projectId) : undefined;
+      if (!projectId || !href) return undefined;
+
+      const location: PortfolioLocation = { area: "project", projectId };
+      return withSelection(projectAppId(projectId), location, href);
+    }
+
     case "studio": {
       if (!hasOnlyKeys(value, ["area", "projectSlug"])) return undefined;
       const projectSlug = optionalString(value, "projectSlug");
@@ -135,7 +180,10 @@ export function resolvePortfolioLocation(
       const location: PortfolioLocation = projectSlug
         ? { area: "studio", projectSlug }
         : { area: "studio" };
-      return withSelection("studio", location, "/#studio");
+      const href = projectSlug
+        ? (publishedProjectHref(projectSlug) ?? "/#studio")
+        : "/#studio";
+      return withSelection("studio", location, href);
     }
 
     case "personal-project": {
@@ -149,10 +197,14 @@ export function resolvePortfolioLocation(
       }
       const appId = personalProjectAppId(projectId);
       if (!appId) return undefined;
+      const href =
+        projectId === venor.id
+          ? (publishedProjectHref(projectId) ?? "/#personal-projects")
+          : "/#personal-projects";
       return withSelection(
         appId,
         { area: "personal-project", projectId },
-        "/#personal-projects",
+        href,
       );
     }
 
@@ -194,4 +246,36 @@ export function resolvePortfolioLocation(
     default:
       return undefined;
   }
+}
+
+/** Encode a validated semantic location to its canonical Simple Mode href. */
+export function encodePortfolioLocation(
+  value: unknown,
+): PortfolioHref | undefined {
+  return resolvePortfolioLocation(value)?.href;
+}
+
+/**
+ * Decode a case-study pathname to its canonical semantic location.
+ * Root fragments are intentionally not decoded: several semantic locations
+ * share each legacy section anchor, so the pathname alone cannot recover one.
+ */
+export function decodePortfolioPathname(
+  value: unknown,
+): PortfolioLocation | undefined {
+  if (typeof value !== "string") return undefined;
+
+  const match = /^\/work\/([^/]+)$/.exec(value);
+  if (!match) return undefined;
+
+  let rawProjectId: string;
+  try {
+    rawProjectId = decodeURIComponent(match[1]);
+  } catch {
+    return undefined;
+  }
+
+  const projectId = parseProjectId(rawProjectId);
+  if (!projectId || !publishedProjectHref(projectId)) return undefined;
+  return { area: "project", projectId };
 }
