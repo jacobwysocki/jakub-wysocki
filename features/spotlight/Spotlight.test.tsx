@@ -157,7 +157,10 @@ describe("Spotlight dialog", () => {
     expect(options[1]).toHaveAttribute("aria-selected", "true");
     fireEvent.keyDown(input, { key: "Enter" });
 
-    expect(openLocation).toHaveBeenCalledWith({ area: "studio" });
+    expect(openLocation).toHaveBeenCalledWith({
+      area: "project",
+      projectId: "ultra-studio",
+    });
   });
 
   it("keeps Tab focus inside the modal search surface", () => {
