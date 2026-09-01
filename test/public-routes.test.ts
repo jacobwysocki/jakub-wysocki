@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
+import { PROJECT_IDS, findCaseStudy } from "@/data/case-studies";
 import { FACTS_UPDATED, SITE_URL, person } from "@/data/site";
 
 describe("public discovery routes", () => {
@@ -31,20 +32,29 @@ describe("public discovery routes", () => {
     }
   });
 
-  it("lists the canonical portfolio and both localized profile pages", () => {
+  it("lists the canonical portfolio, profiles, and published case studies", () => {
     const entries = sitemap();
     const urls = entries.map((entry) => entry.url);
+    const publishedCaseUrls = PROJECT_IDS.filter((projectId) =>
+      findCaseStudy(projectId),
+    ).map((projectId) => `${SITE_URL}/work/${projectId}`);
 
     expect(urls).toEqual([
       SITE_URL,
       `${SITE_URL}${person.entityHome.en}`,
       `${SITE_URL}${person.entityHome.pl}`,
+      // Indeks case studies poprzedza pojedyncze realizacje.
+      `${SITE_URL}/work`,
+      ...publishedCaseUrls,
     ]);
     expect(new Set(urls).size).toBe(entries.length);
     expect(
       entries
-        .slice(1)
+        .slice(1, 3)
         .every((entry) => entry.alternates?.languages?.["x-default"]),
+    ).toBe(true);
+    expect(
+      entries.slice(3).every((entry) => entry.alternates === undefined),
     ).toBe(true);
   });
 });

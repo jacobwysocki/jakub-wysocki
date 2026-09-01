@@ -11,6 +11,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { LangContext } from "@/lib/lang-store";
 import AskJakubSimple from "./AskJakubSimple";
 
+const routerPush = vi.hoisted(() => vi.fn());
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: routerPush }),
+}));
+
 const QUESTION = "Which work best shows product thinking?";
 const ANSWER = "The portfolio points to a documented product example.";
 const MOBILE_QUERY = "(max-width: 899px)";
@@ -176,6 +182,7 @@ describe("Ask Jakub in Simple view", () => {
       configurable: true,
       value: ORIGINAL_INNER_WIDTH,
     });
+    routerPush.mockReset();
   });
 
   it("server-renders one text trigger but no panel payload", () => {
