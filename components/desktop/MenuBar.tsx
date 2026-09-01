@@ -21,7 +21,7 @@ function LogoMenu({
   onClose: () => void;
   onAction: () => void;
 }) {
-  const { openApp, switchToSimple } = useDesktop();
+  const { openApp, openLocation, switchToSimple } = useDesktop();
   const t = useT();
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -98,7 +98,9 @@ function LogoMenu({
           type="button"
           role="menuitem"
           className={item}
-          onClick={run(() => openApp("studio"))}
+          onClick={run(() =>
+            openLocation({ area: "project", projectId: "ultra-studio" }),
+          )}
         >
           {site.studio}
         </button>

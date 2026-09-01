@@ -1,17 +1,20 @@
 "use client";
 
 import type { ComponentType, ReactNode } from "react";
+import dynamic from "next/dynamic";
 import type { LucideIcon } from "lucide-react";
 import {
   AtSign,
   Briefcase,
   GraduationCap,
+  HeartPulse,
   Info,
   MessageCircleMore,
   NotebookText,
-  Radar,
+  Printer,
 } from "lucide-react";
-import { UltraStudioLogo } from "@/components/logos";
+import { UltraStudioLogo, VenorMark } from "@/components/logos";
+import { caseStudies, type ProjectId } from "@/data/case-studies";
 import { showcase, type ShowcaseSite } from "@/data/showcase";
 import {
   AppCatalog,
@@ -71,8 +74,15 @@ const staticAdapters = {
   },
   venor: {
     tile: {
-      bg: darkTile("rgba(50,199,222,0.36)"),
-      glyph: glyph(Radar, "#8FE0EE"),
+      // Prawdziwy znak marki na jej ciemnym polu (Night Mulberry),
+      // nie zastępczy radar sprzed brandingu.
+      bg: darkTile("rgba(138,40,83,0.55)"),
+      glyph: (
+        <VenorMark
+          onDark
+          className="h-[58%] w-[58%] text-[#FCFAFB] drop-shadow-sm"
+        />
+      ),
     },
     Content: VenorApp,
   },
@@ -113,6 +123,37 @@ const staticAdapters = {
   },
 } satisfies Record<StaticAppId, ClientAppAdapter>;
 
+/**
+ * Korpus case study ładuje się dopiero przy pierwszym otwarciu okna:
+ * rejestr importuje wszystkie aplikacje statycznie, więc bez tej granicy
+ * każdy wizytujący pulpit pobierałby też rekordy i layout case'ów.
+ */
+const LazyCaseStudyApp = dynamic(
+  () => import("@/components/case-study/CaseStudyApp"),
+);
+
+/** Znak kafelka dla aplikacji case study; kolor tła niesie tożsamość marki. */
+const PROJECT_GLYPHS: Partial<Record<ProjectId, ReactNode>> = {
+  alumed: glyph(HeartPulse),
+  printly: glyph(Printer, "#FFD9C7"),
+};
+
+function projectAdapter(projectId: ProjectId): ClientAppAdapter {
+  const study = caseStudies[projectId];
+  if (!study) {
+    throw new Error(`Missing case study for Desktop App: project:${projectId}`);
+  }
+  return {
+    tile: {
+      bg: study.gradient,
+      glyph: PROJECT_GLYPHS[projectId] ?? glyph(NotebookText),
+    },
+    Content: function CaseStudyWindow() {
+      return <LazyCaseStudyApp projectId={projectId} />;
+    },
+  };
+}
+
 function showcaseAdapter(site: ShowcaseSite): ClientAppAdapter {
   return {
     tile: {
@@ -129,6 +170,9 @@ function showcaseAdapter(site: ShowcaseSite): ClientAppAdapter {
 }
 
 function adapterFor(entry: AppCatalogEntry): ClientAppAdapter {
+  if (entry.id.startsWith("project:")) {
+    return projectAdapter(entry.id.slice("project:".length) as ProjectId);
+  }
   if (!entry.id.startsWith("site:")) {
     return staticAdapters[entry.id as StaticAppId];
   }

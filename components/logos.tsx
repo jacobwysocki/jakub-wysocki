@@ -124,3 +124,27 @@ export function StackOverflowIcon({
     </svg>
   );
 }
+
+/**
+ * Znak Venora „Final Weight": mała obserwacja (currentColor) ustępuje
+ * większej, kontrważonej konkluzji na kursie 45°. Geometria wprost
+ * z brandbooka (siatka 64, r8 przy (20,20), r12 przy (37,33)); kolor
+ * konkluzji zależy od tła — Deep Mulberry na jasnym, Mulberry Display
+ * na ciemnym, bo produkcyjny burgund ma na czerni tylko 2.21:1.
+ */
+export function VenorMark({
+  className = "",
+  onDark = false,
+}: LogoProps & { onDark?: boolean }) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className}>
+      <circle cx="20" cy="20" r="8" fill="currentColor" />
+      <circle
+        cx="37.333333"
+        cy="37.333333"
+        r="12"
+        fill={onDark ? "#D77BA2" : "#8A2853"}
+      />
+    </svg>
+  );
+}

@@ -85,8 +85,13 @@ export const ui = {
     minimizeWindow: { pl: "Minimalizuj okno", en: "Minimise window" },
     maximizeWindow: { pl: "Maksymalizuj okno", en: "Maximise window" },
     connecting: { pl: "Łączenie z", en: "Connecting to" },
+    caseTab: { pl: "Case study", en: "Case study" },
     liveTab: { pl: "Na żywo", en: "Live preview" },
     overviewTab: { pl: "Przegląd", en: "Overview" },
+    openFullCase: {
+      pl: "Otwórz pełne case study",
+      en: "Open the full case study",
+    },
     whatIsIt: { pl: "Czym to jest", en: "What it is" },
     howItWasBuilt: { pl: "Jak powstało", en: "How it was built" },
     myRole: { pl: "Moja rola", en: "My role" },

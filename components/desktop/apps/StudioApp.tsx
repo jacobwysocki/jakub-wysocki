@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, LoaderCircle } from "lucide-react";
+import CaseWindowContent from "@/components/case-study/CaseWindowContent";
+import { findCaseStudy, parseProjectId } from "@/data/case-studies";
 import {
   studioProjects,
   studioInfo,
@@ -17,7 +19,7 @@ import { useWindowChrome } from "@/components/desktop/Window";
 import { EASE_APPLE } from "@/lib/motion";
 import { ScaledFrame } from "./SiteApp";
 
-type Tab = "studio" | "live" | `project:${string}`;
+type Tab = "studio" | "case" | "live" | `project:${string}`;
 
 const projectTab = (slug: string): Tab => `project:${slug}`;
 
@@ -89,9 +91,13 @@ function StudioTab({ onOpenLive }: { onOpenLive: () => void }) {
   );
 }
 
-/** Zakładka klienta (Printly / Alumed) — case study */
+/** Zakładka klienta (Printly / Alumed) — wizytówka z mostkiem do case'a */
 function ProjectTab({ project }: { project: StudioProject }) {
   const t = useT();
+  const { openLocation } = useDesktop();
+  // Pełny case żyje we własnym oknie; ta zakładka zostaje hubowym skrótem.
+  const caseId = parseProjectId(project.slug);
+  const hasCase = caseId ? findCaseStudy(caseId) !== null : false;
 
   return (
     <motion.div {...fade}>
@@ -148,15 +154,53 @@ function ProjectTab({ project }: { project: StudioProject }) {
             </div>
           ))}
         </div>
+        {hasCase && caseId && (
+          <div className="mt-7">
+            <button
+              type="button"
+              onClick={() =>
+                openLocation({ area: "project", projectId: caseId })
+              }
+              className="flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-accent/90"
+            >
+              {t(ui.desktop.openFullCase)}
+              <ArrowUpRight size={14} aria-hidden />
+            </button>
+          </div>
+        )}
       </div>
+    </motion.div>
+  );
+}
+
+/** Case study samego studia — wspólny korpus w gramatyce tego okna. */
+function UltraStudioCase({ onOpenLive }: { onOpenLive: () => void }) {
+  const study = findCaseStudy("ultra-studio");
+  const studioProject = studioProjects.find(
+    (project) => project.slug === "ultrastudio-site",
+  );
+  if (!study) return null;
+  return (
+    <motion.div {...fade}>
+      <CaseWindowContent
+        study={study}
+        icon={
+          <span className="flex h-14 w-14 items-center justify-center rounded-[24%] bg-ink ring-1 ring-white/10 shadow-soft">
+            <UltraStudioLogo className="h-5 w-9" />
+          </span>
+        }
+        tech={studioProject?.services}
+        onOpenLive={onOpenLive}
+      />
     </motion.div>
   );
 }
 
 /**
  * Ultra Studio — kreatywna, kliencka strona profilu. Zakładki:
- * Studio (o pracowni), Printly i Alumed (case studies) oraz podgląd
- * strony studia na żywo w skalowanym iframe.
+ * Studio (o pracowni), Case study (własna marka), wizytówki klientów
+ * z mostkami do ich pełnych case'ów oraz podgląd strony studia na żywo
+ * w skalowanym iframe.
  */
 export default function StudioApp() {
   const t = useT();
@@ -188,6 +232,7 @@ export default function StudioApp() {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "studio", label: "Studio" },
+    { id: "case", label: t(ui.desktop.caseTab) },
     ...studioProjects
       .filter((project) => project.slug !== "ultrastudio-site")
       .map((project) => ({
@@ -258,6 +303,12 @@ export default function StudioApp() {
           <AnimatePresence mode="wait">
             {tab === "studio" && (
               <StudioTab key="studio" onOpenLive={() => selectTab("live")} />
+            )}
+            {tab === "case" && (
+              <UltraStudioCase
+                key="case"
+                onOpenLive={() => selectTab("live")}
+              />
             )}
             {selectedProject && (
               <ProjectTab

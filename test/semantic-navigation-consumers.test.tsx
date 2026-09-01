@@ -16,12 +16,14 @@ import { LangContext } from "@/lib/lang-store";
 function renderApp(
   content: React.ReactNode,
   selection: PortfolioLocation | undefined,
+  overrides: Partial<DesktopApi> = {},
 ) {
   const api: DesktopApi = {
     openApp: () => {},
     openLocation: () => ({ opened: false, reason: "invalid-location" }),
     selectionFor: () => selection,
     switchToSimple: () => {},
+    ...overrides,
   };
 
   return (
@@ -104,6 +106,33 @@ describe("semantic Desktop App selections", () => {
     expect(view.getByRole("heading", { name: "Bunzl plc" })).toBeVisible();
   });
 
+  it("opens the Ultra Studio case through its canonical project location", async () => {
+    const openLocation = vi.fn<DesktopApi["openLocation"]>(() => ({
+      opened: false,
+      reason: "invalid-location",
+    }));
+    const view = render(
+      renderApp(
+        <ExperienceApp />,
+        { area: "experience", roleId: "ultrastudio" },
+        { openLocation },
+      ),
+    );
+
+    await waitFor(() =>
+      expect(view.getByRole("heading", { name: "Ultra Studio" })).toBeVisible(),
+    );
+    const studioButtons = view.getAllByRole("button", {
+      name: "Ultra Studio",
+    });
+    fireEvent.click(studioButtons.at(-1)!);
+
+    expect(openLocation).toHaveBeenCalledWith({
+      area: "project",
+      projectId: "ultra-studio",
+    });
+  });
+
   it("opens a studio project and updates the mounted app for a later project", async () => {
     const view = render(
       renderApp(<StudioApp />, {
@@ -172,6 +201,23 @@ describe("semantic Desktop App selections", () => {
     },
   );
 
+  it("opens Drone Simulation through its canonical project location", () => {
+    const openLocation = vi.fn<DesktopApi["openLocation"]>(() => ({
+      opened: false,
+      reason: "invalid-location",
+    }));
+    const view = render(
+      renderApp(<EducationApp />, undefined, { openLocation }),
+    );
+
+    fireEvent.click(view.getByRole("button", { name: /simulation/i }));
+
+    expect(openLocation).toHaveBeenCalledWith({
+      area: "project",
+      projectId: "drone-path",
+    });
+  });
+
   it("updates an open education app, repeats the same intent, and ignores mismatches", async () => {
     const view = render(
       renderApp(<EducationApp />, {
@@ -214,7 +260,93 @@ describe("semantic Desktop App selections", () => {
     expect(repositoryLink).toHaveFocus();
   });
 
-  it("opens a showcase view and updates the mounted app without accepting another slug", async () => {
+  it.each([
+    ["squizzu", "Squizzu"],
+    ["drone-path", "Drone Simulation"],
+  ] as const)(
+    "maps the %s overview location to its case tab",
+    async (slug, name) => {
+      const site = showcase.find((candidate) => candidate.slug === slug);
+      if (!site) throw new Error(`Missing ${name} showcase fixture`);
+
+      const view = render(
+        renderApp(<SiteApp site={site} />, {
+          area: "showcase",
+          slug,
+          view: "overview",
+        }),
+      );
+
+      await waitFor(() =>
+        expect(
+          view.getByRole("button", { name: "Case study" }),
+        ).toHaveAttribute("aria-pressed", "true"),
+      );
+      expect(
+        view.queryByRole("button", { name: "Overview" }),
+      ).not.toBeInTheDocument();
+      expect(view.getByRole("heading", { name })).toBeVisible();
+    },
+  );
+
+  it("renders only the merged case presentation for a showcase sheet", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    );
+    const squizzu = showcase.find((site) => site.slug === "squizzu");
+    if (!squizzu) throw new Error("Missing Squizzu showcase fixture");
+
+    const view = render(
+      renderApp(<SiteApp site={squizzu} />, {
+        area: "showcase",
+        slug: "squizzu",
+        view: "live",
+      }),
+    );
+
+    expect(view.getByRole("heading", { name: "Squizzu" })).toBeVisible();
+    expect(
+      view.queryByRole("button", { name: "Live preview" }),
+    ).not.toBeInTheDocument();
+    expect(
+      view.queryByRole("heading", { name: "What is it" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps Overview and Live for a showcase site without a case", () => {
+    const source = showcase.find((site) => site.slug === "squizzu");
+    if (!source) throw new Error("Missing Squizzu showcase fixture");
+    const site = {
+      ...source,
+      slug: "unpublished-showcase",
+      name: "Unpublished Showcase",
+    };
+
+    const view = render(renderApp(<SiteApp site={site} />, undefined));
+
+    expect(view.getByRole("button", { name: "Overview" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(
+      view.getAllByRole("button", { name: "Live preview" })[0],
+    ).toBeVisible();
+    expect(
+      view.queryByRole("button", { name: "Case study" }),
+    ).not.toBeInTheDocument();
+    expect(
+      view.getByRole("heading", { name: "Unpublished Showcase" }),
+    ).toBeVisible();
+  });
+
+  it("opens a showcase live view and updates the mounted app without accepting another slug", async () => {
     const squizzu = showcase.find((site) => site.slug === "squizzu");
     if (!squizzu) throw new Error("Missing Squizzu showcase fixture");
 
@@ -232,8 +364,8 @@ describe("semantic Desktop App selections", () => {
       ).toHaveAttribute("aria-pressed", "true"),
     );
 
-    fireEvent.click(view.getByRole("button", { name: "Overview" }));
-    expect(view.getByRole("button", { name: "Overview" })).toHaveAttribute(
+    fireEvent.click(view.getByRole("button", { name: "Case study" }));
+    expect(view.getByRole("button", { name: "Case study" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -261,7 +393,7 @@ describe("semantic Desktop App selections", () => {
     await waitFor(() =>
       expect(view.getByRole("heading", { name: "Squizzu" })).toBeVisible(),
     );
-    expect(view.getByRole("button", { name: "Overview" })).toHaveAttribute(
+    expect(view.getByRole("button", { name: "Case study" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -273,7 +405,7 @@ describe("semantic Desktop App selections", () => {
         view: "live",
       }),
     );
-    expect(view.getByRole("button", { name: "Overview" })).toHaveAttribute(
+    expect(view.getByRole("button", { name: "Case study" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
