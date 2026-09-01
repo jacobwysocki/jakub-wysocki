@@ -141,7 +141,19 @@ export type UxCaseStudy = {
     diagram?: CaseMedia | { component: string };
   };
 
-  process?: { note: L10n; media: CaseMedia[] };
+  process?: {
+    note: L10n;
+    media: CaseMedia[];
+    iterations?: {
+      note: L10n;
+      frames: {
+        src: string;
+        alt: L10n;
+        note?: L10n;
+        final?: boolean;
+      }[];
+    };
+  };
 
   decisions: CaseDecision[];
 
@@ -214,6 +226,86 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         en: "The design system wasn't borrowed, it was built in Adobe XD: a fixed palette (from warm ambers #FFCD5D and #FDB410 to near-blacks), a shared asset library, and a second-generation landing page drawn out in both light and dark. Over a hundred responsive screens and custom icons.",
       },
       media: [],
+      /**
+       * Historia jednego widoku od szkicu po wdrożenie. Na klatkach 3-5
+       * profil zalogowanego użytkownika jest rozmyty: makiety niosły
+       * fotograficzny awatar i realnie brzmiące nazwisko.
+       */
+      iterations: {
+        note: {
+          pl: "Widok Explore quizzes przerysowałem od pierwszego szkicu o niskiej wierności aż po wersję wdrożoną. Na sześciu klatkach przechodzi od płaskiej siatki wyróżnionych kafelków, przez prowadzony, trzykrokowy kreator quizu, po jeden przeszukiwalny katalog całej taksonomii technologii.",
+          en: "I redrew the Explore quizzes view from the first low-fidelity wireframe to the shipped screen. Across six frames it moves from a flat grid of featured cards, through a guided three-step build-a-quiz wizard, to a single searchable directory of the whole technology taxonomy.",
+        },
+        frames: [
+          {
+            src: "/projects/squizzu/iterations/iter-1.jpg",
+            alt: {
+              pl: "Szkic o niskiej wierności w czerni i bieli, z paskiem wyszukiwania u góry i trzema opisanymi rzędami pustych kafelków z placeholderami.",
+              en: "A low-fidelity black-and-white wireframe with a top search bar and three labelled rows of plain placeholder cards.",
+            },
+            note: {
+              pl: "Pierwszy szkic układa pomysł w czerni i bieli: trzy rzędy jeden pod drugim (kategorie, ścieżki i języki), każdy jako rząd czterech wyróżnionych kafelków i przycisku Explore all.",
+              en: "The first wireframe sets the idea in black and white: three stacked rows (categories, paths and languages), each a row of four featured cards plus an Explore all.",
+            },
+          },
+          {
+            src: "/projects/squizzu/iterations/iter-2.jpg",
+            alt: {
+              pl: "Kolorowa makieta z żółto akcentowanymi rzędami Categories, Career paths i Languages, wypełnionymi kartami z dużą ilością tekstu.",
+              en: "A colour mock-up with yellow-accented Categories, Career paths and Languages rows of text-rich cards.",
+            },
+            note: {
+              pl: "Dochodzi żółta marka i realna treść: stanowiska, technologie, wynagrodzenie, pytania i zastosowania, plus kilka wariantów nagłówka karty w rzędach przewijanych poziomo.",
+              en: "The yellow brand and real content arrive: positions, technologies, salary, questions and use cases, with a few card-header treatments tried on horizontally scrolling rows.",
+            },
+          },
+          {
+            src: "/projects/squizzu/iterations/iter-3.jpg",
+            alt: {
+              pl: "Aplikacja z ikonowym paskiem bocznym i górnym paskiem, rzędem ilustrowanych kart Choose a category z liczbą podkategorii oraz rzędem zaznaczalnych chipów tagów poniżej.",
+              en: "The app with an icon sidebar and top bar, a Choose a category row of illustrated cards with sub-category counts, and a row of selectable technology tag chips below.",
+            },
+            note: {
+              pl: "Widok wchodzi do prawdziwej powłoki aplikacji z paskiem bocznym, a przeglądanie zamienia się w tworzenie quizu: wybierz ilustrowaną kategorię, potem zaznacz tagi technologii.",
+              en: "The view moves into the real app shell with a sidebar, and browsing turns into building a quiz: pick an illustrated category, then toggle technology tags.",
+            },
+          },
+          {
+            src: "/projects/squizzu/iterations/iter-4.jpg",
+            alt: {
+              pl: "Ta sama aplikacja z trzema ponumerowanymi krokami ułożonymi w pionie, każdy z ilustrowanymi kartami do wyboru lub chipami tagów, a wybrany element obramowany na żółto.",
+              en: "The same app showing three numbered steps stacked down the page, each with illustrated selectable cards or tag chips, and a selected item outlined in yellow.",
+            },
+            note: {
+              pl: "Przepływ nazwany wprost: Step 1, 2 i 3 na jednej stronie, z podpowiedzią i spójnym zaznaczaniem, tak by kategoria, specjalizacja i tag czytały się jako trzy wyraźne poziomy.",
+              en: "The flow made explicit: Steps 1, 2 and 3 on one page, with a helper line and consistent selection, so category, specialisation and tag read as three clear tiers.",
+            },
+          },
+          {
+            src: "/projects/squizzu/iterations/iter-5.jpg",
+            alt: {
+              pl: "Widok krokowy z opisanym paskiem bocznym (Dashboard, Explore Quizzes, My Progress) i kartami pokazującymi plakietkę z liczbą i rząd podpowiadanych tagów.",
+              en: "The stepped view with a labelled sidebar (Dashboard, Explore Quizzes, My Progress) and cards that each show a count badge and a row of preview sub-tags.",
+            },
+            note: {
+              pl: "Pasek boczny dostaje czytelne etykiety, a każda karta zapowiada swoją zawartość: plakietkę z liczbą i pasek podkategorii, żeby przed wyborem było widać, co kryje dana opcja.",
+              en: "The sidebar gains readable labels and every card previews its contents: a count badge plus a strip of the sub-categories inside, so a choice shows what it holds before you commit.",
+            },
+          },
+          {
+            src: "/projects/squizzu/iterations/iter-6.jpg",
+            final: true,
+            alt: {
+              pl: "Finalna strona Explore quizzes z nagłówkiem What do you want to practice?, paskiem wyszukiwania, zakładkami filtrów domen i przeglądalnym indeksem technologii z liczbą sekcji.",
+              en: "The final Explore quizzes page headed What do you want to practice?, with a search bar, domain filter tabs, and a browsable index of technologies with section counts.",
+            },
+            note: {
+              pl: "Wersja wdrożona porzuca liniowy kreator na rzecz jednego przeszukiwalnego katalogu: wyszukiwarka i filtry domen z licznikami nad pełną taksonomią, od domeny przez specjalizację po technologię.",
+              en: "The shipped screen drops the linear wizard for one searchable directory: search and domain filters with counts above the full taxonomy, from domain through specialisation to technology.",
+            },
+          },
+        ],
+      },
     },
     decisions: [
       {
