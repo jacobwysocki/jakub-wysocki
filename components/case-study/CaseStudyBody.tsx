@@ -24,6 +24,9 @@ const caseDiagrams: Record<string, ReturnType<typeof dynamic>> = {
   VenorPipeline: dynamic(() => import("@/components/VenorPipeline"), {
     ssr: false,
   }),
+  VenorConstruction: dynamic(
+    () => import("@/components/case-study/VenorConstruction"),
+  ),
 };
 
 const sectionCopy = {
@@ -43,8 +46,14 @@ const sectionCopy = {
     pl: "Czego ta praca nie twierdzi",
     en: "What this work does not claim",
   },
+  brand: { pl: "Identyfikacja", en: "Identity" },
+  explorationsTitle: { pl: "Poszukiwania znaku", en: "Mark explorations" },
+  constructionTitle: { pl: "Konstrukcja", en: "Construction" },
+  paletteTitle: { pl: "Kolor", en: "Color" },
+  finalTag: { pl: "finał", en: "final" },
   visitLive: { pl: "Zobacz na żywo", en: "See it live" },
   viewRepo: { pl: "Kod źródłowy", en: "Source code" },
+  logoDark: { pl: "logo (wariant ciemny)", en: "logo (dark variant)" },
 } as const;
 
 function MediaFigure({ media }: { media: CaseMedia }) {
@@ -98,6 +107,184 @@ function Prose({ children }: { children: React.ReactNode }) {
 
 const pillLink =
   "flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-black/[0.04]";
+
+/** Tytuł pod-bloku wewnątrz rozdziału (jak tytuły detali w oknach). */
+function SubHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="mb-2 mt-9 text-[15px] font-semibold text-ink">{children}</h3>
+  );
+}
+
+/**
+ * Rozdział identyfikacji. Powierzchnie plakiet biorą kolory ze świata marki
+ * (paper/dark z brandbooka), nie z motywu portfolio: dowodem jest znak na
+ * własnym tle, a nie znak przemalowany pod tę stronę.
+ */
+function BrandChapter({
+  brand,
+  client,
+}: {
+  brand: NonNullable<UxCaseStudy["brand"]>;
+  client: string;
+}) {
+  const lang = useLang();
+  const surfaces = brand.lockup.surfaces ?? {
+    light: "#FCFAFB",
+    dark: "#171217",
+  };
+  const Construction = brand.construction?.component
+    ? caseDiagrams[brand.construction.component]
+    : null;
+
+  return (
+    <>
+      <SectionHeading>{sectionCopy.brand[lang]}</SectionHeading>
+      <Prose>{brand.intro[lang]}</Prose>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div
+          className="flex items-center justify-center rounded-2xl border border-line/70 px-8 py-14"
+          style={{ background: surfaces.light }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={brand.lockup.light}
+            alt={`${client} — logo`}
+            className="h-9 w-auto"
+          />
+        </div>
+        {brand.lockup.dark ? (
+          <div
+            className="flex items-center justify-center rounded-2xl px-8 py-14"
+            style={{ background: surfaces.dark }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={brand.lockup.dark}
+              alt={`${client} — ${sectionCopy.logoDark[lang]}`}
+              className="h-9 w-auto"
+            />
+          </div>
+        ) : null}
+      </div>
+      {brand.lockup.caption ? (
+        <p className="mt-2.5 max-w-[64ch] text-[12.5px] leading-snug text-muted">
+          {brand.lockup.caption[lang]}
+        </p>
+      ) : null}
+      {brand.typography ? (
+        <p className="mt-1.5 max-w-[64ch] text-[12.5px] leading-snug text-muted">
+          {brand.typography[lang]}
+        </p>
+      ) : null}
+
+      {brand.explorations ? (
+        <>
+          <SubHeading>{sectionCopy.explorationsTitle[lang]}</SubHeading>
+          <Prose>{brand.explorations.note[lang]}</Prose>
+          <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-5">
+            {brand.explorations.marks.map((mark) => (
+              <li key={mark.src} className="min-w-0">
+                <div
+                  className={`flex aspect-square items-center justify-center rounded-xl border ${
+                    mark.winner ? "border-ink/40" : "border-line/70"
+                  }`}
+                  style={{ background: "#FCFAFB" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={mark.src}
+                    alt={mark.caption ? mark.caption[lang] : mark.name}
+                    className="h-[52%] w-[52%]"
+                  />
+                </div>
+                <p className="mt-1.5 truncate text-center text-[11px] leading-snug text-muted">
+                  {mark.name}
+                  {mark.winner ? (
+                    <span className="ml-1 font-semibold text-accent">
+                      · {sectionCopy.finalTag[lang]}
+                    </span>
+                  ) : null}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      {brand.construction ? (
+        <>
+          <SubHeading>{sectionCopy.constructionTitle[lang]}</SubHeading>
+          {Construction ? (
+            <div
+              className="rounded-2xl border border-line/70 px-8 py-7 sm:px-14"
+              style={{ background: "#FCFAFB" }}
+            >
+              <div className="mx-auto max-w-[380px]">
+                <Construction />
+              </div>
+            </div>
+          ) : null}
+          <p className="mt-2.5 max-w-[64ch] text-[12.5px] leading-snug text-muted">
+            {brand.construction.note[lang]}
+          </p>
+        </>
+      ) : null}
+
+      {brand.palette ? (
+        <>
+          <SubHeading>{sectionCopy.paletteTitle[lang]}</SubHeading>
+          {brand.palette.note ? (
+            <Prose>{brand.palette.note[lang]}</Prose>
+          ) : null}
+          <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {brand.palette.colors.map((color) => (
+              <li
+                key={color.value}
+                className="overflow-hidden rounded-xl border border-line/70"
+              >
+                <div className="h-14" style={{ background: color.value }} />
+                <div className="bg-white px-3 py-2">
+                  <p className="text-[12px] font-semibold leading-snug text-ink">
+                    {color.name}
+                  </p>
+                  <p className="font-mono text-[11px] uppercase text-muted">
+                    {color.value}
+                  </p>
+                  {color.role ? (
+                    <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                      {color.role[lang]}
+                    </p>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ul>
+          {brand.palette.explored ? (
+            <div className="mt-5">
+              <p className="max-w-[64ch] text-[12.5px] leading-snug text-muted">
+                {brand.palette.explored.note[lang]}
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-2.5">
+                {brand.palette.explored.marks.map((mark) => (
+                  <li
+                    key={mark.src}
+                    className="flex h-14 w-14 items-center justify-center rounded-xl border border-line/60"
+                    style={{ background: "#FCFAFB" }}
+                    title={mark.name}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={mark.src} alt={mark.name} className="h-8 w-8" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </>
+      ) : null}
+    </>
+  );
+}
 
 /**
  * `chrome` mówi, kto dostarcza nagłówek: trasa /work potrzebuje pełnego
@@ -309,6 +496,10 @@ export default function CaseStudyBody({
               </a>
             ) : null}
           </div>
+        ) : null}
+
+        {study.brand ? (
+          <BrandChapter brand={study.brand} client={study.client} />
         ) : null}
 
         {study.outcome ? (

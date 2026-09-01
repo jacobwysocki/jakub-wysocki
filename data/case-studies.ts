@@ -62,6 +62,41 @@ export type CaseMetric = {
   verified?: boolean;
 };
 
+/**
+ * Rozdział o identyfikacji: znak, jego znaczenie, droga do niego i system
+ * kolorów. Sekcja jest w całości opcjonalna — dostaje ją tylko projekt,
+ * którego proces brandingowy jest udokumentowany źródłowo (brandbook,
+ * archiwum eksploracji), nigdy zrekonstruowany z pamięci.
+ */
+export type BrandSection = {
+  /** Idea znaku: co geometria znaczy i czego celowo nie obiecuje. */
+  intro: L10n;
+  /** Plakiety lockupu na jasnej i ciemnej powierzchni marki. */
+  lockup: {
+    light: string;
+    dark?: string;
+    /** Tła plakiet pochodzą ze świata marki, nie z motywu portfolio. */
+    surfaces?: { light: string; dark: string };
+    caption?: L10n;
+  };
+  explorations?: {
+    note: L10n;
+    marks: { src: string; name: string; caption?: L10n; winner?: boolean }[];
+  };
+  construction?: {
+    note: L10n;
+    /** Rysunek geometrii znaku: komponent z mapy wizualizacji case'ów. */
+    component?: string;
+  };
+  palette?: {
+    note?: L10n;
+    colors: { name: string; value: string; role?: L10n }[];
+    /** Kierunki zbadane i odrzucone — historia decyzji, nie produkcja. */
+    explored?: { note: L10n; marks: { src: string; name: string }[] };
+  };
+  typography?: L10n;
+};
+
 export type UxCaseStudy = {
   slug: ProjectId;
   client: string;
@@ -98,6 +133,9 @@ export type UxCaseStudy = {
   decisions: CaseDecision[];
 
   solution: { summary: L10n; media: CaseMedia[] };
+
+  /** Rozdział identyfikacji; renderowany po rozwiązaniu, przed wynikiem. */
+  brand?: BrandSection;
 
   outcome?: { narrative?: L10n; metrics?: CaseMetric[] };
 
@@ -478,6 +516,181 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           },
         },
       ],
+    },
+    brand: {
+      intro: {
+        pl: "Znak to jedna niewielka obserwacja ustępująca większemu, zrównoważonemu przeciwwagą wnioskowi, ustawiona na osi 45 stopni. Jest celowo abstrakcyjny — żadnej strzałki, wykresu, sieci ani obietnicy wyniku — relacja ma kierunek, ale niczego nie deklaruje. Odbija to, co Venor naprawdę robi: dowód staje się przemyślanym następnym krokiem, a o budżecie czy zamiarach firmy nic się nie twierdzi.",
+        en: "The mark is one small observation yielding to a larger, counterweighted conclusion, set on a 45-degree bearing. It stays abstract on purpose — no arrow, no chart, no network, no promise of an outcome — a relationship that has direction without claiming a result. It mirrors what Venor actually does: evidence becomes a reasoned next action, and nothing about a company's budget or intent is asserted.",
+      },
+      lockup: {
+        light: "/projects/venor/lockup.svg",
+        dark: "/projects/venor/lockup-dark.svg",
+        // Powierzchnie plakiet wprost z brandbooka: Brand Paper i Brand Dark.
+        surfaces: { light: "#FCFAFB", dark: "#171217" },
+      },
+      typography: {
+        pl: "Logotyp to zawsze pisane małą literą venor, złożone w Instrument Sans SemiBold (600) z trackingiem −0,025em, dostarczane jako obrysowane ścieżki glifów — lockup nie ma żadnej zależności od fontu w czasie działania.",
+        en: "The wordmark is always lowercase venor, set in Instrument Sans SemiBold (600) at −0.025em tracking, shipped as outlined glyph paths — the lockup carries no runtime font dependency.",
+      },
+      explorations: {
+        note: {
+          pl: "Znak wyłonił się z 374 kandydatów w czterech rundach w ciągu trzech dni: najpierw sześć geometrycznych kierunków, potem dwadzieścia dwa tory oparte na researchu, następnie runda dopracowania z zablokowaną formą, a na końcu organiczna fala pod kontraktem na jakość krzywej. Dziesięciu finalistów niżej; zwycięzca, Final Weight, pochodzi z rundy dopracowania.",
+          en: "The mark came out of 374 candidates across four rounds in three days: six geometric direction lanes first, then twenty-two research-driven lanes, then a form-locked refinement round, and finally an organic wave held to a curve-quality contract. The ten finalists are below; the winner, Final Weight, came from the refinement round.",
+        },
+        marks: [
+          {
+            src: "/projects/venor/explorations/signal-trail.svg",
+            name: "Signal Trail",
+            caption: {
+              pl: "Trzy obserwacje nabierają pewności, zbliżając się do stałego punktu — narastanie czytelne bez strzałek i linii ruchu.",
+              en: "Three observations gain confidence as they approach a solid fix — accumulation made legible without arrows or speed lines.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/closing-trace.svg",
+            name: "Closing Trace",
+            caption: {
+              pl: "Pięć kropek zbiega się po osi 45 stopni, gdy odstęp i skala się domykają — obserwowany rytm staje się wybranym momentem działania.",
+              en: "Five dots converge on a 45-degree trace, spacing and scale closing in — observed cadence becoming a chosen moment to act.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/lattice-v.svg",
+            name: "Lattice V",
+            caption: {
+              pl: "Pięć równych sygnałów w precyzyjnej literze V, jeden punkt domyka zejście — poszukiwanie sprowadzone do najprostszego odczytu.",
+              en: "Five equal signals in a precise V lattice, one point completing the descent — the hunt reduced to its simplest read.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/convergent-fix.svg",
+            name: "Convergent Fix",
+            caption: {
+              pl: "Dwa punktowe namiary zbiegają się z szerokiego pola w jeden punkt z przodu — pościg i działanie, bez oklepanego zamkniętego V.",
+              en: "Two dotted bearings converge from a wide field into one forward fix — pursuit and action, without the enclosed-V cliché.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/held-eclipse.svg",
+            name: "Held Eclipse",
+            caption: {
+              pl: "Jeden dysk wysuwa się nad drugi po osi 45 stopni, zostawiając rozstrzygnięty półksiężyc — pościg oddany bez strzałki i dosłownego celu.",
+              en: "One disc advances over another on a 45-degree bearing, leaving a resolved crescent — pursuit carried without an arrow or a literal target.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/folded-ridge.svg",
+            name: "Folded Ridge",
+            caption: {
+              pl: "Płytka grań w kształcie V składa się w aksonometryczną bryłę; jedna ściana zmienia kontur w ukierunkowaną formę.",
+              en: "A shallow V ridge folds into an axonometric solid; one face turns the outline into a directional volume.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/blue-limb.svg",
+            name: "Blue Limb",
+            caption: {
+              pl: "Dwa równe dyski zachodzą na siebie po osi 45 stopni, widoczna zostaje tylko wysuwająca się krawędź.",
+              en: "Two equal discs overlap on a 45-degree axis, leaving only the advancing limb visible.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/steady-bearing.svg",
+            name: "Steady Bearing",
+            caption: {
+              pl: "Stromy, trzykamienny namiar sprowadza poszukiwanie do jednej pewnej, organicznej masy.",
+              en: "A steep three-stone bearing compresses the hunt into one confident, organic mass.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/bronze-sweep.svg",
+            name: "Bronze Sweep",
+            caption: {
+              pl: "Niskie, szerokie V sprawia wrażenie odlanego i osadzonego; wyśrodkowany punkt spina szeroką sylwetkę.",
+              en: "A low, wide V feels cast and settled; a centred counter-fix holds the broad silhouette together.",
+            },
+          },
+          {
+            src: "/projects/venor/explorations/final-weight.svg",
+            name: "Final Weight",
+            winner: true,
+            caption: {
+              pl: "Jedna szeroka obserwacja ustępuje większemu, precyzyjnie zrównoważonemu wnioskowi.",
+              en: "One broad observation yields to a larger, precisely counterweighted conclusion.",
+            },
+          },
+        ],
+      },
+      construction: {
+        component: "VenorConstruction",
+        note: {
+          pl: "Konstrukcja to siatka 64 jednostek: obserwacja tuszem o promieniu 8 w punkcie (20, 20) i wniosek w kolorze Deep Mulberry o promieniu 12 w punkcie (37,33, 37,33), stosunek pól 4:9 na osi 45 stopni. Ważony tymi polami środek ciężkości pary trafia dokładnie w (32, 32), środek pola konstrukcji.",
+          en: "The construction is a 64-unit grid: an r8 ink observation at (20, 20) and an r12 Deep Mulberry conclusion at (37.33, 37.33), a 4:9 area ratio on a 45-degree bearing. Weighted by those areas, the pair's centroid lands exactly at (32, 32), the centre of the box.",
+        },
+      },
+      palette: {
+        note: {
+          pl: "Formę zamknięto, zanim wybrano jakikolwiek kolor. Deep Mulberry #8A2853 wybrano jako kierunek produkcyjny 17.08.2026, z mierzonym kontrastem 8,05:1 na Paper; na ciemnym tle rdzeniowy akcent spada do 2,21:1, więc wymagany jest tam wariant Night Mulberry.",
+          en: "The form was locked before any colour was chosen. Deep Mulberry #8A2853 was selected as the production direction on 2026-08-17, with a measured 8.05:1 contrast on Paper; on a dark field the core accent drops to 2.21:1, so a Night Mulberry variant is required there.",
+        },
+        colors: [
+          {
+            name: "Deep Mulberry",
+            value: "#8A2853",
+            role: {
+              pl: "wniosek w znaku i akcent marki na jasnych polach",
+              en: "the conclusion circle and brand accent on light surfaces",
+            },
+          },
+          {
+            name: "Brand Ink",
+            value: "#171216",
+            role: {
+              pl: "obserwacja w znaku, logotyp i tekst",
+              en: "the mark's observation, wordmark and primary text",
+            },
+          },
+          {
+            name: "Brand Paper",
+            value: "#FCFAFB",
+            role: {
+              pl: "główne tło redakcyjne",
+              en: "the primary editorial background",
+            },
+          },
+          {
+            name: "Mulberry Display",
+            value: "#D77BA2",
+            role: {
+              pl: "wniosek na ciemnym polu (Night Mulberry)",
+              en: "the conclusion on dark fields (Night Mulberry)",
+            },
+          },
+        ],
+        explored: {
+          note: {
+            pl: "Sześć rozważanych, lecz niezatwierdzonych kierunków — kobalt, bursztyn, sosnowa zieleń, fiolet, koral i morski — pozostaje historią decyzji, nie opcjami.",
+            en: "Six explored-but-not-approved directions — cobalt, amber, pine, violet, coral and teal — are kept as decision history, not as options.",
+          },
+          marks: [
+            {
+              src: "/projects/venor/colors/color-03.svg",
+              name: "Cobalt Majority",
+            },
+            {
+              src: "/projects/venor/colors/color-05.svg",
+              name: "Burnished Amber",
+            },
+            { src: "/projects/venor/colors/color-06.svg", name: "Pine Green" },
+            {
+              src: "/projects/venor/colors/color-07.svg",
+              name: "Quiet Violet",
+            },
+            { src: "/projects/venor/colors/color-08.svg", name: "Clay Coral" },
+            { src: "/projects/venor/colors/color-09.svg", name: "Deep Teal" },
+          ],
+        },
+      },
     },
     boundary: {
       pl: "Venor wykrywa dopasowanie, potrzebę i sygnał momentu. Nie wie, czy firma ma budżet ani czy zamierza kupić, więc decyzję o kontakcie zawsze podejmuje człowiek. Świadomie nie ma tu też liczby firm w bazie ani skuteczności scoringu: pierwsze reklamowałoby prywatną bazę z danymi realnych firm, drugiego nie zmierzono.",

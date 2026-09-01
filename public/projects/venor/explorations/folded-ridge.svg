@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Folded Ridge</title>
+  <polygon points="8,16 15,12 32,22 49,12 56,16 32,31" fill="currentColor"/>
+  <polygon points="8,16 32,31 32,40 8,25" fill="currentColor"/>
+  <polygon points="32,31 56,16 56,25 32,40" fill="#3157F6"/>
+</svg>

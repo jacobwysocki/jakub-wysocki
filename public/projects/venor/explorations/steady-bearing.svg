@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Steady Bearing</title>
+  <path d="M.02-1.05C.6-1.05 1-.59 1-.03C1 .52.52.94-.06.94C-.64.94-1.03.5-1.03-.08C-1.03-.65-.55-1.05.02-1.05Z" fill="currentColor" transform="translate(18 55) rotate(13) scale(4.6)"/>
+  <path d="M-.12-1C.43-1 1.03-.58 1.03-.08C1.03.5.7.98.16.98C-.42.98-.97.62-.97.1C-.97-.46-.67-1-.12-1Z" fill="currentColor" transform="translate(27 38) rotate(-10) scale(6.21)"/>
+  <path d="M-.18-.96C.38-.96 1.04-.45 1.04.12C1.04.68.65 1.06.1 1.06C-.48 1.06-1 .46-1-.12C-1-.66-.74-.96-.18-.96Z" fill="#3157F6" transform="translate(38 17) rotate(16) scale(8.3835)"/>
+</svg>
