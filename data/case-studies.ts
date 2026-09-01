@@ -237,6 +237,36 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       {
         decision: {
+          pl: "Praktyka stopniowana trudnością, a nie płaski bank pytań: każdy quiz trzyma stały podział 25/50/25 na pytania łatwe, średnie i trudne.",
+          en: "Difficulty-graded practice, not a flat question bank: every quiz holds a fixed 25/50/25 split of easy, medium and hard.",
+        },
+        rationale: {
+          pl: "Przygotowanie do rozmów działa, gdy jest ustrukturyzowane; stopniowany miks trzyma sesję na tyle wymagającą, by miała sens, nie przechylając się w zniechęcającą.",
+          en: "Interview prep pays off when it's structured; a graded mix keeps a session hard enough to matter without tipping into discouraging.",
+        },
+      },
+      {
+        decision: {
+          pl: "Demo produktu żyje na stronie startowej — bez logowania i bez wywołań backendu: samodzielne, dzielone na fragmenty demo, które dzieli język wizualny z aplikacją.",
+          en: "The product demo lives on the landing page — no login, no backend call: a self-contained, code-split demo that shares the app's visual language.",
+        },
+        rationale: {
+          pl: "Najkrótsza droga do konwersji to dać poczuć produkt, a nie o nim czytać; gdy demo wygląda jak prawdziwa aplikacja, „przetestuj” płynnie przechodzi w „załóż konto”.",
+          en: "The shortest path to conversion is letting someone feel the product, not read about it; when the demo looks like the real thing, 'try it' flows straight into 'sign up'.",
+        },
+      },
+      {
+        decision: {
+          pl: "Jeden system wizualny na dwóch front-endach o różnych fundamentach: aplikacja na własnych, dostępnych komponentach bazowych, strona marketingowa na atomowym CSS z czasu builda — obie na wspólnych tokenach koloru, typografii i odstępów.",
+          en: "One visual system across two front-ends on different styling foundations: the app on owned, accessible component primitives, the marketing site on build-time atomic CSS — both driven by shared colour, type and spacing tokens.",
+        },
+        rationale: {
+          pl: "Obie powierzchnie muszą czytać się jak rodzeństwo bez narzucania im jednego systemu stylów; wspólne tokeny trzymają tożsamość od pierwszej strony marketingowej po najgłębszy ekran produktu.",
+          en: "The two surfaces have to read as siblings without forcing one styling system on both; shared tokens keep the identity continuous from the first marketing page to the deepest product screen.",
+        },
+      },
+      {
+        decision: {
           pl: "Kontrakty pilnowane automatycznie: klienci TypeScript z OpenAPI, bramki jakości i samonaprawiająca się walidacja JSON-a od agentów GPT-4o.",
           en: "Contracts kept honest automatically: TypeScript clients from OpenAPI, quality gates and self-healing validation of the JSON from GPT-4o agents.",
         },
@@ -245,12 +275,28 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           en: "On a two-sided product, drift between the frontend and the API should break the build, not a user's screen.",
         },
       },
+      {
+        decision: {
+          pl: "Jakość treści bramkowana niezależnie: każde wygenerowane przez AI pytanie przechodzi osobny, „zimny” przebieg autokrytyki, a publikuje je dopiero człowiek.",
+          en: "Content quality gated independently: every AI-generated question passes a separate, cold self-critique pass, and only a human publishes it.",
+        },
+        rationale: {
+          pl: "W dwuosobowym zespole zabezpieczenia muszą działać same: drugi, niezależny sędzia na treści podnosi poprzeczkę, zanim ktokolwiek poświęci czas.",
+          en: "On a two-person team the guardrails have to run themselves: a second, independent judge on the content raises the floor before anyone's time is spent.",
+        },
+      },
     ],
     solution: {
       summary: {
         pl: "Produkt dostarczony end-to-end: marka i system projektowy, dostępny front-end w TypeScripcie, React 19 i Next.js z trybem ciemnym, na .NET 8 z orkiestracją Aspire i CosmosDB na Azure — a na wierzchu warstwa grywalizacji, która zamienia naukę w grę.",
         en: "Delivered end to end: brand and design system, an accessible frontend in TypeScript, React 19 and Next.js with dark mode, on .NET 8 with Aspire orchestration and CosmosDB on Azure — topped with a gamification layer that turns studying into a game.",
       },
+      /**
+       * Kadry aplikacji pochodzą z syntetycznego środowiska demo (własny stub
+       * API, konta „Demo Learner”): rankingi z realnymi użytkownikami nigdy
+       * nie mogą trafić na publiczną stronę. Demo z landing page to publiczna
+       * powierzchnia marketingowa — kadr z produkcji jest tu w porządku.
+       */
       media: [
         {
           src: "/projects/squizzu-app-preview.jpg",
@@ -261,19 +307,59 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           },
         },
         {
-          src: "/projects/squizzu-landing-preview.jpg",
+          src: "/projects/squizzu/app-question.jpg",
           kind: "image",
           alt: {
-            pl: "Strona główna squizzu.com w oknie przeglądarki: nagłówek Boost Your Confidence Quiz by Quiz, przyciski Get started i How it works, wokół nich ikony kategorii technologicznych na ciemnym tle.",
-            en: "The squizzu.com homepage in a browser window: the headline Boost Your Confidence Quiz by Quiz, the Get started and How it works buttons, and technology-category icons on a dark background.",
+            pl: "Ekran pytania w Squizzu po udzieleniu odpowiedzi: błędna opcja oznaczona na czerwono, poprawna na zielono, pod spodem sekcja Knowledge Base z wyjaśnieniem i rozwijanym omówieniem pogłębionym, obok nawigator pytań i ocena pytania kciukami.",
+            en: "A Squizzu question screen after answering: the wrong option flagged red, the correct one green, a Knowledge Base section with the explanation and a collapsible in-depth breakdown below, a question navigator and thumbs-up/down question feedback beside it.",
+          },
+          caption: {
+            pl: "Rdzeń pętli nauki: zła odpowiedź nie jest karą, tylko wejściem do wyjaśnienia i pogłębionego omówienia. Kadr ze środowiska demo.",
+            en: "The core learning loop: a wrong answer isn't a punishment, it's the doorway into the explanation and the in-depth breakdown. Captured in the demo environment.",
+          },
+        },
+        {
+          src: "/projects/squizzu/app-quizboard.jpg",
+          kind: "image",
+          alt: {
+            pl: "Tablica quizu React w Squizzu: przyciski „Continue Grind session” i „See sections”, karty trybów Grind session i Standard quiz oraz sekcje z paskami postępu 25%, 100% i 40%.",
+            en: "The Squizzu React quiz board: “Continue Grind session” and “See sections” actions, Grind-session and Standard-quiz mode cards, and sections with 25%, 100% and 40% progress bars.",
+          },
+          caption: {
+            pl: "Tryby nauki obok siebie: mieszany Grind session i ustrukturyzowane sekcje tematyczne, każdy z własnym postępem. Kadr ze środowiska demo.",
+            en: "Learning modes side by side: the mixed Grind session and structured topic sections, each with its own progress. Captured in the demo environment.",
+          },
+        },
+        {
+          src: "/projects/squizzu/app-leaderboard-dark.jpg",
+          kind: "image",
+          alt: {
+            pl: "Ranking Squizzu w trybie ciemnym: podium trzech najlepszych graczy, przełącznik XP / poprawnych odpowiedzi, przypięty wiersz „YOU” z pozycją nr 4 i licznik streaka w nagłówku. Dane pokazowe — konta Demo Learner.",
+            en: "The Squizzu leaderboard in dark mode: a top-three podium, an XP / correct-answers toggle, a pinned “YOU” row at rank 4 and the streak counter in the header. Demo data — Demo Learner accounts.",
+          },
+          caption: {
+            pl: "Warstwa gry w trybie ciemnym: podium, dwa rankingi (XP i celność), zawsze widoczna własna pozycja i streak w nagłówku. Dane pokazowe.",
+            en: "The game layer in dark mode: a podium, two rankings (XP and accuracy), your own position always in view and the streak in the header. Demo data.",
+          },
+        },
+        {
+          src: "/projects/squizzu/landing-demo.jpg",
+          kind: "image",
+          alt: {
+            pl: "Sekcja „Experience Squizzu in Action” na squizzu.com: interaktywne demo pytania o zarządzanie pamięcią w Pythonie z poprawną odpowiedzią, wyjaśnieniem, omówieniem pogłębionym z blokiem kodu i przyciskiem „Start practicing”.",
+            en: "The “Experience Squizzu in Action” section on squizzu.com: an interactive demo of a Python memory-management question with the correct answer, the explanation, an in-depth breakdown with a code block and a “Start practicing” button.",
+          },
+          caption: {
+            pl: "Decyzja o demie w praktyce: pełna pętla pytanie → odpowiedź → wyjaśnienie działa na stronie startowej bez logowania i bez backendu.",
+            en: "The demo decision in practice: the full question → answer → explanation loop runs on the landing page with no login and no backend.",
           },
         },
       ],
     },
     outcome: {
       narrative: {
-        pl: "Na warstwie grywalizacji, którą zaprojektowałem i wdrożyłem, platforma urosła od zera do ponad tysiąca użytkowników.",
-        en: "On the gamification layer I designed and shipped, the platform grew from zero to over a thousand users.",
+        pl: "Na warstwie grywalizacji, którą zaprojektowałem i wdrożyłem, platforma urosła od zera do ponad tysiąca użytkowników. Działa w produkcji jako płatny produkt, a nie prototyp.",
+        en: "On the gamification layer I designed and shipped, the platform grew from zero to over a thousand users. It runs in production as a paid product, not a prototype.",
       },
       metrics: [
         {
@@ -283,8 +369,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       ],
     },
     reflection: {
-      pl: "Definicja, marka i kod w jednej głowie sprawiają, że szwy między nimi znikają — produkt zachowuje się spójnie, bo nikt nie musiał zgadywać cudzych intencji.",
-      en: "Definition, brand and code in one head keep the seams between them invisible — the product feels coherent because nobody had to guess at someone else's intent.",
+      pl: "Definicja, marka i kod w jednej głowie sprawiają, że szwy między nimi znikają — produkt zachowuje się spójnie, bo nikt nie musiał zgadywać cudzych intencji. Zasada pod tym wszystkim: spraw, by właściwa droga była łatwa, a błędna — głośna — w systemie projektowym, w kontraktach i w bramkach jakości.",
+      en: "Definition, brand and code in one head keep the seams between them invisible — the product feels coherent because nobody had to guess at someone else's intent. The rule underneath all of it: make the right thing easy and the wrong thing loud — in the design system, in the contracts, and in the quality gates.",
     },
   },
 
