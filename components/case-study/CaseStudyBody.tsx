@@ -71,9 +71,9 @@ function MediaFigure({ media }: { media: CaseMedia }) {
           aria-label={media.alt[lang]}
           className="w-full rounded-2xl shadow-soft"
         />
-      ) : callouts.length ? (
-        // Znaczniki żyją nad obrazem jako warstwa danych, nie wypalone
-        // w bitmapie: zostają dwujęzyczne i ostre przy każdej skali.
+      ) : (
+        // Znaczniki i wygaszenie żyją nad obrazem jako warstwa danych,
+        // nie wypalone w bitmapie: zostają dwujęzyczne i ostre w każdej skali.
         <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -82,6 +82,14 @@ function MediaFigure({ media }: { media: CaseMedia }) {
             loading="lazy"
             className="w-full rounded-2xl shadow-soft"
           />
+          {media.excerpt ? (
+            // Dół kadru rozpływa się zamiast urywać: to górna część
+            // strony, która w oryginale biegnie dalej.
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-28 rounded-b-2xl bg-gradient-to-t from-white via-white/70 to-transparent"
+            />
+          ) : null}
           {callouts.map((callout, index) => (
             <span
               key={callout.note.en}
@@ -93,14 +101,6 @@ function MediaFigure({ media }: { media: CaseMedia }) {
             </span>
           ))}
         </div>
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={media.src}
-          alt={media.alt[lang]}
-          loading="lazy"
-          className="w-full rounded-2xl shadow-soft"
-        />
       )}
       {callouts.length ? (
         <ol className="mt-3 space-y-1.5">

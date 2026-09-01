@@ -54,6 +54,11 @@ export type CaseMedia = {
   caption?: L10n;
   /** Numerowane znaczniki na kadrze plus legenda pod nim. */
   callouts?: CaseCallout[];
+  /**
+   * Kadr z górnej części dłuższej strony: dół rozpływa się gradientem,
+   * żeby czytało się „strona biegnie dalej”, a nie „obraz ucięty”.
+   */
+  excerpt?: boolean;
 };
 
 /** Decyzja projektowa wraz z uzasadnieniem: podstawowa jednostka case'a UX. */
@@ -994,6 +999,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/home-v1.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Makieta strony głównej Printly, kierunek pierwszy: hero z hasłem „Drukuj z nami”, pomarańczowa nawigacja produktowa i siatka kategorii z mockupami wizytówek, plakatów i ulotek.",
             en: "The Printly homepage mockup, first direction: a hero with the tagline Drukuj z nami, the orange product navigation and a category grid with business-card, poster and flyer mockups.",
@@ -1006,6 +1012,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/home-v2.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Makieta strony głównej Printly, kierunek drugi: to samo zadanie z innym otwarciem i innym układem sekcji produktowych.",
             en: "The Printly homepage mockup, second direction: the same brief with a different opening and a different arrangement of the product sections.",
@@ -1018,6 +1025,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/product-desktop.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Karta produktu Wizytówki standard: galeria mockupów, cztery ścieżki startu (wygeneruj projekt AI, wgraj projekt, zamów wykonanie, użyj zapisanego), tabela wariantów z nakładem i ceną oraz przycisk ręcznej konfiguracji.",
             en: "The standard business cards product page: a mockup gallery, four starting paths (generate with AI, upload a design, order design work, use a saved design), a variant table with volume and price, and a manual configuration button.",
@@ -1030,6 +1038,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/product-mam-projekt.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Wariant karty produktu „Mam projekt”: kupujący z gotowym plikiem dostaje własną, krótszą ścieżkę zamówienia wizytówek.",
             en: "The product page in its I-have-a-project variant: a buyer arriving with a ready file gets a dedicated, shorter route to ordering the cards.",
@@ -1042,6 +1051,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/product-mobile.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Mobilna wersja karty produktu wizytówek: ta sama zawartość i ścieżki zamówienia ułożone w jednej kolumnie telefonu.",
             en: "The mobile version of the business cards product page: the same content and ordering paths arranged in a single phone column.",
@@ -1054,6 +1064,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/order-form.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Ekran zamówienia: dane odbiorcy z przełącznikiem klient/firma, podsumowanie koszyka z terminem dostawy i kodem promocyjnym oraz wybór paczkomatu z listą punktów.",
             en: "The order screen: recipient details with a client/company toggle, an order summary with the delivery estimate and promo code, and a parcel-locker picker with a list of points.",
@@ -1066,6 +1077,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         {
           src: "/projects/printly/order-details.jpg",
           kind: "image",
+          excerpt: true,
           alt: {
             pl: "Szczegóły zamówienia w koncie klienta: stepper statusu dostawy od przyjęcia po doręczenie, pozycje z parametrami druku i podsumowanie kosztów.",
             en: "Order details in the account area: a delivery status stepper from accepted to delivered, line items with their print parameters, and a cost summary.",
