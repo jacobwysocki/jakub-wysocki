@@ -73,6 +73,8 @@ export type CaseMetric = {
   value: string;
   label: L10n;
   verified?: boolean;
+  /** Punkt startu drogi (np. "0"): metryka renderuje się jako 0 → cel. */
+  from?: string;
 };
 
 /**
@@ -415,12 +417,24 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           src: "/projects/squizzu/app-question.jpg",
           kind: "image",
           alt: {
-            pl: "Ekran pytania w Squizzu po udzieleniu odpowiedzi: błędna opcja oznaczona na czerwono, poprawna na zielono, pod spodem sekcja Knowledge Base z wyjaśnieniem i rozwijanym omówieniem pogłębionym, obok nawigator pytań i ocena pytania kciukami.",
-            en: "A Squizzu question screen after answering: the wrong option flagged red, the correct one green, a Knowledge Base section with the explanation and a collapsible in-depth breakdown below, a question navigator and thumbs-up/down question feedback beside it.",
+            pl: "Ekran pytania w Squizzu z banerem Incorrect: pytanie o console.log po setSaved(true), blok kodu TSX, błędna opcja oznaczona na czerwono i nawigator czterech pytań po prawej.",
+            en: "A Squizzu question screen with an Incorrect banner: the question about console.log after setSaved(true), a TSX code block, the wrong option flagged red and the four-question navigator on the right.",
           },
           caption: {
-            pl: "Rdzeń pętli nauki: zła odpowiedź nie jest karą, tylko wejściem do wyjaśnienia i pogłębionego omówienia. Kadr ze środowiska demo.",
-            en: "The core learning loop: a wrong answer isn't a punishment, it's the doorway into the explanation and the in-depth breakdown. Captured in the demo environment.",
+            pl: "Pytanie z kodem: zła odpowiedź jest oznaczona wprost, a poprawna od razu widoczna. Kadr ze środowiska demo.",
+            en: "A question with code: the wrong answer is called out plainly and the correct one is shown right away. Captured in the demo environment.",
+          },
+        },
+        {
+          src: "/projects/squizzu/app-explanation.jpg",
+          kind: "image",
+          alt: {
+            pl: "Dalsza część tego samego ekranu: sekcja Knowledge Base z wyjaśnieniem, rozwijane omówienie pogłębione, pasek postępu 100% i ocena pytania kciukami.",
+            en: "The same screen scrolled on: the Knowledge Base section with the explanation, the collapsible in-depth breakdown, a 100% progress bar and thumbs-up/down question feedback.",
+          },
+          caption: {
+            pl: "Zła odpowiedź nie jest karą, tylko wejściem do wyjaśnienia i pogłębionego omówienia. Kadr ze środowiska demo.",
+            en: "A wrong answer isn't a punishment, it's the doorway into the explanation and the in-depth breakdown. Captured in the demo environment.",
           },
         },
         {
@@ -433,6 +447,18 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           caption: {
             pl: "Tryby nauki obok siebie: mieszany Grind session i ustrukturyzowane sekcje tematyczne, każdy z własnym postępem. Kadr ze środowiska demo.",
             en: "Learning modes side by side: the mixed Grind session and structured topic sections, each with its own progress. Captured in the demo environment.",
+          },
+        },
+        {
+          src: "/projects/squizzu/app-summary.jpg",
+          kind: "image",
+          alt: {
+            pl: "Karta Session Complete po ukończeniu sesji: celność 75%, ukończenie 100%, przyciski Review Answers i Back to Menu.",
+            en: "The Session Complete card after finishing a session: 75% accuracy, 100% completion, Review Answers and Back to Menu buttons.",
+          },
+          caption: {
+            pl: "Zamknięcie pętli: sesja kończy się raportem celności i przejściem do powtórki odpowiedzi. Kadr ze środowiska demo.",
+            en: "Closing the loop: a session ends in an accuracy report and a route back into reviewing the answers. Captured in the demo environment.",
           },
         },
         {
@@ -468,7 +494,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       metrics: [
         {
-          value: "0 → 1,000+",
+          from: "0",
+          value: "1,000+",
           label: { pl: "użytkowników", en: "users" },
         },
       ],

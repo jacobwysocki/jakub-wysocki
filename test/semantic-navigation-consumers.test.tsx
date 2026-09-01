@@ -43,6 +43,15 @@ describe("semantic Desktop App selections", () => {
         disconnect() {}
       },
     );
+    // Figura wyniku w korpusie case'a animuje licznik przez useInView.
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
     vi.stubGlobal(
       "matchMedia",
       vi.fn(() => ({

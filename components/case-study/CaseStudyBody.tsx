@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import CountUp from "@/components/CountUp";
 import { GithubIcon } from "@/components/logos";
 import { useLang } from "@/lib/lang-store";
-import type { CaseMedia, UxCaseStudy } from "@/data/case-studies";
+import type { CaseMedia, CaseMetric, UxCaseStudy } from "@/data/case-studies";
 
 /**
  * Wspólny korpus case study: jedna implementacja treści dla trasy /work/…
@@ -127,6 +128,54 @@ function MediaFigure({ media }: { media: CaseMedia }) {
         </figcaption>
       ) : null}
     </figure>
+  );
+}
+
+/**
+ * Wynik jako figura, nie wiersz tekstu. Metryka z polem `from` opowiada
+ * drogę: wyszarzony punkt startu, akcentowa strzałka i licznik rosnący do
+ * wartości docelowej (CountUp startuje od prawdziwej liczby w HTML, więc
+ * boty i czytniki nigdy nie widzą zera). Jedna zmierzona liczba to jedna
+ * figura; wykresu z jednego punktu uczciwie zrobić się nie da.
+ */
+function MetricFigure({ metric }: { metric: CaseMetric }) {
+  const lang = useLang();
+  const target = Number.parseInt(metric.value.replace(/\D/g, ""), 10);
+  const suffix = metric.value.includes("+") ? "+" : "";
+
+  if (metric.from === undefined || Number.isNaN(target)) {
+    return (
+      <div className="min-w-[180px] rounded-2xl border border-line/70 bg-black/[0.02] px-6 py-5">
+        <dd className="text-[30px] font-bold tracking-tight text-ink">
+          {metric.value}
+        </dd>
+        <dt className="mt-0.5 text-[12.5px] leading-snug text-muted">
+          {metric.label[lang]}
+        </dt>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-w-[260px] rounded-2xl border border-line/70 bg-black/[0.02] px-7 py-6">
+      <dd className="flex items-baseline gap-3">
+        <span className="text-[22px] font-semibold tracking-tight text-muted">
+          {metric.from}
+        </span>
+        <ArrowRight
+          size={22}
+          strokeWidth={2.5}
+          aria-hidden
+          className="translate-y-[2px] self-center text-accent"
+        />
+        <span className="text-[46px] font-bold leading-none tracking-tight text-ink sm:text-[54px]">
+          <CountUp value={target} suffix={suffix} duration={1.8} />
+        </span>
+      </dd>
+      <dt className="mt-2 text-[12.5px] leading-snug text-muted">
+        {metric.label[lang]}
+      </dt>
+    </div>
   );
 }
 
@@ -362,7 +411,9 @@ export default function CaseStudyBody({
       className={
         chrome === "window"
           ? "mx-auto w-full max-w-[760px] px-8 pb-8"
-          : "mx-auto w-full max-w-[720px] px-6 py-10 sm:px-8"
+          : // Szeroka kolumna dla mediów; tekst i tak trzyma miarę 64ch,
+            // więc szerokość strony rośnie tylko na korzyść kadrów.
+            "mx-auto w-full max-w-[940px] px-6 py-10 sm:px-8"
       }
     >
       {chrome === "page" ? (
@@ -477,10 +528,10 @@ export default function CaseStudyBody({
               </div>
             ) : null}
             {study.process.iterations ? (
-              <>
+              <div>
                 <SubHeading>{sectionCopy.iterationsTitle[lang]}</SubHeading>
                 <Prose>{study.process.iterations.note[lang]}</Prose>
-                <ol className="mt-5 grid gap-4 sm:grid-cols-2">
+                <ol className="mt-5 grid gap-5 sm:grid-cols-2">
                   {study.process.iterations.frames.map((frame, index) => (
                     <li key={`${frame.src}-${index}`} className="min-w-0">
                       <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line/70">
@@ -511,7 +562,7 @@ export default function CaseStudyBody({
                     </li>
                   ))}
                 </ol>
-              </>
+              </div>
             ) : null}
           </>
         ) : null}
@@ -598,16 +649,9 @@ export default function CaseStudyBody({
               <Prose>{study.outcome.narrative[lang]}</Prose>
             ) : null}
             {study.outcome.metrics?.length ? (
-              <dl className="mt-5 flex flex-wrap gap-x-12 gap-y-5">
+              <dl className="mt-6 flex flex-wrap gap-4">
                 {study.outcome.metrics.map((metric) => (
-                  <div key={metric.label.en}>
-                    <dd className="text-[26px] font-bold tracking-tight text-ink">
-                      {metric.value}
-                    </dd>
-                    <dt className="mt-0.5 text-[12.5px] leading-snug text-muted">
-                      {metric.label[lang]}
-                    </dt>
-                  </div>
+                  <MetricFigure key={metric.label.en} metric={metric} />
                 ))}
               </dl>
             ) : null}
