@@ -91,6 +91,21 @@ describe("case study outcome figures", () => {
     expect(srTexts).toContain("to");
     expect(screen.getByText("0")).toBeInTheDocument();
     expect(screen.getByText("users")).toBeInTheDocument();
+
+    // Warstwa wizualna: poza viewportem (obserwator nigdy nie zgłasza
+    // wejścia) licznik ma pokazywać prawdziwą wartość, nie zero z resetu.
+    const visual = container.querySelector(".tabular-nums");
+    expect(visual?.textContent).toBe("1,000+");
+  });
+
+  it("renders a decimal value statically instead of corrupting it", () => {
+    renderEn(
+      withMetrics([
+        { from: "0", value: "12.5%", label: { pl: "wzrost", en: "growth" } },
+      ]),
+    );
+
+    expect(screen.getByText("12.5%")).toBeInTheDocument();
   });
 
   it("keeps the journey for a digitless from → value pair", () => {

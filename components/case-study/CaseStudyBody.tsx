@@ -133,10 +133,11 @@ function MediaFigure({ media }: { media: CaseMedia }) {
 }
 
 /**
- * Animowany licznik figury wyniku. Warstwa wizualna startuje w HTML od
- * prawdziwej wartości, zeruje się dopiero po hydratacji i rośnie po wejściu
- * w viewport; równoległy tekst sr-only trzyma stałą, sformatowaną wartość,
- * więc czytniki ekranu i roboty renderujące JS nigdy nie czytają zera.
+ * Animowany licznik figury wyniku. Warstwa wizualna pokazuje prawdziwą
+ * wartość od pierwszego renderu aż do wejścia w viewport; zero istnieje
+ * wyłącznie jako klatki biegnącej animacji. Równoległy tekst sr-only trzyma
+ * stałą, sformatowaną wartość, więc czytniki ekranu i roboty renderujące JS
+ * nigdy nie czytają zera.
  */
 function AnimatedFigure({
   target,
@@ -207,10 +208,13 @@ function AnimatedFigure({
 function MetricFigure({ metric }: { metric: CaseMetric }) {
   const lang = useLang();
   // Prefiks i sufiks przeżywają w całości (waluty, procenty, jednostki);
-  // tylko ciąg cyfr w środku jest animowany i formatowany per język.
-  const parsed = metric.value.match(/^(\D*?)(\d[\d.,\s]*)(.*)$/);
+  // animowana i formatowana per język jest wyłącznie CAŁKOWITA liczba
+  // (goła albo z grupowaniem przecinkami). Wartość dziesiętna renderuje
+  // się statycznie, bo licznik zgubiłby kropkę (12.5% to nie 125%).
+  let parsed = metric.value.match(/^(\D*?)((?:\d{1,3}(?:,\d{3})+)|\d+)(.*)$/);
+  if (parsed && /^[.,]\d/.test(parsed[3])) parsed = null;
   const target = parsed
-    ? Number.parseInt(parsed[2].replace(/\D/g, ""), 10)
+    ? Number.parseInt(parsed[2].replace(/,/g, ""), 10)
     : null;
   const prefix = parsed ? parsed[1] : "";
   const suffix = parsed ? parsed[3] : "";
