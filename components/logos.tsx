@@ -148,3 +148,28 @@ export function VenorMark({
     </svg>
   );
 }
+
+/**
+ * Znak Printly: kwadratowa litera „p" z logotypu klienta (oryginał w brand
+ * orange #FF6C19). Rysowany w currentColor, bo kafelek i nagłówek okna
+ * kładą go na własnych gradientach marki.
+ */
+export function PrintlyMark({ className = "" }: LogoProps) {
+  return (
+    <svg viewBox="0 0 130.41 130.49" aria-hidden className={className}>
+      <g transform="translate(18096 6479.746)">
+        <rect
+          width="74"
+          height="28.21"
+          transform="translate(-18067.801 -6479.746)"
+          fill="currentColor"
+        />
+        <path
+          d="M242.92,158.7a17.872,17.872,0,0,1,17.99,17.76v41.73c0,9.81-8.11,15.7-18.04,15.7H158.53v27.1H130.5V176.46a17.879,17.879,0,0,1,17.99-17.76H158.7v46.97h74V158.7h10.22"
+          transform="translate(-18226.5 -6610.246)"
+          fill="currentColor"
+        />
+      </g>
+    </svg>
+  );
+}

@@ -149,7 +149,7 @@ function BrandChapter({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={brand.lockup.light}
-            alt={`${client} — logo`}
+            alt={`${client}: logo`}
             className="h-9 w-auto"
           />
         </div>
@@ -161,7 +161,7 @@ function BrandChapter({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={brand.lockup.dark}
-              alt={`${client} — ${sectionCopy.logoDark[lang]}`}
+              alt={`${client}: ${sectionCopy.logoDark[lang]}`}
               className="h-9 w-auto"
             />
           </div>
@@ -355,9 +355,19 @@ export default function CaseStudyBody({
             className="flex h-52 w-full items-center justify-center rounded-2xl"
             style={{ background: study.gradient }}
           >
-            <span className="select-none text-[34px] font-bold tracking-tight text-white/90">
-              {study.client}
-            </span>
+            {study.brand?.lockup.dark ? (
+              // Marka z opublikowanym lockupem pokazuje znak, nie sam napis.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={study.brand.lockup.dark}
+                alt=""
+                className="h-10 w-auto"
+              />
+            ) : (
+              <span className="select-none text-[34px] font-bold tracking-tight text-white/90">
+                {study.client}
+              </span>
+            )}
           </div>
         )}
       </div>

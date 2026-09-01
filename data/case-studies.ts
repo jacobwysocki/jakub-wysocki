@@ -176,8 +176,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     },
     links: { live: "https://squizzu.com", embed: true },
     problem: {
-      pl: "Przygotowanie do rozmów technicznych jest żmudne i łatwo je porzucić. Squizzu miało zamienić tę harówkę w grę, do której się wraca — i całość produktu, od ścieżek użytkownika po kontrakty API, trzeba było ustawić, zanim padła pierwsza linijka kodu.",
-      en: "Preparing for technical interviews is a grind that's easy to abandon. Squizzu had to turn that grind into a game people come back to — and the whole product, from user journeys to API contracts, had to be settled before the first line of code.",
+      pl: "Przygotowanie do rozmów technicznych jest żmudne i łatwo je porzucić. Squizzu miało zamienić tę harówkę w grę, do której się wraca. Całość produktu, od ścieżek użytkownika po kontrakty API, trzeba było ustawić, zanim padła pierwsza linijka kodu.",
+      en: "Preparing for technical interviews is a grind that's easy to abandon. Squizzu had to turn that grind into a game people come back to. The whole product, from user journeys to API contracts, had to be settled before the first line of code.",
     },
     context: [
       {
@@ -185,8 +185,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         en: "Greenfield: we started from zero users and an empty repository.",
       },
       {
-        pl: "Jeden człowiek odpowiada za definicję produktu, markę, system projektowy i front-end — bez gotowych szablonów UI.",
-        en: "One person owns product definition, brand, design system and frontend — with no pre-made UI kit.",
+        pl: "Jeden człowiek odpowiada za definicję produktu, markę, system projektowy i front-end, bez gotowych szablonów UI.",
+        en: "One person owns product definition, brand, design system and frontend, with no pre-made UI kit.",
       },
     ],
     architecture: {
@@ -209,8 +209,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           en: "Definition before pixels: requirements, journeys and API contracts settled before building.",
         },
         rationale: {
-          pl: "Współzałożyciel nie ma budżetu na przeróbki — kształt produktu musiał się trzymać, zanim ktokolwiek napisał ekran.",
-          en: "A co-founder can't afford rework — the shape of the product had to hold before anyone built a screen.",
+          pl: "Współzałożyciel nie ma budżetu na przeróbki: kształt produktu musiał się trzymać, zanim ktokolwiek napisał ekran.",
+          en: "A co-founder can't afford rework: the shape of the product had to hold before anyone built a screen.",
         },
       },
       {
@@ -247,8 +247,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       {
         decision: {
-          pl: "Demo produktu żyje na stronie startowej — bez logowania i bez wywołań backendu: samodzielne, dzielone na fragmenty demo, które dzieli język wizualny z aplikacją.",
-          en: "The product demo lives on the landing page — no login, no backend call: a self-contained, code-split demo that shares the app's visual language.",
+          pl: "Demo produktu żyje na stronie startowej, bez logowania i bez wywołań backendu: samodzielne, dzielone na fragmenty demo, które dzieli język wizualny z aplikacją.",
+          en: "The product demo lives on the landing page, with no login and no backend call: a self-contained, code-split demo that shares the app's visual language.",
         },
         rationale: {
           pl: "Najkrótsza droga do konwersji to dać poczuć produkt, a nie o nim czytać; gdy demo wygląda jak prawdziwa aplikacja, „przetestuj” płynnie przechodzi w „załóż konto”.",
@@ -257,8 +257,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       {
         decision: {
-          pl: "Jeden system wizualny na dwóch front-endach o różnych fundamentach: aplikacja na własnych, dostępnych komponentach bazowych, strona marketingowa na atomowym CSS z czasu builda — obie na wspólnych tokenach koloru, typografii i odstępów.",
-          en: "One visual system across two front-ends on different styling foundations: the app on owned, accessible component primitives, the marketing site on build-time atomic CSS — both driven by shared colour, type and spacing tokens.",
+          pl: "Jeden system wizualny na dwóch front-endach o różnych fundamentach: aplikacja na własnych, dostępnych komponentach bazowych, strona marketingowa na atomowym CSS z czasu builda. Obie stoją na wspólnych tokenach koloru, typografii i odstępów.",
+          en: "One visual system across two front-ends on different styling foundations: the app on owned, accessible component primitives, the marketing site on build-time atomic CSS. Both are driven by shared colour, type and spacing tokens.",
         },
         rationale: {
           pl: "Obie powierzchnie muszą czytać się jak rodzeństwo bez narzucania im jednego systemu stylów; wspólne tokeny trzymają tożsamość od pierwszej strony marketingowej po najgłębszy ekran produktu.",
@@ -288,8 +288,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     solution: {
       summary: {
-        pl: "Produkt dostarczony end-to-end: marka i system projektowy, dostępny front-end w TypeScripcie, React 19 i Next.js z trybem ciemnym, na .NET 8 z orkiestracją Aspire i CosmosDB na Azure — a na wierzchu warstwa grywalizacji, która zamienia naukę w grę.",
-        en: "Delivered end to end: brand and design system, an accessible frontend in TypeScript, React 19 and Next.js with dark mode, on .NET 8 with Aspire orchestration and CosmosDB on Azure — topped with a gamification layer that turns studying into a game.",
+        pl: "Produkt dostarczony end-to-end: marka i system projektowy, dostępny front-end w TypeScripcie, React 19 i Next.js z trybem ciemnym, na .NET 8 z orkiestracją Aspire i CosmosDB na Azure, a na wierzchu warstwa grywalizacji, która zamienia naukę w grę.",
+        en: "Delivered end to end: brand and design system, an accessible frontend in TypeScript, React 19 and Next.js with dark mode, on .NET 8 with Aspire orchestration and CosmosDB on Azure, topped with a gamification layer that turns studying into a game.",
       },
       /**
        * Kadry aplikacji pochodzą z syntetycznego środowiska demo (własny stub
@@ -334,8 +334,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           src: "/projects/squizzu/app-leaderboard-dark.jpg",
           kind: "image",
           alt: {
-            pl: "Ranking Squizzu w trybie ciemnym: podium trzech najlepszych graczy, przełącznik XP / poprawnych odpowiedzi, przypięty wiersz „YOU” z pozycją nr 4 i licznik streaka w nagłówku. Dane pokazowe — konta Demo Learner.",
-            en: "The Squizzu leaderboard in dark mode: a top-three podium, an XP / correct-answers toggle, a pinned “YOU” row at rank 4 and the streak counter in the header. Demo data — Demo Learner accounts.",
+            pl: "Ranking Squizzu w trybie ciemnym: podium trzech najlepszych graczy, przełącznik XP / poprawnych odpowiedzi, przypięty wiersz „YOU” z pozycją nr 4 i licznik streaka w nagłówku. Dane pokazowe: konta Demo Learner.",
+            en: "The Squizzu leaderboard in dark mode: a top-three podium, an XP / correct-answers toggle, a pinned “YOU” row at rank 4 and the streak counter in the header. Demo data: Demo Learner accounts.",
           },
           caption: {
             pl: "Warstwa gry w trybie ciemnym: podium, dwa rankingi (XP i celność), zawsze widoczna własna pozycja i streak w nagłówku. Dane pokazowe.",
@@ -369,8 +369,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       ],
     },
     reflection: {
-      pl: "Definicja, marka i kod w jednej głowie sprawiają, że szwy między nimi znikają — produkt zachowuje się spójnie, bo nikt nie musiał zgadywać cudzych intencji. Zasada pod tym wszystkim: spraw, by właściwa droga była łatwa, a błędna — głośna — w systemie projektowym, w kontraktach i w bramkach jakości.",
-      en: "Definition, brand and code in one head keep the seams between them invisible — the product feels coherent because nobody had to guess at someone else's intent. The rule underneath all of it: make the right thing easy and the wrong thing loud — in the design system, in the contracts, and in the quality gates.",
+      pl: "Definicja, marka i kod w jednej głowie sprawiają, że szwy między nimi znikają. Produkt zachowuje się spójnie, bo nikt nie musiał zgadywać cudzych intencji. Pod tym wszystkim leży jedna zasada: spraw, by właściwa droga była łatwa, a błędna głośna, w systemie projektowym, w kontraktach i w bramkach jakości.",
+      en: "Definition, brand and code in one head keep the seams between them invisible. The product feels coherent because nobody had to guess at someone else's intent. The rule underneath all of it: make the right thing easy and the wrong thing loud, in the design system, in the contracts, and in the quality gates.",
     },
   },
 
@@ -394,13 +394,13 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     },
     links: { live: "https://ultrastud.io" },
     problem: {
-      pl: "Własna marka to najtrudniejszy brief studia: musi przejść dokładnie tę poprzeczkę, którą stawiamy płatnym klientom. Ultra Studio potrzebowało tożsamości i strony, które są jego najlepszą wizytówką — i sposobu pracy, w którym projekt trafia na żywo bez utraty kontroli nad detalem.",
-      en: "A studio's own brand is its hardest brief: it has to clear the exact bar we set for paying clients. Ultra Studio needed an identity and a site that were its best calling card — and a way of working where design ships live without losing control of the detail.",
+      pl: "Własna marka to najtrudniejszy brief studia: musi przejść dokładnie tę poprzeczkę, którą stawiamy płatnym klientom. Ultra Studio potrzebowało tożsamości i strony, które są jego najlepszą wizytówką, oraz sposobu pracy, w którym projekt trafia na żywo bez utraty kontroli nad detalem.",
+      en: "A studio's own brand is its hardest brief: it has to clear the exact bar we set for paying clients. Ultra Studio needed an identity and a site that were its best calling card, and a way of working where design ships live without losing control of the detail.",
     },
     context: [
       {
-        pl: "Branding z wyższej półki, web design i custom development — kliencka, wizualna strona mojego profilu.",
-        en: "High-end branding, web design and custom development — the client-facing, visual side of my profile.",
+        pl: "Branding z wyższej półki, web design i custom development: kliencka, wizualna strona mojego profilu.",
+        en: "High-end branding, web design and custom development: the client-facing, visual side of my profile.",
       },
       {
         pl: "To okno jest hubem: pełne case'y klientów (Alumed, Printly, Venor, identyfikacja Squizzu) żyją w osobnych oknach.",
@@ -409,8 +409,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     process: {
       note: {
-        pl: "Strona jest zbudowana we Framerze, więc decyzja projektowa trafia na żywo tego samego dnia — bez oddawania kontroli nad detalem i wydajnością, bez czekania na osobny build.",
-        en: "The site is built in Framer, so a design decision goes live the same day — without giving up control over detail or performance, and without waiting on a separate build step.",
+        pl: "Strona jest zbudowana we Framerze, więc decyzja projektowa trafia na żywo tego samego dnia, bez oddawania kontroli nad detalem i wydajnością i bez czekania na osobny build.",
+        en: "The site is built in Framer, so a design decision goes live the same day, without giving up control over detail or performance, and without waiting on a separate build step.",
       },
       media: [],
     },
@@ -431,7 +431,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           en: "Build in Framer instead of a classic design-to-dev handoff.",
         },
         rationale: {
-          pl: "Pętla między projektem a wersją live zostaje krótka, a kontrola nad detalem i wydajnością — po naszej stronie.",
+          pl: "Pętla między projektem a wersją live zostaje krótka, a kontrola nad detalem i wydajnością zostaje po naszej stronie.",
           en: "The loop between design and the live site stays short, and control over detail and performance stays with us.",
         },
       },
@@ -448,8 +448,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     solution: {
       summary: {
-        pl: "Marka i strona studia zbudowane we Framerze, spięte z autorskim narzędziem SEO — i będące bramą do realnych realizacji klientowskich, którym poświęcone są osobne case'y.",
-        en: "The studio's brand and site built in Framer, wired to an in-house SEO tool — and serving as the gateway to the real client work that has its own dedicated cases.",
+        pl: "Marka i strona studia zbudowane we Framerze i spięte z autorskim narzędziem SEO, a zarazem brama do realnych realizacji klientowskich, którym poświęcone są osobne case'y.",
+        en: "The studio's brand and site built in Framer, wired to an in-house SEO tool, and serving as the gateway to the real client work that has its own dedicated cases.",
       },
       media: [],
     },
@@ -472,8 +472,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     gradient: "linear-gradient(145deg, #171216 0%, #2B1622 55%, #8A2853 150%)",
     cover: null,
     problem: {
-      pl: "Ultra Studio potrzebowało stałego sposobu na znajdowanie i kwalifikowanie właściwych firm do kontaktu — i na zaufanie tej krótkiej liście. Trudne nie jest zebranie nazw, tylko wyprodukowanie oceny, którą da się wyjaśnić, bez udawania większej wiedzy niż się ma.",
-      en: "Ultra Studio needed a steady way to find and qualify the right companies to reach out to — and to trust that shortlist. The hard part isn't collecting names; it's producing a score you can actually explain, without pretending to know more than you do.",
+      pl: "Ultra Studio potrzebowało stałego sposobu na znajdowanie i kwalifikowanie właściwych firm do kontaktu, a przy tym na zaufanie tej krótkiej liście. Trudne nie jest zebranie nazw, tylko wyprodukowanie oceny, którą da się wyjaśnić, bez udawania większej wiedzy niż się ma.",
+      en: "Ultra Studio needed a steady way to find and qualify the right companies to reach out to, and to trust that shortlist. The hard part isn't collecting names; it's producing a score you can actually explain, without pretending to know more than you do.",
     },
     context: [
       {
@@ -487,8 +487,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     architecture: {
       summary: {
-        pl: "Ciężka praca — odkrywanie firm, crawle Playwright i Lighthouse, wizualna ocena strony przez Claude'a — leci lokalnie jako skrypty CLI i zapisuje gotowy results.json. Panel na Vercelu tylko go czyta, więc Chromium, pamięć i długie zadania kończą się na kresce wdrożenia; po drugiej stronie zostaje lekki CRUD.",
-        en: "The heavy work — discovery, Playwright and Lighthouse crawls, Claude's visual read of each site — runs locally as CLI scripts and writes a finished results.json. The panel on Vercel only reads it, so Chromium, memory and long-running jobs stop at the deployment line; past it there's nothing but light CRUD.",
+        pl: "Ciężka praca (odkrywanie firm, crawle Playwright i Lighthouse, wizualna ocena strony przez Claude'a) leci lokalnie jako skrypty CLI i zapisuje gotowy results.json. Panel na Vercelu tylko go czyta, więc Chromium, pamięć i długie zadania kończą się na kresce wdrożenia; po drugiej stronie zostaje lekki CRUD.",
+        en: "The heavy work (discovery, Playwright and Lighthouse crawls, Claude's visual read of each site) runs locally as CLI scripts and writes a finished results.json. The panel on Vercel only reads it, so Chromium, memory and long-running jobs stop at the deployment line; past it there's nothing but light CRUD.",
       },
       diagram: { component: "VenorPipeline" },
     },
@@ -539,8 +539,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           en: "I chose a mark that refuses to overpromise: one observation yielding to a counterweighted conclusion, deliberately not an arrow, chart, network or target.",
         },
         rationale: {
-          pl: "Uczciwość produktu polega na tym, że dowód prowadzi do przemyślanego następnego kroku, a nie do gwarantowanego wyniku. Forma musiała nieść tę samą granicę — mieć kierunek, ale nigdy nie twierdzić wyniku.",
-          en: "The product's honesty is that evidence leads to a reasoned next action, not a guaranteed outcome. The form had to carry that same boundary — directional, but never claiming a result.",
+          pl: "Uczciwość produktu polega na tym, że dowód prowadzi do przemyślanego następnego kroku, a nie do gwarantowanego wyniku. Forma musiała nieść tę samą granicę: mieć kierunek, ale nigdy nie twierdzić wyniku.",
+          en: "The product's honesty is that evidence leads to a reasoned next action, not a guaranteed outcome. The form had to carry that same boundary: directional, but never claiming a result.",
         },
       },
       {
@@ -556,8 +556,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     solution: {
       summary: {
-        pl: "System prospectingu, który prowadzi pracę od surowego sygnału do następnego działania: odkrywa firmy z publicznych źródeł, ocenia ich dopasowanie do konkretnej usługi i trzyma stan follow-upu — bez ciężkiego back-endu.",
-        en: "A prospecting system that carries the work from a raw signal to the next action: it discovers companies from public sources, scores their fit to a specific service and keeps the follow-up state — with no heavyweight backend.",
+        pl: "System prospectingu, który prowadzi pracę od surowego sygnału do następnego działania: odkrywa firmy z publicznych źródeł, ocenia ich dopasowanie do konkretnej usługi i trzyma stan follow-upu, bez ciężkiego back-endu.",
+        en: "A prospecting system that carries the work from a raw signal to the next action: it discovers companies from public sources, scores their fit to a specific service and keeps the follow-up state, with no heavyweight backend.",
       },
       /**
        * Kadry z wbudowanego generatora materiałów demo: dziesięć jawnie
@@ -569,24 +569,24 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           src: "/projects/venor/app/panel-evidence.png",
           kind: "image",
           alt: {
-            pl: "Panel Venora z otwartą szufladą dowodów: wynik kampanii 73/100, osobno raportowana pewność kwalifikacji 0,84, plakietka „Wymaga sprawdzenia” i zacytowane sygnały. Dane pokazowe — fikcyjne firmy.",
-            en: "The Venor panel with the evidence drawer open: a 73/100 campaign score, qualification confidence of 0.84 reported separately, a “needs checking” badge and quoted signals. Demo data — fictional companies.",
+            pl: "Panel Venora z otwartą szufladą dowodów: wynik kampanii 73/100, osobno raportowana pewność kwalifikacji 0,84, plakietka „Wymaga sprawdzenia” i zacytowane sygnały. Dane pokazowe: fikcyjne firmy.",
+            en: "The Venor panel with the evidence drawer open: a 73/100 campaign score, qualification confidence of 0.84 reported separately, a “needs checking” badge and quoted signals. Demo data: fictional companies.",
           },
           caption: {
-            pl: "Szuflada dowodów: wynik, którego można się doczepić — pewność danych osobno, sygnały zacytowane, niepewność oznaczona. Kadry z danych pokazowych (fikcyjne firmy).",
-            en: "The evidence drawer: a score you can interrogate — data confidence reported separately, signals quoted, uncertainty flagged. Captured on demo data (fictional companies).",
+            pl: "Szuflada dowodów: wynik, którego można się doczepić, pewność danych osobno, sygnały zacytowane, niepewność oznaczona. Kadry z danych pokazowych (fikcyjne firmy).",
+            en: "The evidence drawer: a score you can interrogate, with data confidence reported separately, signals quoted and uncertainty flagged. Captured on demo data (fictional companies).",
           },
         },
         {
           src: "/projects/venor/app/panel-ranking.png",
           kind: "image",
           alt: {
-            pl: "Ranking leadów w panelu Venora: firmy z priorytetami 92, 86 i 78 na 100, pasmami A/B i akcjami kontaktu; filtry kampanii u góry. Dane pokazowe — fikcyjne firmy.",
-            en: "The Venor lead ranking: companies scored 92, 86 and 78 out of 100 with A/B bands and contact actions; campaign filters above. Demo data — fictional companies.",
+            pl: "Ranking leadów w panelu Venora: firmy z priorytetami 92, 86 i 78 na 100, pasmami A/B i akcjami kontaktu; filtry kampanii u góry. Dane pokazowe: fikcyjne firmy.",
+            en: "The Venor lead ranking: companies scored 92, 86 and 78 out of 100 with A/B bands and contact actions; campaign filters above. Demo data: fictional companies.",
           },
           caption: {
-            pl: "Ranking per kampania: liczba nigdy nie występuje sama — obok zawsze stoi pasmo priorytetu i następna akcja. Dane pokazowe.",
-            en: "Per-campaign ranking: a number never stands alone — a priority band and the next action always sit beside it. Demo data.",
+            pl: "Ranking per kampania: liczba nigdy nie występuje sama; obok zawsze stoi pasmo priorytetu i następna akcja. Dane pokazowe.",
+            en: "Per-campaign ranking: a number never stands alone; a priority band and the next action always sit beside it. Demo data.",
           },
         },
         {
@@ -597,16 +597,16 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             en: "A one-page mini-audit PDF generated in the browser: a site frame, a 92/100 change-potential score, observations, technical metrics, experience ratings and a recommended talking point. Demo data.",
           },
           caption: {
-            pl: "Mini-audyt składany w całości po stronie klienta — bez endpointu i bez Chromium na serwerze — ze stopką, która uczciwie nazywa materiał orientacyjnym. Dane pokazowe.",
-            en: "The mini-audit assembled entirely client-side — no endpoint, no server Chromium — with a footer that honestly calls the material indicative. Demo data.",
+            pl: "Mini-audyt składany w całości po stronie klienta (bez endpointu i bez Chromium na serwerze), ze stopką, która uczciwie nazywa materiał orientacyjnym. Dane pokazowe.",
+            en: "The mini-audit assembled entirely client-side (no endpoint, no server Chromium), with a footer that honestly calls the material indicative. Demo data.",
           },
         },
       ],
     },
     brand: {
       intro: {
-        pl: "Znak to jedna niewielka obserwacja ustępująca większemu, zrównoważonemu przeciwwagą wnioskowi, ustawiona na osi 45 stopni. Jest celowo abstrakcyjny — żadnej strzałki, wykresu, sieci ani obietnicy wyniku — relacja ma kierunek, ale niczego nie deklaruje. Odbija to, co Venor naprawdę robi: dowód staje się przemyślanym następnym krokiem, a o budżecie czy zamiarach firmy nic się nie twierdzi.",
-        en: "The mark is one small observation yielding to a larger, counterweighted conclusion, set on a 45-degree bearing. It stays abstract on purpose — no arrow, no chart, no network, no promise of an outcome — a relationship that has direction without claiming a result. It mirrors what Venor actually does: evidence becomes a reasoned next action, and nothing about a company's budget or intent is asserted.",
+        pl: "Znak to jedna niewielka obserwacja ustępująca większemu, zrównoważonemu przeciwwagą wnioskowi, ustawiona na osi 45 stopni. Jest celowo abstrakcyjny, bez strzałki, wykresu, sieci czy obietnicy wyniku: relacja ma kierunek, ale niczego nie deklaruje. Odbija to, co Venor naprawdę robi: dowód staje się przemyślanym następnym krokiem, a o budżecie czy zamiarach firmy nic się nie twierdzi.",
+        en: "The mark is one small observation yielding to a larger, counterweighted conclusion, set on a 45-degree bearing. It stays abstract on purpose, with no arrow, no chart, no network and no promise of an outcome: a relationship that has direction without claiming a result. It mirrors what Venor actually does: evidence becomes a reasoned next action, and nothing about a company's budget or intent is asserted.",
       },
       lockup: {
         light: "/projects/venor/lockup.svg",
@@ -615,8 +615,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         surfaces: { light: "#FCFAFB", dark: "#171217" },
       },
       typography: {
-        pl: "Logotyp to zawsze pisane małą literą venor, złożone w Instrument Sans SemiBold (600) z trackingiem −0,025em, dostarczane jako obrysowane ścieżki glifów — lockup nie ma żadnej zależności od fontu w czasie działania.",
-        en: "The wordmark is always lowercase venor, set in Instrument Sans SemiBold (600) at −0.025em tracking, shipped as outlined glyph paths — the lockup carries no runtime font dependency.",
+        pl: "Logotyp to zawsze pisane małą literą venor, złożone w Instrument Sans SemiBold (600) z trackingiem −0,025em, dostarczane jako obrysowane ścieżki glifów, więc lockup nie ma żadnej zależności od fontu w czasie działania.",
+        en: "The wordmark is always lowercase venor, set in Instrument Sans SemiBold (600) at −0.025em tracking, shipped as outlined glyph paths, so the lockup carries no runtime font dependency.",
       },
       explorations: {
         note: {
@@ -628,40 +628,40 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             src: "/projects/venor/explorations/signal-trail.svg",
             name: "Signal Trail",
             caption: {
-              pl: "Trzy obserwacje nabierają pewności, zbliżając się do stałego punktu — narastanie czytelne bez strzałek i linii ruchu.",
-              en: "Three observations gain confidence as they approach a solid fix — accumulation made legible without arrows or speed lines.",
+              pl: "Trzy obserwacje nabierają pewności, zbliżając się do stałego punktu; narastanie czytelne bez strzałek i linii ruchu.",
+              en: "Three observations gain confidence as they approach a solid fix; accumulation made legible without arrows or speed lines.",
             },
           },
           {
             src: "/projects/venor/explorations/closing-trace.svg",
             name: "Closing Trace",
             caption: {
-              pl: "Pięć kropek zbiega się po osi 45 stopni, gdy odstęp i skala się domykają — obserwowany rytm staje się wybranym momentem działania.",
-              en: "Five dots converge on a 45-degree trace, spacing and scale closing in — observed cadence becoming a chosen moment to act.",
+              pl: "Pięć kropek zbiega się po osi 45 stopni, gdy odstęp i skala się domykają; obserwowany rytm staje się wybranym momentem działania.",
+              en: "Five dots converge on a 45-degree trace, spacing and scale closing in; observed cadence becoming a chosen moment to act.",
             },
           },
           {
             src: "/projects/venor/explorations/lattice-v.svg",
             name: "Lattice V",
             caption: {
-              pl: "Pięć równych sygnałów w precyzyjnej literze V, jeden punkt domyka zejście — poszukiwanie sprowadzone do najprostszego odczytu.",
-              en: "Five equal signals in a precise V lattice, one point completing the descent — the hunt reduced to its simplest read.",
+              pl: "Pięć równych sygnałów w precyzyjnej literze V, jeden punkt domyka zejście; poszukiwanie sprowadzone do najprostszego odczytu.",
+              en: "Five equal signals in a precise V lattice, one point completing the descent; the hunt reduced to its simplest read.",
             },
           },
           {
             src: "/projects/venor/explorations/convergent-fix.svg",
             name: "Convergent Fix",
             caption: {
-              pl: "Dwa punktowe namiary zbiegają się z szerokiego pola w jeden punkt z przodu — pościg i działanie, bez oklepanego zamkniętego V.",
-              en: "Two dotted bearings converge from a wide field into one forward fix — pursuit and action, without the enclosed-V cliché.",
+              pl: "Dwa punktowe namiary zbiegają się z szerokiego pola w jeden punkt z przodu; pościg i działanie, bez oklepanego zamkniętego V.",
+              en: "Two dotted bearings converge from a wide field into one forward fix; pursuit and action, without the enclosed-V cliché.",
             },
           },
           {
             src: "/projects/venor/explorations/held-eclipse.svg",
             name: "Held Eclipse",
             caption: {
-              pl: "Jeden dysk wysuwa się nad drugi po osi 45 stopni, zostawiając rozstrzygnięty półksiężyc — pościg oddany bez strzałki i dosłownego celu.",
-              en: "One disc advances over another on a 45-degree bearing, leaving a resolved crescent — pursuit carried without an arrow or a literal target.",
+              pl: "Jeden dysk wysuwa się nad drugi po osi 45 stopni, zostawiając rozstrzygnięty półksiężyc; pościg oddany bez strzałki i dosłownego celu.",
+              en: "One disc advances over another on a 45-degree bearing, leaving a resolved crescent; pursuit carried without an arrow or a literal target.",
             },
           },
           {
@@ -755,8 +755,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         ],
         explored: {
           note: {
-            pl: "Sześć rozważanych, lecz niezatwierdzonych kierunków — kobalt, bursztyn, sosnowa zieleń, fiolet, koral i morski — pozostaje historią decyzji, nie opcjami.",
-            en: "Six explored-but-not-approved directions — cobalt, amber, pine, violet, coral and teal — are kept as decision history, not as options.",
+            pl: "Sześć rozważanych, lecz niezatwierdzonych kierunków (kobalt, bursztyn, sosnowa zieleń, fiolet, koral i morski) pozostaje historią decyzji, nie opcjami.",
+            en: "Six explored-but-not-approved directions (cobalt, amber, pine, violet, coral and teal) are kept as decision history, not as options.",
           },
           marks: [
             {
@@ -806,8 +806,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     },
     links: { live: "https://alumed.mx" },
     problem: {
-      pl: "Klinika medycyny estetycznej z segmentu premium potrzebowała strony, która wygląda tak ekskluzywnie jak sama praktyka — a jednocześnie ładuje się błyskawicznie i zostaje łatwa w edycji dla zespołu. Te trzy siły zwykle ze sobą walczą.",
-      en: "A premium aesthetic-medicine clinic needed a site that looks as exclusive as the practice itself — while loading instantly and staying easy for the team to edit. Those three pulls usually fight each other.",
+      pl: "Klinika medycyny estetycznej z segmentu premium potrzebowała strony, która wygląda tak ekskluzywnie jak sama praktyka, a jednocześnie ładuje się błyskawicznie i zostaje łatwa w edycji dla zespołu. Te trzy siły zwykle ze sobą walczą.",
+      en: "A premium aesthetic-medicine clinic needed a site that looks as exclusive as the practice itself, while loading instantly and staying easy for the team to edit. Those three pulls usually fight each other.",
     },
     decisions: [
       {
@@ -895,7 +895,93 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         pl: "Praca jest udokumentowana na 17 artboardach w Adobe XD: dwa rozrysowane kierunki strony głównej na desktopie (v1 i v2), widoki kategorii i produktu na desktopie i mobile, osobny wariant zamówienia „Mam projekt”, megamenu, listing, koszyk i ekran zamówienia oraz pięcioekranowa sekcja „Moje konto”, w której szczegóły zamówienia niosą stepper statusu dostawy. Wcześniejszy plik zapasowy trzyma poprzednią generację, więc „przed i po” jest realne.",
         en: "The work is documented across 17 Adobe XD artboards: two explored directions for the desktop homepage (v1 and v2), category and product views for desktop and mobile, a dedicated “I have a project” ordering variant, a megamenu, listing, cart and order screens, and a five-screen account area whose order detail carries a delivery-status stepper. An earlier backup file holds the previous generation, so the before-and-after is real.",
       },
-      media: [],
+      /** Kadry z górnych partii artboardów; pełne strony mają po 11k px. */
+      media: [
+        {
+          src: "/projects/printly/home-v1.jpg",
+          kind: "image",
+          alt: {
+            pl: "Makieta strony głównej Printly, kierunek pierwszy: hero z hasłem „Drukuj z nami”, pomarańczowa nawigacja produktowa i siatka kategorii z mockupami wizytówek, plakatów i ulotek.",
+            en: "The Printly homepage mockup, first direction: a hero with the tagline Drukuj z nami, the orange product navigation and a category grid with business-card, poster and flyer mockups.",
+          },
+          caption: {
+            pl: "Strona główna, kierunek pierwszy: klasyczne hero i katalog kategorii.",
+            en: "Homepage, direction one: a classic hero and a category catalogue.",
+          },
+        },
+        {
+          src: "/projects/printly/home-v2.jpg",
+          kind: "image",
+          alt: {
+            pl: "Makieta strony głównej Printly, kierunek drugi: to samo zadanie z innym otwarciem i innym układem sekcji produktowych.",
+            en: "The Printly homepage mockup, second direction: the same brief with a different opening and a different arrangement of the product sections.",
+          },
+          caption: {
+            pl: "Kierunek drugi. Oba rozrysowane w całości, zanim zapadła decyzja.",
+            en: "Direction two. Both were drawn out in full before the decision was made.",
+          },
+        },
+        {
+          src: "/projects/printly/product-desktop.jpg",
+          kind: "image",
+          alt: {
+            pl: "Karta produktu Wizytówki standard: galeria mockupów, cztery ścieżki startu (wygeneruj projekt AI, wgraj projekt, zamów wykonanie, użyj zapisanego), tabela wariantów z nakładem i ceną oraz przycisk ręcznej konfiguracji.",
+            en: "The standard business cards product page: a mockup gallery, four starting paths (generate with AI, upload a design, order design work, use a saved design), a variant table with volume and price, and a manual configuration button.",
+          },
+          caption: {
+            pl: "Karta produktu: dziesiątki wariantów zamknięte w prowadzącym wyborze, nie w jednym formularzu.",
+            en: "The product page: dozens of variants held inside a guided choice rather than one form.",
+          },
+        },
+        {
+          src: "/projects/printly/product-mam-projekt.jpg",
+          kind: "image",
+          alt: {
+            pl: "Wariant karty produktu „Mam projekt”: kupujący z gotowym plikiem dostaje własną, krótszą ścieżkę zamówienia wizytówek.",
+            en: "The product page in its I-have-a-project variant: a buyer arriving with a ready file gets a dedicated, shorter route to ordering the cards.",
+          },
+          caption: {
+            pl: "Osobna ścieżka „Mam projekt”: kto ma plik, nie przechodzi przez dobieranie produktu.",
+            en: "The dedicated I-have-a-project path: whoever has a file skips product selection.",
+          },
+        },
+        {
+          src: "/projects/printly/product-mobile.jpg",
+          kind: "image",
+          alt: {
+            pl: "Mobilna wersja karty produktu wizytówek: ta sama zawartość i ścieżki zamówienia ułożone w jednej kolumnie telefonu.",
+            en: "The mobile version of the business cards product page: the same content and ordering paths arranged in a single phone column.",
+          },
+          caption: {
+            pl: "Ten sam przepływ na telefonie, projektowany równolegle z desktopem.",
+            en: "The same flow on a phone, designed alongside desktop.",
+          },
+        },
+        {
+          src: "/projects/printly/order-form.jpg",
+          kind: "image",
+          alt: {
+            pl: "Ekran zamówienia: dane odbiorcy z przełącznikiem klient/firma, podsumowanie koszyka z terminem dostawy i kodem promocyjnym oraz wybór paczkomatu z listą punktów.",
+            en: "The order screen: recipient details with a client/company toggle, an order summary with the delivery estimate and promo code, and a parcel-locker picker with a list of points.",
+          },
+          caption: {
+            pl: "Zamówienie prowadzone sekcjami: odbiorca, wysyłka, podsumowanie zawsze pod ręką.",
+            en: "The order guided section by section: recipient, shipping, and a summary always in view.",
+          },
+        },
+        {
+          src: "/projects/printly/order-details.jpg",
+          kind: "image",
+          alt: {
+            pl: "Szczegóły zamówienia w koncie klienta: stepper statusu dostawy od przyjęcia po doręczenie, pozycje z parametrami druku i podsumowanie kosztów.",
+            en: "Order details in the account area: a delivery status stepper from accepted to delivered, line items with their print parameters, and a cost summary.",
+          },
+          caption: {
+            pl: "Konto klienta: status dostawy czytany z jednego steppera, nie z historii maili.",
+            en: "The account area: delivery status read off one stepper instead of an email trail.",
+          },
+        },
+      ],
     },
     decisions: [
       {
@@ -941,8 +1027,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     solution: {
       summary: {
-        pl: "Spójna wizualnie z marką, responsywna strona zbudowana wokół prostego, intuicyjnego procesu zamawiania — oddana z brandbookiem, plikami źródłowymi, dokumentacją i dostępem do CMS-a.",
-        en: "A brand-consistent, responsive site built around a simple, intuitive ordering process — delivered with a brandbook, source files, documentation and CMS access.",
+        pl: "Spójna wizualnie z marką, responsywna strona zbudowana wokół prostego, intuicyjnego procesu zamawiania, oddana z brandbookiem, plikami źródłowymi, dokumentacją i dostępem do CMS-a.",
+        en: "A brand-consistent, responsive site built around a simple, intuitive ordering process, delivered with a brandbook, source files, documentation and CMS access.",
       },
       media: [],
     },
@@ -982,8 +1068,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       embed: true,
     },
     problem: {
-      pl: "Mając zestaw dostaw dronami: jaka najmniejsza flota zrealizuje je bezpiecznie w limitach baterii i udźwigu — i jak poprowadzić ją przez trójwymiarową przestrzeń powietrzną bez kolizji?",
-      en: "Given a set of drone deliveries: what is the smallest fleet that can complete them safely within battery and payload limits — and how do you route it through 3D airspace without collisions?",
+      pl: "Mając zestaw dostaw dronami: jaka najmniejsza flota zrealizuje je bezpiecznie w limitach baterii i udźwigu, i jak poprowadzić ją przez trójwymiarową przestrzeń powietrzną bez kolizji?",
+      en: "Given a set of drone deliveries: what is the smallest fleet that can complete them safely within battery and payload limits, and how do you route it through 3D airspace without collisions?",
     },
     context: [
       {
@@ -998,8 +1084,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       findings: [
         {
-          pl: "Klasyczne A* i Dijkstra dają krótsze trasy pojedynczych dronów, ale przeprowadzają je przez siebie nawzajem — i to jest właśnie uzasadnienie dla kooperacyjnego, wieloagentowego pathfindera.",
-          en: "Classic A* and Dijkstra find shorter individual paths, but they fly the drones through each other — which is precisely what motivates a cooperative, multi-agent pathfinder.",
+          pl: "Klasyczne A* i Dijkstra dają krótsze trasy pojedynczych dronów, ale przeprowadzają je przez siebie nawzajem, co jest właśnie uzasadnieniem dla kooperacyjnego, wieloagentowego pathfindera.",
+          en: "Classic A* and Dijkstra find shorter individual paths, but they fly the drones through each other, which is precisely what motivates a cooperative, multi-agent pathfinder.",
         },
       ],
     },
@@ -1050,14 +1136,14 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     solution: {
       summary: {
-        pl: "Interaktywna symulacja 3D: rozstaw cele dostaw na siatce miasta, podaj wielkość floty albo pozwól aplikacji wyliczyć ją z zasięgu i udźwigu, a potem patrz, jak flota planuje bezkolizyjne trasy, wraca do bazy po doładunek i wraca do domu — z narracją na żywo.",
-        en: "An interactive 3D simulation: drop delivery targets on a city grid, set a fleet size or let the app derive it from range and payload, then watch the fleet plan collision-free routes, return to base to reload and fly home — narrated live.",
+        pl: "Interaktywna symulacja 3D: rozstaw cele dostaw na siatce miasta, podaj wielkość floty albo pozwól aplikacji wyliczyć ją z zasięgu i udźwigu, a potem patrz, jak flota planuje bezkolizyjne trasy, wraca do bazy po doładunek i wraca do domu, z narracją na żywo.",
+        en: "An interactive 3D simulation: drop delivery targets on a city grid, set a fleet size or let the app derive it from range and payload, then watch the fleet plan collision-free routes, return to base to reload and fly home, narrated live.",
       },
       media: [],
     },
     reflection: {
-      pl: "Uczciwie co do zakresu: to aplikacja jednostronicowa, bez back-endu i bez testów poza domyślnymi z toolchainu. Jest po to, żeby pokazać, jak rozkładam trudny problem na czynniki — dzielę go na podproblemy, dobieram właściwe narzędzie do każdego i sprawiam, że wynik widać.",
-      en: "Scope-honest by design: a single-page app, no backend, no tests beyond the toolchain's default. It's here to show how I break a hard problem down — decomposing it into sub-problems, picking the right tool for each, and making the result visible.",
+      pl: "Uczciwie co do zakresu: to aplikacja jednostronicowa, bez back-endu i bez testów poza domyślnymi z toolchainu. Jest po to, żeby pokazać, jak rozkładam trudny problem na czynniki: dzielę go na podproblemy, dobieram właściwe narzędzie do każdego i sprawiam, że wynik widać.",
+      en: "Scope-honest by design: a single-page app, no backend, no tests beyond the toolchain's default. It's here to show how I break a hard problem down: decomposing it into sub-problems, picking the right tool for each, and making the result visible.",
     },
   },
 };
@@ -1091,8 +1177,8 @@ export const designProcess: {
         en: "Definition before pixels",
       },
       text: {
-        pl: "Zanim narysuję ekran, ustalam problem, ścieżki użytkownika i kontrakty między front-endem a back-endem — żeby kształt produktu się trzymał, zanim ktokolwiek się na niego zamknie.",
-        en: "Before I draw a screen, I settle the problem, the user journeys and the contracts between frontend and backend — so the shape of the product holds before anyone commits to it.",
+        pl: "Zanim narysuję ekran, ustalam problem, ścieżki użytkownika i kontrakty między front-endem a back-endem, żeby kształt produktu się trzymał, zanim ktokolwiek się na niego zamknie.",
+        en: "Before I draw a screen, I settle the problem, the user journeys and the contracts between frontend and backend, so the shape of the product holds before anyone commits to it.",
       },
     },
     {
@@ -1101,8 +1187,8 @@ export const designProcess: {
         en: "A system, not a set of screens",
       },
       text: {
-        pl: "System projektowy — paletę, komponenty, ikony — buduję od zera, zamiast opierać się na szablonie, bo to spójność i rozpoznawalna tożsamość sprawiają, że interfejs jest jednym produktem.",
-        en: "I build the design system from scratch — palette, components, icons — rather than lean on a template, because consistency and a recognisable identity are what make an interface feel like one product.",
+        pl: "System projektowy (paletę, komponenty, ikony) buduję od zera, zamiast opierać się na szablonie, bo to spójność i rozpoznawalna tożsamość sprawiają, że interfejs jest jednym produktem.",
+        en: "I build the design system from scratch (palette, components, icons) rather than lean on a template, because consistency and a recognisable identity are what make an interface feel like one product.",
       },
     },
     {
@@ -1111,7 +1197,7 @@ export const designProcess: {
         en: "Desktop and mobile together",
       },
       text: {
-        pl: "Desktop i mobile projektuję jako jeden przepływ, a nie po kolei — żeby doświadczenie trzymało się tam, gdzie naprawdę się go używa, a nie było doginane do mniejszego ekranu.",
+        pl: "Desktop i mobile projektuję jako jeden przepływ, a nie po kolei, żeby doświadczenie trzymało się tam, gdzie naprawdę się go używa, a nie było doginane do mniejszego ekranu.",
         en: "I design desktop and mobile as one flow, not one after the other, so the experience holds up wherever it's actually used instead of being retrofitted to the smaller screen.",
       },
     },
@@ -1121,8 +1207,8 @@ export const designProcess: {
         en: "Consistency kept honest automatically",
       },
       text: {
-        pl: "Tam, gdzie się da, pozwalam, żeby to build pilnował kontraktu — generowani klienci i bramki jakości — tak żeby rozjazd między projektem, front-endem a API łamał test, a nie ekran użytkownika.",
-        en: "Where I can, I let the build enforce the contract — generated clients and quality gates — so drift between design, frontend and API breaks a check, not a user's screen.",
+        pl: "Tam, gdzie się da, pozwalam, żeby to build pilnował kontraktu (generowani klienci i bramki jakości), tak żeby rozjazd między projektem, front-endem a API łamał test, a nie ekran użytkownika.",
+        en: "Where I can, I let the build enforce the contract (generated clients and quality gates), so drift between design, frontend and API breaks a check, not a user's screen.",
       },
     },
     {
@@ -1135,8 +1221,8 @@ export const designProcess: {
     {
       title: { pl: "Uczciwość co do zakresu", en: "Honest about scope" },
       text: {
-        pl: "Nazywam granicę tego, co dana praca robi — i czego nie robi — i nie przypisuję sobie wyniku, którego nie zmierzyłem. Nazwana granica jest bardziej przydatna niż zawyżona i ukryta.",
-        en: "I name the boundary of what a piece of work does — and doesn't — do, and I don't claim an outcome I didn't measure. A stated limit is more useful than an inflated one left hidden.",
+        pl: "Nazywam granicę tego, co dana praca robi (i czego nie robi), i nie przypisuję sobie wyniku, którego nie zmierzyłem. Nazwana granica jest bardziej przydatna niż zawyżona i ukryta.",
+        en: "I name the boundary of what a piece of work does and doesn't do, and I don't claim an outcome I didn't measure. A stated limit is more useful than an inflated one left hidden.",
       },
     },
   ],

@@ -11,9 +11,8 @@ import {
   Info,
   MessageCircleMore,
   NotebookText,
-  Printer,
 } from "lucide-react";
-import { UltraStudioLogo, VenorMark } from "@/components/logos";
+import { PrintlyMark, UltraStudioLogo, VenorMark } from "@/components/logos";
 import { caseStudies, type ProjectId } from "@/data/case-studies";
 import { showcase, type ShowcaseSite } from "@/data/showcase";
 import {
@@ -135,7 +134,10 @@ const LazyCaseStudyApp = dynamic(
 /** Znak kafelka dla aplikacji case study; kolor tła niesie tożsamość marki. */
 const PROJECT_GLYPHS: Partial<Record<ProjectId, ReactNode>> = {
   alumed: glyph(HeartPulse),
-  printly: glyph(Printer, "#FFD9C7"),
+  // Prawdziwy logotyp klienta zamiast zastępczej drukarki z lucide.
+  printly: (
+    <PrintlyMark className="h-[46%] w-[46%] text-white drop-shadow-sm" />
+  ),
 };
 
 function projectAdapter(projectId: ProjectId): ClientAppAdapter {
