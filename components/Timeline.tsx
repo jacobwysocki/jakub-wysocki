@@ -8,6 +8,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, Award, Code2, GraduationCap } from "lucide-react";
 import { engineeringRoles, studioNote, type Role } from "@/data/experience";
 import { education } from "@/data/education";
@@ -255,8 +256,22 @@ function OsFooter() {
  */
 function VenorFooter() {
   const t = useT();
-  if (!venor.note) return null;
-  return <p className="text-[12px] text-white/50">{t(venor.note)}</p>;
+  // Karta miała kiedyś "dokąd prowadzić" tylko w notce; teraz prowadzi do
+  // pełnego case study pod /work/venor.
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+      {venor.note && (
+        <p className="text-[12px] text-white/50">{t(venor.note)}</p>
+      )}
+      <Link
+        href="/work/venor"
+        className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-accent-bright transition-colors hover:text-white"
+      >
+        {t(ui.actions.viewCaseStudy)}
+        <ArrowUpRight size={13} aria-hidden />
+      </Link>
+    </div>
+  );
 }
 
 /** Karta "Co jest w środku": punkty Interactive OS obok jego kadru */

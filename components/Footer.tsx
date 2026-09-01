@@ -128,19 +128,25 @@ export default function Footer({
           </div>
 
           <Column heading={t(ui.footer.explore)}>
-            {navLinks.map((link) => (
-              <FooterLink
-                key={link.href}
-                href={linkSectionsToHome ? `/${link.href}` : link.href}
-                onClick={
-                  linkSectionsToHome
-                    ? undefined
-                    : (e) => handleAnchor(e, link.href)
-                }
-              >
-                {t(link.label)}
-              </FooterLink>
-            ))}
+            {navLinks.map((link) => {
+              // Wpis ścieżkowy (/work) nawiguje normalnie; kotwice jak dotąd.
+              const isPath = link.href.startsWith("/");
+              return (
+                <FooterLink
+                  key={link.href}
+                  href={
+                    isPath || !linkSectionsToHome ? link.href : `/${link.href}`
+                  }
+                  onClick={
+                    linkSectionsToHome || isPath
+                      ? undefined
+                      : (e) => handleAnchor(e, link.href)
+                  }
+                >
+                  {t(link.label)}
+                </FooterLink>
+              );
+            })}
             {/* Jedyny link wewnętrzny do /about i /o-mnie. */}
             <li>
               <Link

@@ -66,11 +66,14 @@ export default function Nav({
     setMenuOpen(false);
     anchor(e, href);
   };
+  // Link ścieżkowy (np. /work) nawiguje normalnie: bez przedrostka "/"
+  // i bez przejmowania przez płynny scroll, który zna tylko kotwice.
+  const isPathLink = (href: string) => href.startsWith("/");
   const sectionHref = (href: string) =>
-    linkSectionsToHome ? `/${href}` : href;
+    isPathLink(href) ? href : linkSectionsToHome ? `/${href}` : href;
   const handleSectionLink = (e: React.MouseEvent, href: string) => {
     setMenuOpen(false);
-    if (!linkSectionsToHome) anchor(e, href);
+    if (!linkSectionsToHome && !isPathLink(href)) anchor(e, href);
   };
 
   return (

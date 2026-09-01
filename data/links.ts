@@ -50,11 +50,16 @@ export const contactLinks: SocialLink[] = [
 
 export type NavLink = { label: L10n; href: string };
 
-/** Kotwice sekcji prostego widoku — id neutralne językowo */
+/**
+ * Kotwice sekcji prostego widoku — id neutralne językowo.
+ * /work jest jedynym wpisem ścieżkowym: case studies to osobna strona,
+ * nie sekcja dokumentu, więc konsumenci rozpoznają ją po wiodącym "/".
+ */
 export const navLinks: NavLink[] = [
   { label: { pl: "O mnie", en: "About" }, href: "#about" },
   { label: { pl: "Doświadczenie", en: "Experience" }, href: "#engineering" },
   { label: { pl: "Projekty", en: "Projects" }, href: "#personal-projects" },
   { label: { pl: "Ultra Studio", en: "Ultra Studio" }, href: "#studio" },
+  { label: { pl: "Realizacje", en: "Case studies" }, href: "/work" },
   { label: { pl: "Kontakt", en: "Contact" }, href: "#contact" },
 ];

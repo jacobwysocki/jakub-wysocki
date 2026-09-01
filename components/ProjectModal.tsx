@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
+import { findCaseStudy, parseProjectId } from "@/data/case-studies";
 import type { StudioProject } from "@/data/projects";
 import { ui } from "@/data/ui";
 import { useT } from "@/lib/lang-store";
@@ -22,6 +24,11 @@ export default function ProjectModal({
 }) {
   const t = useT();
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  // Opublikowany case dostaje drzwi; projekt bez case'a zostaje przy starym
+  // CTA. parseProjectId zna alias ultrastudio-site → ultra-studio.
+  const caseId = parseProjectId(project.slug);
+  const caseHref =
+    caseId && findCaseStudy(caseId) ? (`/work/${caseId}` as const) : null;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -106,17 +113,34 @@ export default function ProjectModal({
                 {project.client}
               </h2>
             </div>
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-accent px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent/90"
-              >
-                {t(project.linkLabel ?? ui.actions.openSite)}
-                <ArrowUpRight size={15} aria-hidden />
-              </a>
-            )}
+            <div className="flex shrink-0 flex-wrap items-center gap-2.5 self-start">
+              {/* Case study jest głównym CTA: modal to zwiastun, pełna
+                  narracja procesu żyje pod /work. */}
+              {caseHref && (
+                <Link
+                  href={caseHref}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent/90"
+                >
+                  {t(ui.actions.viewCaseStudy)}
+                  <ArrowUpRight size={15} aria-hidden />
+                </Link>
+              )}
+              {project.link && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={
+                    caseHref
+                      ? "inline-flex items-center gap-1.5 rounded-full border border-line px-5 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:bg-black/[0.04]"
+                      : "inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent/90"
+                  }
+                >
+                  {t(project.linkLabel ?? ui.actions.openSite)}
+                  <ArrowUpRight size={15} aria-hidden />
+                </a>
+              )}
+            </div>
           </div>
           <p className="mt-3 max-w-prose text-body text-muted">
             {t(project.description)}
