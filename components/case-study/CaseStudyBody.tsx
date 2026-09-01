@@ -140,29 +140,29 @@ function MediaFigure({ media }: { media: CaseMedia }) {
  */
 function AnimatedFigure({
   target,
+  prefix,
   suffix,
   lang,
 }: {
   target: number;
+  prefix: string;
   suffix: string;
   lang: "pl" | "en";
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const reduced = useReducedMotion();
+  // Prawdziwa wartość od pierwszego renderu po obu stronach; zero istnieje
+  // wyłącznie jako klatki animacji już w viewporcie. Stan zmienia się tylko
+  // w callbackach requestAnimationFrame, nie synchronicznie w efekcie.
   const [display, setDisplay] = useState(target);
-  const [armed, setArmed] = useState(false);
+  const started = useRef(false);
   const format = (n: number) =>
     n.toLocaleString(lang === "pl" ? "pl-PL" : "en-GB");
 
   useEffect(() => {
-    if (reduced) return;
-    setArmed(true);
-    setDisplay(0);
-  }, [reduced]);
-
-  useEffect(() => {
-    if (!armed || !inView) return;
+    if (!inView || reduced || started.current) return;
+    started.current = true;
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
@@ -172,19 +172,23 @@ function AnimatedFigure({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [armed, inView, target]);
+  }, [inView, reduced, target]);
 
   return (
     <span ref={ref}>
       <span
         aria-hidden
         className="inline-block whitespace-nowrap tabular-nums"
-        style={{ minWidth: `${format(target).length + suffix.length}ch` }}
+        style={{
+          minWidth: `${prefix.length + format(target).length + suffix.length}ch`,
+        }}
       >
+        {prefix}
         {format(display)}
         {suffix}
       </span>
       <span className="sr-only">
+        {prefix}
         {format(target)}
         {suffix}
       </span>
@@ -202,13 +206,19 @@ function AnimatedFigure({
  */
 function MetricFigure({ metric }: { metric: CaseMetric }) {
   const lang = useLang();
-  const digits = metric.value.replace(/\D/g, "");
-  const target = digits ? Number.parseInt(digits, 10) : null;
-  const suffix = metric.value.includes("+") ? "+" : "";
+  // Prefiks i sufiks przeżywają w całości (waluty, procenty, jednostki);
+  // tylko ciąg cyfr w środku jest animowany i formatowany per język.
+  const parsed = metric.value.match(/^(\D*?)(\d[\d.,\s]*)(.*)$/);
+  const target = parsed
+    ? Number.parseInt(parsed[2].replace(/\D/g, ""), 10)
+    : null;
+  const prefix = parsed ? parsed[1] : "";
+  const suffix = parsed ? parsed[3] : "";
   const journey = metric.from !== undefined;
 
   return (
     <div
+      data-testid="metric-figure"
       className={`flex flex-col-reverse rounded-2xl border border-line/70 bg-black/[0.02] ${
         journey
           ? "w-full min-w-0 px-6 py-5 sm:w-auto sm:min-w-[260px] sm:px-7 sm:py-6"
@@ -234,7 +244,12 @@ function MetricFigure({ metric }: { metric: CaseMetric }) {
           <span className="sr-only">{lang === "pl" ? "do" : "to"}</span>
           <span className="text-[clamp(34px,8vw,54px)] font-bold leading-none tracking-tight text-ink">
             {target !== null ? (
-              <AnimatedFigure target={target} suffix={suffix} lang={lang} />
+              <AnimatedFigure
+                target={target}
+                prefix={prefix}
+                suffix={suffix}
+                lang={lang}
+              />
             ) : (
               metric.value
             )}

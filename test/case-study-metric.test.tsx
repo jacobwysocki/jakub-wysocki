@@ -113,6 +113,55 @@ describe("case study outcome figures", () => {
     expect(screen.queryByText("to")).not.toBeInTheDocument();
   });
 
+  it("formats the figure per language, Polish included", () => {
+    const { container } = render(
+      <LangProvider initialLang="pl">
+        <CaseStudyBody
+          study={withMetrics([
+            {
+              from: "0",
+              value: "1,000+",
+              label: { pl: "użytkowników", en: "users" },
+            },
+          ])}
+        />
+      </LangProvider>,
+    );
+
+    const srTexts = Array.from(container.querySelectorAll(".sr-only")).map(
+      (el) => el.textContent,
+    );
+    // pl-PL nie grupuje tysiąca przecinkiem; łącznik drogi po polsku.
+    expect(srTexts).toContain("1000+");
+    expect(srTexts).toContain("do");
+    expect(screen.getByText("użytkowników")).toBeInTheDocument();
+  });
+
+  it("renders the journey inside window chrome as well", () => {
+    const { container } = render(
+      <LangProvider initialLang="en">
+        <CaseStudyBody
+          chrome="window"
+          study={withMetrics([
+            {
+              from: "0",
+              value: "1,000+",
+              label: { pl: "użytkowników", en: "users" },
+            },
+          ])}
+        />
+      </LangProvider>,
+    );
+
+    const srTexts = Array.from(container.querySelectorAll(".sr-only")).map(
+      (el) => el.textContent,
+    );
+    expect(srTexts).toContain("1,000+");
+    // Karta drogi nie może wymuszać stałej szerokości w wąskim sheecie.
+    const card = container.querySelector('[data-testid="metric-figure"]');
+    expect(card?.className).toContain("min-w-0");
+  });
+
   it("orders definition terms before definitions inside the metrics list", () => {
     const { container } = renderEn(
       withMetrics([
@@ -124,9 +173,10 @@ describe("case study outcome figures", () => {
       ]),
     );
 
-    const group = container.querySelector("dl > div");
+    const group = container.querySelector('[data-testid="metric-figure"]');
     expect(group).not.toBeNull();
     const children = Array.from(group!.children).map((el) => el.tagName);
+    expect(children.indexOf("DT")).toBeGreaterThanOrEqual(0);
     expect(children.indexOf("DT")).toBeLessThan(children.indexOf("DD"));
   });
 });
