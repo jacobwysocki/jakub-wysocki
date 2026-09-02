@@ -7,8 +7,18 @@ import { findCaseStudy, parseProjectId } from "@/data/case-studies";
  * `notFound()` z dopasowanej trasy nie ma wspólnego root boundary i w
  * produkcyjnym SSR wpada w generyczny `__next_error__`.
  */
+/**
+ * Wygenerowane obrazy metadanych indeksu /work żyją pod jednosegmentowymi
+ * ścieżkami (`/work/opengraph-image-<hash>`), więc matcher je łapie.
+ * Nie są slugami case study i przechodzą dalej bez weryfikacji katalogu.
+ */
+const METADATA_IMAGE =
+  /^(?:opengraph-image|twitter-image|icon|apple-icon)(?:-\w+)?$/;
+
 export function proxy(request: NextRequest) {
   const slug = request.nextUrl.pathname.slice("/work/".length);
+  if (METADATA_IMAGE.test(slug)) return NextResponse.next();
+
   const projectId = parseProjectId(slug);
   const study = projectId ? findCaseStudy(projectId) : undefined;
 

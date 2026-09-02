@@ -45,6 +45,23 @@ describe("work route proxy", () => {
     expect(isRewrite(response)).toBe(false);
   });
 
+  it("lets the index's generated metadata images through", () => {
+    // Obraz OG indeksu /work ma jednosegmentową ścieżkę z hashem w nazwie,
+    // więc wpada w matcher, ale nie jest slugiem z katalogu.
+    for (const pathname of [
+      "/work/opengraph-image-hzldn2",
+      "/work/opengraph-image",
+      "/work/twitter-image-abc123",
+      "/work/icon-x1",
+      "/work/apple-icon",
+    ]) {
+      const response = proxy(request(pathname));
+
+      expect(response.headers.get("x-middleware-next")).toBe("1");
+      expect(isRewrite(response)).toBe(false);
+    }
+  });
+
   it("rewrites unknown and unpublished slugs to the global 404 route", () => {
     delete caseStudies.printly;
 
