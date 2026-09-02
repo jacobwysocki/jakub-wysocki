@@ -33,9 +33,8 @@ export default function EntityHome({ lang }: { lang: Lang }) {
   const other: Lang = lang === "pl" ? "en" : "pl";
 
   return (
-    // lang nadpisuje "pl" z root layoutu. min-h-screen, bo ta strona nie
-    // renderuje ModeGate, więc nigdy nie dostaje data-hydrated i bez tego
-    // czarne tło pulpitu prześwituje u osób z zapisanym trybem "desktop".
+    // Powtarzamy stały język root layoutu także na semantycznym poddrzewie.
+    // min-h-screen utrzymuje pełną powierzchnię wizytówki bez ModeGate.
     <div lang={lang} className="min-h-screen bg-surface text-ink">
       <div className="mx-auto max-w-prose px-6 py-16 md:py-24">
         <nav className="flex items-center justify-between text-caption uppercase text-muted">

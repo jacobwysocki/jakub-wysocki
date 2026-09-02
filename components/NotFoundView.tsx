@@ -6,14 +6,13 @@ import { useT } from "@/lib/lang-store";
 import LangProvider from "@/components/LangProvider";
 
 /**
- * Treść strony 404. Siedzi tutaj, a nie w app/not-found.tsx, bo tamten plik
- * musi zostać komponentem serwerowym — inaczej nie wolno mu wyeksportować
- * `metadata`, a bez tego 404 dziedziczy tytuł strony głównej i w wynikach
- * wyszukiwania wygląda jak jej duplikat.
+ * Kliencka treść dla statycznego app/global-not-found.tsx oraz lokalnego
+ * not-found w grupie dwujęzycznej. Metadata pozostają w plikach serwerowych,
+ * więc 404 nie dziedziczy tytułu zwykłej strony.
  *
- * 404 celowo nie czyta ciastka na serwerze: to jedyna trasa, która ma zostać
- * statyczna mimo dwujęzyczności, a chwilowe miganie na stronie błędu nie ma
- * znaczenia. LangProvider bez initialLang ustala język po stronie klienta.
+ * Globalny 404 celowo nie czyta ciastka na serwerze. LangProvider bez
+ * initialLang ustala język po stronie klienta; krótkie przełączenie na stronie
+ * błędu jest akceptowalnym kosztem zachowania statycznego renderu.
  */
 export default function NotFoundView() {
   return (

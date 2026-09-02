@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
-import AboutPage from "@/app/about/page";
-import OMniePage from "@/app/o-mnie/page";
+import AboutPage from "@/app/(english)/about/page";
+import OMniePage from "@/app/(polish)/o-mnie/page";
 import { person } from "@/data/site";
 
 afterEach(cleanup);

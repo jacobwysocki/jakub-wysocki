@@ -57,9 +57,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const { projectId, study } = requirePublishedStudy(slug);
   const canonical = canonicalWorkHref(projectId);
-  // Metadane mówią językiem czytelnika, tak jak treść i <html lang>:
-  // polski odbiorca udostępnia polski tytuł. Robot bez ciastka dostaje
-  // angielski wariant, spójnie na każdej wizycie.
+  // Metadane mówią językiem czytelnika, tak jak treść i <html lang>.
+  // Bez ciastka decyduje Accept-Language; inne języki wpadają w EN.
   const lang = await resolveLang();
   const title =
     lang === "pl"

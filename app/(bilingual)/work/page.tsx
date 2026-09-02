@@ -12,8 +12,8 @@ import { resolveLang } from "@/lib/lang-server";
  * kanoniczny przez metadataBase (patrz app/work/[slug]/page.tsx).
  */
 export async function generateMetadata(): Promise<Metadata> {
-  // Jak na stronach case'ów: metadane w języku czytelnika, angielskie
-  // dla robota bez ciastka.
+  // Jak na stronach case'ów: metadane w języku czytelnika. Bez ciastka
+  // decyduje Accept-Language, z angielskim fallbackiem dla pozostałych.
   const lang = await resolveLang();
   const title =
     lang === "pl"
@@ -36,6 +36,11 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: lang === "pl" ? "pl_PL" : "en_GB",
       alternateLocale: lang === "pl" ? "en_GB" : "pl_PL",
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }

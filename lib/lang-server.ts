@@ -8,10 +8,9 @@ import { LANG_COOKIE, normalizeLang, type Lang } from "@/lib/lang";
  * potem preferencja przeglądarki. Dzięki temu pierwszy paint jest już we
  * właściwym języku.
  *
- * Root layout używa tej funkcji dla atrybutu `<html lang>`, a dwujęzyczne
- * strony dla LangProvider. Odczyt danych żądania świadomie przełącza całą
- * aplikację na render dynamiczny, ale dzięki temu dokument i treść mają ten
- * sam język już w odpowiedzi serwera.
+ * Root grupy `(bilingual)` używa tej funkcji dla `<html lang>`, a jej strony
+ * dla LangProvider i metadanych. Odczyt danych żądania czyni dynamiczną tylko
+ * tę grupę; stałe `/about`, `/o-mnie` i globalny 404 go nie importują.
  */
 export async function resolveLang(): Promise<Lang> {
   const stored = (await cookies()).get(LANG_COOKIE)?.value;

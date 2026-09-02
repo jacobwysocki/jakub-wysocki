@@ -4,8 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WorkPage, {
   generateMetadata,
   generateStaticParams,
-} from "@/app/work/[slug]/page";
-import { generateMetadata as generateWorkIndexMetadata } from "@/app/work/page";
+} from "@/app/(bilingual)/work/[slug]/page";
+import { generateImageMetadata } from "@/app/(bilingual)/work/[slug]/opengraph-image";
+import { generateMetadata as generateWorkIndexMetadata } from "@/app/(bilingual)/work/page";
 import {
   PROJECT_IDS,
   caseStudies,
@@ -15,9 +16,9 @@ import {
 } from "@/data/case-studies";
 import { person } from "@/data/site";
 
-vi.mock("@/lib/lang-server", () => ({
-  resolveLang: vi.fn(async () => "en"),
-}));
+const resolveLang = vi.hoisted(() => vi.fn());
+
+vi.mock("@/lib/lang-server", () => ({ resolveLang }));
 
 const originalCaseStudies = { ...caseStudies };
 
@@ -47,6 +48,8 @@ function publish(projectId: ProjectId) {
 }
 
 beforeEach(() => {
+  resolveLang.mockReset();
+  resolveLang.mockResolvedValue("en");
   vi.stubGlobal(
     "matchMedia",
     vi.fn(() => ({
@@ -86,8 +89,8 @@ describe("/work/[slug]", () => {
       params: Promise.resolve({ slug: "printly" }),
     });
 
-    // Bez ciastka języka metadane mówią po angielsku (domyślny język
-    // robota); locale OG podąża za rozstrzygniętym językiem.
+    // Mock resolvera reprezentuje angielski fallback po rozpatrzeniu
+    // ciastka i Accept-Language.
     expect(metadata).toMatchObject({
       title: `${study.client} UX case study | ${person.fullName}`,
       description: study.problem.en,
@@ -97,11 +100,59 @@ describe("/work/[slug]", () => {
         locale: "en_GB",
         alternateLocale: "pl_PL",
       },
+      twitter: {
+        card: "summary_large_image",
+        title: `${study.client} UX case study | ${person.fullName}`,
+        description: study.problem.en,
+      },
     });
     expect(metadata.alternates?.languages).toBeUndefined();
     expect(metadata.openGraph?.images).toBeUndefined();
     const workIndexMetadata = await generateWorkIndexMetadata();
     expect(workIndexMetadata.openGraph?.images).toBeUndefined();
+    expect(workIndexMetadata.twitter).toMatchObject({
+      card: "summary_large_image",
+      title: `UX case studies | ${person.fullName}`,
+      description: expect.stringContaining("Six UX/UI case studies"),
+    });
+  });
+
+  it("emits Polish case and index metadata for a Polish reader", async () => {
+    const study = publish("alumed");
+    resolveLang.mockResolvedValue("pl");
+
+    const caseMetadata = await generateMetadata({
+      params: Promise.resolve({ slug: "alumed" }),
+    });
+    const indexMetadata = await generateWorkIndexMetadata();
+
+    expect(caseMetadata).toMatchObject({
+      title: `${study.client}: studium przypadku UX | ${person.fullName}`,
+      description: study.problem.pl,
+      openGraph: { locale: "pl_PL", alternateLocale: "en_GB" },
+      twitter: {
+        title: `${study.client}: studium przypadku UX | ${person.fullName}`,
+        description: study.problem.pl,
+      },
+    });
+    expect(indexMetadata).toMatchObject({
+      title: `Realizacje UX | ${person.fullName}`,
+      openGraph: { locale: "pl_PL", alternateLocale: "en_GB" },
+      twitter: { title: `Realizacje UX | ${person.fullName}` },
+    });
+  });
+
+  it("names the case-study client in generated OG image metadata", () => {
+    const study = publish("squizzu");
+
+    expect(
+      generateImageMetadata({ params: { slug: "squizzu" } }),
+    ).toContainEqual(
+      expect.objectContaining({
+        id: "squizzu",
+        alt: `${study.client} UX case study | ${person.fullName}`,
+      }),
+    );
   });
 
   it("renders a published case in the linear Simple Mode chrome", async () => {
