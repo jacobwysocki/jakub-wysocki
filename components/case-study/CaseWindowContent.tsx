@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import CaseStudyBody from "@/components/case-study/CaseStudyBody";
 import { GithubIcon } from "@/components/logos";
-import { ui } from "@/data/ui";
-import { useLang, useT } from "@/lib/lang-store";
 import type { UxCaseStudy } from "@/data/case-studies";
+import { ui } from "@/data/ui";
+import { type L10n, useLang, useT } from "@/lib/lang-store";
 
 /**
  * Jedna prezentacja case'a wewnątrz okna Desktop Mode, wspólna dla wszystkich
@@ -25,7 +25,7 @@ export default function CaseWindowContent({
   /** Kafelek marki aplikacji; bez niego nagłówek zaczyna się od tekstu. */
   icon?: ReactNode;
   /** Chipy technologii z danych przeglądu (showcase/personal). */
-  tech?: readonly string[];
+  tech?: readonly (string | L10n)[];
   /** Obecne tylko, gdy okno ma zakładkę „Na żywo". */
   onOpenLive?: () => void;
 }) {
@@ -62,10 +62,10 @@ export default function CaseWindowContent({
           <ul className="mt-4 flex flex-wrap gap-1.5">
             {tech.map((item) => (
               <li
-                key={item}
+                key={typeof item === "string" ? item : item.en}
                 className="rounded-full border border-line bg-white px-2.5 py-0.5 text-[11px] font-medium text-ink/70"
               >
-                {item}
+                {typeof item === "string" ? item : t(item)}
               </li>
             ))}
           </ul>

@@ -428,7 +428,11 @@ function studioEntries(project: StudioProject): readonly KnowledgeEntry[] {
   }
   const evidence = [`evidence:studio:${project.slug}` as EvidenceId];
   const projectKeywords = keywords(
-    [project.client, project.slug, ...project.services],
+    [
+      project.client,
+      project.slug,
+      ...project.services.flatMap((service) => [service.pl, service.en]),
+    ],
     [project.tag.pl, "projekt studia"],
     [project.tag.en, "studio project"],
   );

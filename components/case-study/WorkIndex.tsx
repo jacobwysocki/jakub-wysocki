@@ -27,6 +27,11 @@ const indexCopy = {
 
 function CardCover({ study }: { study: UxCaseStudy }) {
   const lang = useLang();
+  const coverSrc =
+    study.cover &&
+    (typeof study.cover.src === "string"
+      ? study.cover.src
+      : study.cover.src[lang]);
   if (!study.cover) {
     return (
       <div
@@ -49,7 +54,7 @@ function CardCover({ study }: { study: UxCaseStudy }) {
   if (study.cover.kind === "video") {
     return (
       <video
-        src={study.cover.src}
+        src={coverSrc ?? undefined}
         autoPlay
         loop
         muted
@@ -62,7 +67,7 @@ function CardCover({ study }: { study: UxCaseStudy }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={study.cover.src}
+      src={coverSrc ?? undefined}
       alt={study.cover.alt[lang]}
       loading="lazy"
       className="h-full w-full object-cover"

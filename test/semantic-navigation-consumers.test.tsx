@@ -5,6 +5,7 @@ import {
   DesktopProvider,
   type DesktopApi,
 } from "@/components/desktop/DesktopContext";
+import CaseStudyApp from "@/components/case-study/CaseStudyApp";
 import EducationApp from "@/components/desktop/apps/EducationApp";
 import ExperienceApp from "@/components/desktop/apps/ExperienceApp";
 import SiteApp from "@/components/desktop/apps/SiteApp";
@@ -186,6 +187,23 @@ describe("semantic Desktop App selections", () => {
       }),
     );
     expect(view.getByRole("heading", { name: "Squizzu" })).toBeVisible();
+  });
+
+  it("localizes Printly services and lets its mobile case metadata wrap", () => {
+    const view = render(
+      <LangContext.Provider value={{ lang: "pl", setLang: () => {} }}>
+        <CaseStudyApp projectId="printly" />
+      </LangContext.Provider>,
+    );
+
+    expect(view.getByText("Architektura informacji")).toBeVisible();
+    expect(
+      view.queryByText("Information Architecture"),
+    ).not.toBeInTheDocument();
+
+    const meta = view.getByText(/7–8 tygodni/);
+    expect(meta).toHaveClass("sm:truncate");
+    expect(meta.className.split(/\s+/)).not.toContain("truncate");
   });
 
   it.each([
