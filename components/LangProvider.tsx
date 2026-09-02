@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LangContext } from "@/lib/lang-store";
 import {
   LANG_COOKIE,
@@ -27,6 +28,7 @@ export default function LangProvider({
   initialLang?: Lang;
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [lang, setLangState] = useState<Lang>(initialLang ?? "pl");
 
   useEffect(() => {
@@ -45,10 +47,18 @@ export default function LangProvider({
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((next: Lang) => {
-    document.cookie = `${LANG_COOKIE}=${next};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
-    setLangState(next);
-  }, []);
+  const setLang = useCallback(
+    (next: Lang) => {
+      document.cookie = `${LANG_COOKIE}=${next};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
+      // Treść i <html lang> zmieniają się lokalnie od razu. Refresh pobiera
+      // nowy payload serwerowy już z zapisanym ciastkiem, dzięki czemu
+      // metadata tej samej trasy przechodzą na ten sam język. App Router
+      // scala payload bez resetowania stanu klienta ani pozycji przewijania.
+      setLangState(next);
+      router.refresh();
+    },
+    [router],
+  );
 
   const value = useMemo(() => ({ lang, setLang }), [lang, setLang]);
 
