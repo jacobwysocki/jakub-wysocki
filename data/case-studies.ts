@@ -808,7 +808,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           },
           caption: {
             pl: "Mini-audyt składany w całości po stronie klienta, bez endpointu i bez Chromium na serwerze. Dane pokazowe.",
-            en: "The mini-audit assembled entirely client-side, with no endpoint and no server Chromium. Demo data.",
+            en: "The mini-audit assembled entirely client-side, with no endpoint and no server Chromium. Shown in Polish: the document speaks the language of the companies it audits. Demo data.",
           },
           callouts: [
             {
