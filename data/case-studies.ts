@@ -48,7 +48,12 @@ export type CaseCallout = { x: number; y: number; note: L10n };
 
 /** Jedno odwołanie do materiału wizualnego; lustrzane wobec wzorca z cases.ts. */
 export type CaseMedia = {
-  src: string;
+  /**
+   * Ścieżka kadru. Wariant L10n dla zrzutów, które istnieją w obu językach
+   * produktu: czytelnik EN nie powinien oglądać polskiego chrome'u tam,
+   * gdzie narzędzie ma angielski.
+   */
+  src: string | L10n;
   alt: L10n;
   kind?: "image" | "video" | "diagram";
   caption?: L10n;
@@ -705,7 +710,10 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
        */
       media: [
         {
-          src: "/projects/venor/app/panel-evidence.png",
+          src: {
+            pl: "/projects/venor/app/panel-evidence.png",
+            en: "/projects/venor/app/panel-evidence-en.png",
+          },
           kind: "image",
           alt: {
             pl: "Panel Venora z otwartą szufladą dowodów: wynik kampanii 73/100, osobno raportowana pewność kwalifikacji 0,84, plakietka „Wymaga sprawdzenia” i zacytowane sygnały. Dane pokazowe: fikcyjne firmy.",
@@ -733,8 +741,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
               },
             },
             {
-              x: 86.5,
-              y: 59,
+              x: 65.2,
+              y: 59.4,
               note: {
                 pl: "Pewność danych raportowana osobno od wyniku, żeby liczba nie udawała wiedzy.",
                 en: "Data confidence is reported apart from the score, so the number does not pretend to be knowledge.",
@@ -751,7 +759,10 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           ],
         },
         {
-          src: "/projects/venor/app/panel-ranking.png",
+          src: {
+            pl: "/projects/venor/app/panel-ranking.png",
+            en: "/projects/venor/app/panel-ranking-en.png",
+          },
           kind: "image",
           alt: {
             pl: "Ranking leadów w panelu Venora: firmy z priorytetami 92, 86 i 78 na 100, pasmami A/B i akcjami kontaktu; filtry kampanii u góry. Dane pokazowe: fikcyjne firmy.",
@@ -779,7 +790,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
               },
             },
             {
-              x: 89,
+              x: 82.6,
               y: 69.3,
               note: {
                 pl: "Akcje przy wierszu: z rankingu prosto do kontaktu, bez zmiany widoku.",

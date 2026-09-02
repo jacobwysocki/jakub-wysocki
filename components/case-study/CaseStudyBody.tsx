@@ -59,14 +59,20 @@ const sectionCopy = {
   logoDark: { pl: "logo (wariant ciemny)", en: "logo (dark variant)" },
 } as const;
 
+/** Stabilny klucz kadru niezależny od języka czytelnika. */
+function mediaKey(media: CaseMedia) {
+  return typeof media.src === "string" ? media.src : media.src.pl;
+}
+
 function MediaFigure({ media }: { media: CaseMedia }) {
   const lang = useLang();
   const callouts = media.callouts ?? [];
+  const src = typeof media.src === "string" ? media.src : media.src[lang];
   return (
     <figure>
       {media.kind === "video" ? (
         <video
-          src={media.src}
+          src={src}
           autoPlay
           loop
           muted
@@ -80,7 +86,7 @@ function MediaFigure({ media }: { media: CaseMedia }) {
         <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={media.src}
+            src={src}
             alt={media.alt[lang]}
             loading="lazy"
             className="w-full rounded-2xl shadow-soft"
@@ -612,7 +618,7 @@ export default function CaseStudyBody({
             {study.process.media.length ? (
               <div className="mt-6 space-y-7">
                 {study.process.media.map((media) => (
-                  <MediaFigure key={media.src} media={media} />
+                  <MediaFigure key={mediaKey(media)} media={media} />
                 ))}
               </div>
             ) : null}
@@ -682,7 +688,7 @@ export default function CaseStudyBody({
         {study.solution.media.length ? (
           <div className="mt-6 space-y-7">
             {study.solution.media.map((media) => (
-              <MediaFigure key={media.src} media={media} />
+              <MediaFigure key={mediaKey(media)} media={media} />
             ))}
           </div>
         ) : null}
