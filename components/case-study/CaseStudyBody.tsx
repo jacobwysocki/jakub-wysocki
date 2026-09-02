@@ -236,7 +236,10 @@ function AnimatedFigure({
   lang: "pl" | "en";
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  // Dodatni margines startuje licznik, ZANIM figura wjedzie w kadr:
+  // czytelnik nigdy nie widzi prawdziwej wartości resetującej się do zera,
+  // tylko bieg już w toku. Ujemny margines robił dokładnie odwrotnie.
+  const inView = useInView(ref, { once: true, margin: "0px 0px 25% 0px" });
   const reduced = useReducedMotion();
   // Prawdziwa wartość od pierwszego renderu po obu stronach; zero istnieje
   // wyłącznie jako klatki animacji już w viewporcie. Stan zmienia się tylko
@@ -252,8 +255,10 @@ function AnimatedFigure({
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
-      const t = Math.min((now - start) / 1800, 1);
-      setDisplay(Math.round(target * (1 - Math.pow(1 - t, 4))));
+      // Sześcienny ease-out w krótszym oknie: kwartowy przy 1800ms kończył
+      // pełzaniem po jednej cyfrze co ~150ms i licznik wyglądał na zacięty.
+      const t = Math.min((now - start) / 1100, 1);
+      setDisplay(Math.round(target * (1 - Math.pow(1 - t, 3))));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
