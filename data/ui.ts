@@ -69,7 +69,7 @@ export const ui = {
     viewWork: { pl: "Zobacz projekty", en: "View work" },
     viewCaseStudy: { pl: "Zobacz realizację", en: "Read the case study" },
     allCaseStudies: {
-      pl: "Wszystkie case studies",
+      pl: "Wszystkie realizacje",
       en: "All case studies",
     },
   },

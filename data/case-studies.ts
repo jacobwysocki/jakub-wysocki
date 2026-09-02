@@ -384,8 +384,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       {
         decision: {
-          pl: "Jakość treści bramkowana niezależnie, żeby użytkownik nigdy nie zobaczył błędnego pytania: każde pytanie od AI przechodzi osobny, „zimny” przebieg autokrytyki, a publikuje je człowiek.",
-          en: "Content quality gated independently so a user never meets a wrong question: every AI-drafted question passes a separate, cold self-critique pass, and a human publishes it.",
+          pl: "Jakość treści bramkowana niezależnie, żeby błędne pytania nie docierały do użytkowników: każde pytanie od AI przechodzi osobny, „zimny” przebieg autokrytyki, a publikuje je człowiek.",
+          en: "Content quality gated independently, to keep wrong questions from reaching users: every AI-drafted question passes a separate, cold self-critique pass, and a human publishes it.",
         },
         rationale: {
           pl: "W dwuosobowym zespole zabezpieczenia muszą działać same: drugi, niezależny sędzia na treści podnosi poprzeczkę, zanim ktokolwiek poświęci czas.",
@@ -606,8 +606,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             en: "The portfolio section on ultrastud.io: Printly posters outdoors, Squizzu on a laptop and the Pod Skrzydłami Mistrzów billboard.",
           },
           caption: {
-            pl: "Ściana realizacji: te same projekty, które w tym portfolio mają własne case'y.",
-            en: "The portfolio wall: the same projects that have their own cases in this portfolio.",
+            pl: "Ściana realizacji studia; kilka z tych projektów ma w tym portfolio własne strony.",
+            en: "The studio's portfolio wall; several of these projects have pages of their own in this portfolio.",
           },
         },
       ],
@@ -1441,8 +1441,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
               x: 83,
               y: 27.6,
               note: {
-                pl: "Terminal symulacji opowiada przebieg na żywo: klastrowanie, kolejność wizyt, trasa powrotna.",
-                en: "The simulation terminal narrates the run live: clustering, visit order, the return leg.",
+                pl: "Terminal symulacji opowiada przebieg na żywo, od kolejności wizyt po trasę powrotną do bazy.",
+                en: "The simulation terminal narrates the run live, from the visit order to the return leg home.",
               },
             },
             {
