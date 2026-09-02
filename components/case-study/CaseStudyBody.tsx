@@ -349,11 +349,14 @@ function MetricFigure({ metric }: { metric: CaseMetric }) {
       </dt>
       {journey ? (
         <dd className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="text-[20px] font-semibold tracking-tight text-muted sm:text-[22px]">
+          {/* Punkt startu skaluje się razem z celem (ok. 0,63 jego rozmiaru):
+              wyraźny stopień hierarchii zamiast liczby wyglądającej na
+              pomniejszoną przez pomyłkę. Wagę różnicuje kolor, nie krój. */}
+          <span className="text-[clamp(21px,5vw,34px)] font-bold leading-none tracking-tight text-muted">
             {metric.from}
           </span>
           <ArrowRight
-            size={20}
+            size={24}
             strokeWidth={2.5}
             aria-hidden
             className="self-center text-accent"
