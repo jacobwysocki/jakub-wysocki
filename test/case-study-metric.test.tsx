@@ -181,6 +181,39 @@ describe("case study outcome figures", () => {
     expect(card?.className).toContain("min-w-0");
   });
 
+  it("observes the nearest scroller, not the viewport, inside window chrome", () => {
+    // rootMargin działa tylko na roocie obserwatora, nie na przodkach
+    // przycinających: w oknie pulpitu licznik musi obserwować scroller
+    // okna, inaczej start-przed-kadrem nie działa i widać reset do zera.
+    const roots: (Element | null)[] = [];
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        constructor(_cb: unknown, options?: IntersectionObserverInit) {
+          roots.push((options?.root as Element | null) ?? null);
+        }
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+
+    render(
+      <LangProvider initialLang="en">
+        <div data-testid="window-scroller" style={{ overflowY: "auto" }}>
+          <CaseStudyBody
+            study={withMetrics([
+              { from: "0", value: "1,000+", label: { pl: "u", en: "users" } },
+            ])}
+          />
+        </div>
+      </LangProvider>,
+    );
+
+    const scroller = screen.getByTestId("window-scroller");
+    expect(roots).toContain(scroller);
+  });
+
   it("orders definition terms before definitions inside the metrics list", () => {
     const { container } = renderEn(
       withMetrics([

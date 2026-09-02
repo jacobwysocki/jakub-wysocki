@@ -239,7 +239,30 @@ function AnimatedFigure({
   // Dodatni margines startuje licznik, ZANIM figura wjedzie w kadr:
   // czytelnik nigdy nie widzi prawdziwej wartości resetującej się do zera,
   // tylko bieg już w toku. Ujemny margines robił dokładnie odwrotnie.
-  const inView = useInView(ref, { once: true, margin: "0px 0px 25% 0px" });
+  //
+  // rootMargin działa wyłącznie na roocie obserwatora, nigdy na przodkach
+  // przycinających (spec Intersection Observer), więc w oknie pulpitu
+  // rootem musi być scroller okna, nie viewport. Ten efekt jest
+  // zadeklarowany PRZED useInView, więc wypełnia ref, zanim framer
+  // zarejestruje obserwatora.
+  const scrollRootRef = useRef<Element | null>(null);
+  useEffect(() => {
+    let el: HTMLElement | null = ref.current?.parentElement ?? null;
+    while (el && el !== document.body) {
+      const { overflowY } = getComputedStyle(el);
+      if (overflowY === "auto" || overflowY === "scroll") {
+        scrollRootRef.current = el;
+        return;
+      }
+      el = el.parentElement;
+    }
+    scrollRootRef.current = null;
+  }, []);
+  const inView = useInView(ref, {
+    once: true,
+    margin: "0px 0px 25% 0px",
+    root: scrollRootRef as React.RefObject<Element>,
+  });
   const reduced = useReducedMotion();
   // Prawdziwa wartość od pierwszego renderu po obu stronach; zero istnieje
   // wyłącznie jako klatki animacji już w viewporcie. Stan zmienia się tylko
