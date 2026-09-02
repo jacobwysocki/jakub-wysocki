@@ -16,6 +16,7 @@ import {
 } from "@/features/portfolio-navigation";
 import { Spotlight } from "@/features/spotlight";
 import { useModeStore } from "@/lib/mode-store";
+import { hasTopmostOverlay } from "@/lib/overlay";
 import { useLang, useT } from "@/lib/lang-store";
 import { EASE_APPLE } from "@/lib/motion";
 import { site } from "@/data/site";
@@ -139,6 +140,9 @@ export default function MobileDesktop({
       sheetRef.current?.focus({ preventScroll: true });
     });
     const handleKeys = (event: KeyboardEvent) => {
+      // Nakładka pełnoekranowa (lightbox) leży nad arkuszem: dopóki jest
+      // otwarta, Escape i pułapka fokusa należą do niej, nie do arkusza.
+      if (hasTopmostOverlay()) return;
       if (event.key === "Escape") {
         event.stopPropagation();
         closeTopApp();

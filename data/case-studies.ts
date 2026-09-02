@@ -46,6 +46,14 @@ export function parseProjectId(value: string): ProjectId | null {
  */
 export type CaseCallout = { x: number; y: number; note: L10n };
 
+/** Jedna klatka historii iteracji: szkic albo zrzut kolejnej wersji widoku. */
+export type IterationFrame = {
+  src: string;
+  alt: L10n;
+  note?: L10n;
+  final?: boolean;
+};
+
 /** Jedno odwołanie do materiału wizualnego; lustrzane wobec wzorca z cases.ts. */
 export type CaseMedia = {
   /**
@@ -153,12 +161,7 @@ export type UxCaseStudy = {
     media: CaseMedia[];
     iterations?: {
       note: L10n;
-      frames: {
-        src: string;
-        alt: L10n;
-        note?: L10n;
-        final?: boolean;
-      }[];
+      frames: IterationFrame[];
     };
   };
 

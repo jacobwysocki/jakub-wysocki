@@ -15,6 +15,7 @@ import {
   type AppLaunchSelections,
 } from "@/features/portfolio-navigation/launch-selection";
 import { useModeStore } from "@/lib/mode-store";
+import { hasTopmostOverlay } from "@/lib/overlay";
 import { useWindowStore, type Point } from "@/lib/window-store";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { DesktopProvider, type DesktopApi } from "./DesktopContext";
@@ -140,6 +141,9 @@ function DesktopFull({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
+      // Nakładka pełnoekranowa (lightbox) jest nad oknami: jej Escape
+      // zamyka tylko ją, a pulpit czeka na swoją kolej.
+      if (hasTopmostOverlay()) return;
       if (ctxMenu) {
         setCtxMenu(null);
         return;
