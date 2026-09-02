@@ -149,10 +149,10 @@ export default function ProjectModal({
           <ul className="mt-5 flex flex-wrap gap-1.5">
             {project.services.map((service) => (
               <li
-                key={service}
+                key={service.en}
                 className="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-medium text-ink/70"
               >
-                {service}
+                {t(service)}
               </li>
             ))}
           </ul>

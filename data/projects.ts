@@ -8,7 +8,7 @@ export type StudioProject = {
   description: L10n;
   /** Rozwinięcie case study — sekcje w oknie / modalu detalu */
   details: { title: L10n; text: L10n }[];
-  services: string[];
+  services: L10n[];
   /**
    * Ścieżka do okładki (np. "/projects/printly.jpg" w /public).
    * Gdy null — elegancki placeholder gradientowy z typografią.
@@ -47,7 +47,17 @@ export const studioProjects: StudioProject[] = [
         },
       },
     ],
-    services: ["Core Software Development", "Branding / Identity", "UX/UI"],
+    services: [
+      {
+        pl: "Rozwój oprogramowania",
+        en: "Core Software Development",
+      },
+      {
+        pl: "Branding / identyfikacja wizualna",
+        en: "Branding / Identity",
+      },
+      { pl: "UX/UI", en: "UX/UI" },
+    ],
     image: "/projects/squizzu.jpg",
     gallery: [],
     gradient: "linear-gradient(150deg, #FFC205 0%, #FF8C00 100%)",
@@ -77,7 +87,12 @@ export const studioProjects: StudioProject[] = [
         },
       },
     ],
-    services: ["Branding", "Web design", "Framer", "AI / SEO"],
+    services: [
+      { pl: "Branding", en: "Branding" },
+      { pl: "Projektowanie stron WWW", en: "Web design" },
+      { pl: "Framer", en: "Framer" },
+      { pl: "AI / SEO", en: "AI / SEO" },
+    ],
     image: "/projects/ultrastudio.jpg",
     gallery: [],
     gradient: "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
@@ -110,7 +125,11 @@ export const studioProjects: StudioProject[] = [
         },
       },
     ],
-    services: ["UX Design", "Custom HTML/CSS/JS", "WordPress"],
+    services: [
+      { pl: "Projektowanie UX", en: "UX Design" },
+      { pl: "Dedykowany kod HTML/CSS/JS", en: "Custom HTML/CSS/JS" },
+      { pl: "WordPress", en: "WordPress" },
+    ],
     image: "/projects/alumed.jpg",
     gallery: [],
     gradient: "linear-gradient(135deg, #1D1D1F 0%, #6E6E73 100%)",
@@ -144,7 +163,11 @@ export const studioProjects: StudioProject[] = [
         },
       },
     ],
-    services: ["UX/UI", "Information Architecture", "E-commerce"],
+    services: [
+      { pl: "UX/UI", en: "UX/UI" },
+      { pl: "Architektura informacji", en: "Information Architecture" },
+      { pl: "E-commerce", en: "E-commerce" },
+    ],
     image: "/projects/printly.jpg",
     gallery: [],
     gradient: "linear-gradient(135deg, #40180A 0%, #C2410C 100%)",
