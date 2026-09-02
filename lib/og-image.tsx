@@ -14,7 +14,15 @@ import { ImageResponse } from "next/og";
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";
 
-export function renderOg({ heading, sub }: { heading: string; sub: string }) {
+export function renderOg({
+  heading,
+  sub,
+  accentSurface = "#FF6A3D",
+}: {
+  heading: string;
+  sub: string;
+  accentSurface?: string;
+}) {
   return new ImageResponse(
     <div
       style={{
@@ -44,7 +52,7 @@ export function renderOg({ heading, sub }: { heading: string; sub: string }) {
             width: 14,
             height: 14,
             borderRadius: "50%",
-            background: "#FF6A3D",
+            background: accentSurface,
           }}
         />
         jakub-wysocki.com

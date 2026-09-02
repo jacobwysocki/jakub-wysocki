@@ -1,6 +1,10 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
+
 import CaseStudyBody from "@/components/case-study/CaseStudyBody";
 import LangProvider from "@/components/LangProvider";
 import type { UxCaseStudy } from "@/data/case-studies";

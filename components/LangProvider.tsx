@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LangContext } from "@/lib/lang-store";
 import {
   LANG_COOKIE,
@@ -27,6 +28,7 @@ export default function LangProvider({
   initialLang?: Lang;
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [lang, setLangState] = useState<Lang>(initialLang ?? "pl");
 
   useEffect(() => {
@@ -38,29 +40,34 @@ export default function LangProvider({
     setLangState(normalizeLang(fromCookie ?? navigator.language));
   }, [initialLang]);
 
-  // Atrybut na <html> ustawia root layout wartością domyślną; tutaj
-  // doprowadzamy go do języka faktycznie renderowanego. To sam atrybut,
-  // więc nie powoduje przemalowania treści.
+  // Root layout ustawia ten sam język w odpowiedzi serwera. Efekt utrzymuje
+  // atrybut po zmianie przełącznikiem i nawigacji klienckiej; na pierwszej
+  // hydratacji zapisuje identyczną wartość, więc nie ma rozjazdu.
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((next: Lang) => {
-    document.cookie = `${LANG_COOKIE}=${next};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
-    setLangState(next);
-  }, []);
+  const setLang = useCallback(
+    (next: Lang) => {
+      document.cookie = `${LANG_COOKIE}=${next};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
+      // Treść i <html lang> zmieniają się lokalnie od razu. Refresh pobiera
+      // nowy payload serwerowy już z zapisanym ciastkiem, dzięki czemu
+      // metadata tej samej trasy przechodzą na ten sam język. App Router
+      // scala payload bez resetowania stanu klienta ani pozycji przewijania.
+      setLangState(next);
+      router.refresh();
+    },
+    [router],
+  );
 
   const value = useMemo(() => ({ lang, setLang }), [lang, setLang]);
 
   return (
     <LangContext.Provider value={value}>
       {/*
-        lang na wrapperze, bo <html lang> ustawia root layout i nie da się go
-        zmienić z poziomu trasy bez uczynienia całej aplikacji dynamiczną.
-        Dokument deklaruje angielski (x-default to /about), a ta sekcja
-        nadpisuje go językiem faktycznie renderowanym — ten sam zabieg co
-        w EntityHome. Dzięki temu polska treść jest poprawnie otagowana
-        już w HTML-u serwerowym, a nie dopiero po hydratacji.
+        Wrapper zachowuje lokalną semantykę także podczas przełączenia języka
+        po stronie klienta, zanim efekt zsynchronizuje <html>. W pierwszej
+        odpowiedzi oba atrybuty dostają tę samą wartość z serwera.
       */}
       <div lang={lang}>{children}</div>
     </LangContext.Provider>

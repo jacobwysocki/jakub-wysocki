@@ -8,9 +8,9 @@ import { LANG_COOKIE, normalizeLang, type Lang } from "@/lib/lang";
  * potem preferencja przeglądarki. Dzięki temu pierwszy paint jest już we
  * właściwym języku.
  *
- * UWAGA: wywołanie tego przełącza trasę na render dynamiczny. Celowo
- * używamy go WYŁĄCZNIE na stronie głównej — /about i /o-mnie mają jeden
- * język na URL, nie potrzebują ciastka i zostają prerenderowane statycznie.
+ * Root grupy `(bilingual)` używa tej funkcji dla `<html lang>`, a jej strony
+ * dla LangProvider i metadanych. Odczyt danych żądania czyni dynamiczną tylko
+ * tę grupę; stałe `/about`, `/o-mnie` i globalny 404 go nie importują.
  */
 export async function resolveLang(): Promise<Lang> {
   const stored = (await cookies()).get(LANG_COOKIE)?.value;

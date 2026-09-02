@@ -55,10 +55,27 @@ export async function generateMetadata({
   params,
 }: WorkPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { projectId, study } = requirePublishedStudy(slug);
+  const published = findPublishedStudy(slug);
+  // W normalnym routingu proxy odrzuca taki slug przed dopasowaniem strony.
+  // Defensywna odpowiedź zachowuje kontrakt także przy bezpośrednim wywołaniu
+  // funkcji metadanych i nie rzuca drugiego błędu z MetadataOutlet.
+  if (!published) {
+    return {
+      title: `404 | ${person.fullName}`,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const { projectId, study } = published;
   const canonical = canonicalWorkHref(projectId);
-  const title = `${study.client} UX case study | ${person.fullName}`;
-  const description = study.problem.en;
+  // Metadane mówią językiem czytelnika, tak jak treść i <html lang>.
+  // Bez ciastka decyduje Accept-Language; inne języki wpadają w EN.
+  const lang = await resolveLang();
+  const title =
+    lang === "pl"
+      ? `${study.client}: studium przypadku UX | ${person.fullName}`
+      : `${study.client} UX case study | ${person.fullName}`;
+  const description = study.problem[lang];
 
   return {
     title,
@@ -71,8 +88,8 @@ export async function generateMetadata({
       description,
       url: canonical,
       siteName: person.fullName,
-      locale: "pl_PL",
-      alternateLocale: "en_GB",
+      locale: lang === "pl" ? "pl_PL" : "en_GB",
+      alternateLocale: lang === "pl" ? "en_GB" : "pl_PL",
       type: "article",
     },
     twitter: {

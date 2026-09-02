@@ -66,20 +66,35 @@ Kolumna „źródło" mówi, skąd wziąć wartość.
 
 ### jakub-wysocki.com
 
-| Element                                | Źródło                      | Uwaga                                           |
-| -------------------------------------- | --------------------------- | ----------------------------------------------- |
-| `Person`, `WebSite`, `Organization` ×2 | `lib/schema.ts`             | render w `app/layout.tsx`, na każdej podstronie |
-| `ProfilePage`                          | `lib/schema.ts`             | tylko `/about` i `/o-mnie`                      |
-| tytuły, opisy, canonical, hreflang     | `app/*/page.tsx`            | budowane z `person`                             |
-| treść wizytówek                        | `components/EntityHome.tsx` | z `data/`, bez drugiego źródła                  |
-| portret                                | `person.portrait`           | zwykły URL, nie `/_next/image`                  |
-| wymiary portretu                       | `person.portraitSize`       | odczyt z pliku przez `sips`                     |
-| sitemap z `<image:image>`              | `app/sitemap.ts`            |                                                 |
-| `lastmod` i `ProfilePage.dateModified` | `FACTS_UPDATED`             | data ręczna, patrz sekcja 4                     |
-| certyfikaty i ich wystawcy             | `data/education.ts`         | `hasCredential` wyprowadzone, nie przepisane    |
+| Element                                | Źródło                      | Uwaga                                        |
+| -------------------------------------- | --------------------------- | -------------------------------------------- |
+| `Person`, `WebSite`, `Organization` ×2 | `lib/schema.ts`             | render w `app/_components/SiteDocument.tsx`  |
+| `ProfilePage`                          | `lib/schema.ts`             | tylko `/about` i `/o-mnie`                   |
+| tytuły, opisy, canonical, hreflang     | `app/*/page.tsx`            | budowane z `person`                          |
+| treść wizytówek                        | `components/EntityHome.tsx` | z `data/`, bez drugiego źródła               |
+| portret                                | `person.portrait`           | zwykły URL, nie `/_next/image`               |
+| wymiary portretu                       | `person.portraitSize`       | odczyt z pliku przez `sips`                  |
+| sitemap z `<image:image>`              | `app/sitemap.ts`            |                                              |
+| `lastmod` i `ProfilePage.dateModified` | `FACTS_UPDATED`             | data ręczna, patrz sekcja 4                  |
+| certyfikaty i ich wystawcy             | `data/education.ts`         | `hasCredential` wyprowadzone, nie przepisane |
 
 Zmiana w `data/site.ts` propaguje się tu automatycznie. Reszta tabeli
 wymaga ręcznej aktualizacji.
+
+### Kontrakt języka i renderowania tras
+
+| Trasy                          | Root layout                  | Źródło `<html lang>`                              | Build |
+| ------------------------------ | ---------------------------- | ------------------------------------------------- | ----- |
+| `/`, `/work`, `/work/[slug]`   | `app/(bilingual)/layout.tsx` | `jw-lang`, potem `Accept-Language`, fallback `en` | `ƒ`   |
+| `/about`                       | `app/(english)/layout.tsx`   | stałe `en`                                        | `○`   |
+| `/o-mnie`                      | `app/(polish)/layout.tsx`    | stałe `pl`                                        | `○`   |
+| niedopasowany URL (global 404) | `app/global-not-found.tsx`   | statyczne `en`; treść dopasowuje klient           | `○`   |
+
+`ƒ` jest tu świadomym renderem na żądanie, a `○` statycznym prerenderem.
+Crawler bez ciastka nie ma osobnej reguły: dostaje polski wariant, gdy jego
+`Accept-Language` preferuje polski, albo angielski fallback w pozostałych
+przypadkach. Metadane tras dwujęzycznych korzystają z tego samego wyniku co
+widoczna treść i `<html lang>`.
 
 ### Profile
 
@@ -185,13 +200,17 @@ oddaje numer telefonu jako JSON, gdy w env jest `CONTACT_PHONE`, a cała ta
 trasa istnieje po to, żeby numer nie leżał w statycznym HTML-u. Nic do niej
 nie linkuje, więc to zabezpieczenie, a nie łatanie wycieku.
 
-**404 jest komponentem serwerowym.** `app/not-found.tsx` eksportuje `metadata`
-(`404 | Jakub Wysocki`, `noindex, follow`), a w komponencie klienckim taki
-eksport jest zabroniony — dlatego treść mieszka w `components/NotFoundView.tsx`.
-Wcześniej `/_not-found` renderował `<title>` strony głównej, czyli każdy błędny
-adres zapowiadał się w SERP-ie i w podglądach linków jako wizytówka osoby.
-`follow: true` jest świadome: crawler, który wpadnie na 404, ma zachować
-ścieżkę powrotną na stronę główną.
+**404 omija root layouty i pozostaje statyczny.** Przy wielu root layoutach
+`app/global-not-found.tsx` eksportuje metadata (`404 | Jakub Wysocki`,
+`noindex, follow`) i pełny dokument. Interaktywna, dwujęzyczna treść mieszka w
+`components/NotFoundView.tsx` i dopasowuje się dopiero na kliencie, więc odczyt
+preferencji nie zmienia 404 w trasę dynamiczną. `follow: true` jest świadome:
+crawler, który wpadnie na 404, ma zachować ścieżkę powrotną na stronę główną.
+Skończony katalog `/work/[slug]` jest sprawdzany w `proxy.ts`: nieznany albo
+nieopublikowany slug zostaje przepisany na niedopasowany adres wewnętrzny, aby
+również dostał ten pełny globalny dokument zamiast generycznego
+`__next_error__` zwracanego przez dopasowaną trasę przy wielu root layoutach.
+Alias `ultrastudio-site` dostaje tam stałe 308 do `/work/ultra-studio`.
 
 **`sameAs` kontra `worksFor`.** `sameAs` zawiera wyłącznie adresy
 identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
@@ -200,14 +219,15 @@ identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
 jeden byt. Relację niesie `worksFor` i `founder`, a widoczna lista na
 wizytówkach pokazuje wszystkie sześć linków bez zmian.
 
-**`<html lang>` jest angielskie.** Root layout jest statyczny dla wszystkich
-tras i musi zadeklarować jeden język; angielski, bo `/about` jest `x-default`,
-węzeł `Person` jest angielski, a `og:locale:alternate` to `en_GB`. Wcześniejsze
-`pl` przeczyło na `/about` trzem sygnałom naraz, a rozjazd `lang` kontra
-`hreflang` bywa powodem odrzucenia całego klastra. Polski niosą poddrzewa:
-`EntityHome` na `/o-mnie` i `LangProvider` na stronie głównej. Języka nie
-przepuszczamy przez root layout dynamicznie — to uczyniłoby każdą trasę
-dynamiczną.
+**`<html lang>` ma trzy osobne granice root layoutu.** Tylko grupa
+`(bilingual)` korzysta z `resolveLang`: najpierw z ciastka `jw-lang`, potem z
+`Accept-Language`, z angielskim fallbackiem. Dzięki temu jej dokument, treść i
+metadane mówią tym samym językiem już w odpowiedzi serwera. Skrypt przed
+pierwszym paintem nadal ustala wyłącznie tryb prezentacji; nie prowadzi drugiej
+heurystyki języka. `/about` ma osobny, statyczny root `lang="en"`, a `/o-mnie`
+statyczny root `lang="pl"`, niezależnie od preferencji zapisanej dla tras
+dwujęzycznych. Zachowują samokanoniczne adresy i parę hreflang; cookie nie może
+zmienić języka dokumentu przypisanego do tych URL-i.
 
 **`StableText` renderuje tylko aktywny język.** Wcześniej komponent trzymał
 w DOM obie wersje, przez co crawler czytał sklejki w rodzaju

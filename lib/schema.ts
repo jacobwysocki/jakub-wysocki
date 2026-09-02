@@ -283,7 +283,7 @@ const organizationNodes = [
 
 /**
  * Graf dla strony głównej: witryna + osoba + firmy.
- * Renderowany w app/layout.tsx, więc trafia do HTML-a każdej podstrony.
+ * Renderowany przez SiteDocument, więc trafia do HTML-a każdego root layoutu.
  */
 export function siteGraph() {
   return {
@@ -325,8 +325,8 @@ export function siteGraph() {
  * Google używa wprost do rozpoznawania stron „o osobie" — mocniejszy
  * sygnał niż zwykły WebPage.
  *
- * Sam węzeł osoby nie jest tu powtarzany: strony-wizytówki siedzą w root
- * layoucie, więc `siteGraph()` już go wstrzyknęło do tego samego dokumentu.
+ * Sam węzeł osoby nie jest tu powtarzany: SiteDocument w stałych root
+ * layoutach już wstrzyknął `siteGraph()` do tego samego dokumentu.
  * Wystarczy referencja przez @id — dublowanie definicji groziłoby rozjazdem.
  */
 export function profilePageGraph(lang: Lang) {
