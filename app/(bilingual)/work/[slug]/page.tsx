@@ -55,7 +55,18 @@ export async function generateMetadata({
   params,
 }: WorkPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { projectId, study } = requirePublishedStudy(slug);
+  const published = findPublishedStudy(slug);
+  // W normalnym routingu proxy odrzuca taki slug przed dopasowaniem strony.
+  // Defensywna odpowiedź zachowuje kontrakt także przy bezpośrednim wywołaniu
+  // funkcji metadanych i nie rzuca drugiego błędu z MetadataOutlet.
+  if (!published) {
+    return {
+      title: `404 | ${person.fullName}`,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const { projectId, study } = published;
   const canonical = canonicalWorkHref(projectId);
   // Metadane mówią językiem czytelnika, tak jak treść i <html lang>.
   // Bez ciastka decyduje Accept-Language; inne języki wpadają w EN.

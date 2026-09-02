@@ -6,9 +6,8 @@ import { useT } from "@/lib/lang-store";
 import LangProvider from "@/components/LangProvider";
 
 /**
- * Kliencka treść dla statycznego app/global-not-found.tsx oraz lokalnego
- * not-found w grupie dwujęzycznej. Metadata pozostają w plikach serwerowych,
- * więc 404 nie dziedziczy tytułu zwykłej strony.
+ * Kliencka treść dla statycznego app/global-not-found.tsx. Metadata pozostają
+ * w pliku serwerowym, więc 404 nie dziedziczy tytułu zwykłej strony.
  *
  * Globalny 404 celowo nie czyta ciastka na serwerze. LangProvider bez
  * initialLang ustala język po stronie klienta; krótkie przełączenie na stronie

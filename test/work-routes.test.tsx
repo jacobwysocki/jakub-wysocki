@@ -1,6 +1,16 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+const routerRefresh = vi.hoisted(() => vi.fn());
+
+vi.mock("next/navigation", async (importOriginal) => {
+  const navigation = await importOriginal<typeof import("next/navigation")>();
+  return {
+    ...navigation,
+    useRouter: () => ({ refresh: routerRefresh }),
+  };
+});
+
 import WorkPage, {
   generateMetadata,
   generateStaticParams,
@@ -48,6 +58,7 @@ function publish(projectId: ProjectId) {
 }
 
 beforeEach(() => {
+  routerRefresh.mockReset();
   resolveLang.mockReset();
   resolveLang.mockResolvedValue("en");
   vi.stubGlobal(
@@ -178,6 +189,13 @@ describe("/work/[slug]", () => {
 
   it("fails closed for an unknown or unpublished slug", async () => {
     delete caseStudies.printly;
+
+    await expect(
+      generateMetadata({ params: Promise.resolve({ slug: "missing" }) }),
+    ).resolves.toMatchObject({
+      title: `404 | ${person.fullName}`,
+      robots: { index: false, follow: true },
+    });
 
     await expect(
       WorkPage({ params: Promise.resolve({ slug: "missing" }) }),

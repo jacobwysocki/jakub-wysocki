@@ -206,6 +206,11 @@ nie linkuje, więc to zabezpieczenie, a nie łatanie wycieku.
 `components/NotFoundView.tsx` i dopasowuje się dopiero na kliencie, więc odczyt
 preferencji nie zmienia 404 w trasę dynamiczną. `follow: true` jest świadome:
 crawler, który wpadnie na 404, ma zachować ścieżkę powrotną na stronę główną.
+Skończony katalog `/work/[slug]` jest sprawdzany w `proxy.ts`: nieznany albo
+nieopublikowany slug zostaje przepisany na niedopasowany adres wewnętrzny, aby
+również dostał ten pełny globalny dokument zamiast generycznego
+`__next_error__` zwracanego przez dopasowaną trasę przy wielu root layoutach.
+Alias `ultrastudio-site` dostaje tam stałe 308 do `/work/ultra-studio`.
 
 **`sameAs` kontra `worksFor`.** `sameAs` zawiera wyłącznie adresy
 identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
