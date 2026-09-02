@@ -200,14 +200,16 @@ identyfikujące **tę osobę**. Adresy firm są z niego odfiltrowane flagą
 jeden byt. Relację niesie `worksFor` i `founder`, a widoczna lista na
 wizytówkach pokazuje wszystkie sześć linków bez zmian.
 
-**`<html lang>` jest angielskie.** Root layout jest statyczny dla wszystkich
-tras i musi zadeklarować jeden język; angielski, bo `/about` jest `x-default`,
-węzeł `Person` jest angielski, a `og:locale:alternate` to `en_GB`. Wcześniejsze
-`pl` przeczyło na `/about` trzem sygnałom naraz, a rozjazd `lang` kontra
-`hreflang` bywa powodem odrzucenia całego klastra. Polski niosą poddrzewa:
-`EntityHome` na `/o-mnie` i `LangProvider` na stronie głównej. Języka nie
-przepuszczamy przez root layout dynamicznie — to uczyniłoby każdą trasę
-dynamiczną.
+**`<html lang>` odpowiada językowi rozstrzygniętemu przez serwer.** Root layout
+korzysta z `resolveLang`: najpierw z ciastka `jw-lang`, potem z
+`Accept-Language`. To świadomie czyni całą aplikację dynamiczną, ale usuwa
+sprzeczność, w której polska treść dwujęzycznych adresów była wysyłana jako
+`<html lang="en">`. Skrypt przed pierwszym paintem nadal ustala wyłącznie tryb
+prezentacji; nie prowadzi drugiej, potencjalnie odmiennej heurystyki języka.
+`LangProvider` dostaje ten sam wybór serwera i synchronizuje atrybut dopiero po
+późniejszej zmianie przełącznikiem. `/about` i `/o-mnie` zachowują osobne,
+samokanoniczne adresy, parę hreflang oraz jawny `lang` na swoich poddrzewach;
+ta decyzja nie łączy ich w jeden dwujęzyczny URL.
 
 **`StableText` renderuje tylko aktywny język.** Wcześniej komponent trzymał
 w DOM obie wersje, przez co crawler czytał sklejki w rodzaju

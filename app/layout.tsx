@@ -6,6 +6,7 @@ import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import JsonLd from "@/components/JsonLd";
 import { MODE_INIT_SCRIPT } from "@/lib/mode-store";
 import { SITE_URL, person } from "@/data/site";
+import { resolveLang } from "@/lib/lang-server";
 import { siteGraph } from "@/lib/schema";
 import "./globals.css";
 
@@ -65,26 +66,22 @@ export const viewport: Viewport = {
   themeColor: "#FBFBFD",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const lang = await resolveLang();
+
   return (
-    // lang="en" na korzeniu, bo root layout jest statyczny dla wszystkich
-    // tras i musi zadeklarować jeden język. Angielski wygrywa, bo /about
-    // jest x-default, węzeł Person jest angielski, a og:locale:alternate to
-    // en_GB — wcześniejsze "pl" przeczyło wszystkim trzem sygnałom naraz
-    // i rozjazd lang kontra hreflang potrafi unieważnić cały klaster.
-    // /o-mnie zostaje poprawne na poziomie poddrzewa: EntityHome ustawia
-    // lang={lang} na własnym wrapperze, a strona niesie og:locale=pl_PL
-    // i inLanguage=pl-PL. Języka nie przepuszczamy przez root layout
-    // dynamicznie — to uczyniłoby każdą trasę dynamiczną.
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    // Ten sam wybór serwera zasila treść dwujęzycznych tras, więc dokument
+    // i body deklarują jeden język już w pierwszym HTML-u. Odczyt ciastka w
+    // root layout świadomie czyni aplikację dynamiczną.
+    <html lang={lang} className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Ustala tryb widoku (prosty/pulpit) przed pierwszym paintem — bez migania */}
         <script dangerouslySetInnerHTML={{ __html: MODE_INIT_SCRIPT }} />
-        {/* Języka nie ustala już skrypt: rozstrzyga go serwer w app/page.tsx
-            (ciastko albo Accept-Language) i wysyła gotowy HTML. Druga
-            heurystyka po stronie klienta mogłaby tylko odpowiedzieć inaczej. */}
+        {/* Języka nie ustala skrypt: rozstrzyga go tutaj serwer z ciastka albo
+            Accept-Language. LangProvider dostaje ten sam wybór, a po zmianie
+            przełącznikiem utrzymuje atrybut bez konkurencyjnej heurystyki. */}
 
         <JsonLd data={siteGraph()} />
       </head>

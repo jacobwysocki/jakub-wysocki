@@ -11,22 +11,34 @@ import { resolveLang } from "@/lib/lang-server";
  * Jeden dwujęzyczny URL jak reszta /work — bez klastra hreflang,
  * kanoniczny przez metadataBase (patrz app/work/[slug]/page.tsx).
  */
-export const metadata: Metadata = {
-  title: `UX case studies | ${person.fullName}`,
-  description:
-    "Six UX/UI case studies told the way they were built: the problem, the design decisions with their rationale, the solution and an honest outcome.",
-  alternates: { canonical: "/work" },
-  openGraph: {
-    title: `UX case studies | ${person.fullName}`,
-    description:
-      "Six UX/UI case studies: problem, design decisions, solution, honest outcomes.",
-    url: "/work",
-    siteName: person.fullName,
-    locale: "pl_PL",
-    alternateLocale: "en_GB",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  // Jak na stronach case'ów: metadane w języku czytelnika, angielskie
+  // dla robota bez ciastka.
+  const lang = await resolveLang();
+  const title =
+    lang === "pl"
+      ? `Realizacje UX | ${person.fullName}`
+      : `UX case studies | ${person.fullName}`;
+  const description =
+    lang === "pl"
+      ? "Sześć realizacji UX/UI opisanych tak, jak powstawały: problem, decyzje projektowe z uzasadnieniem i rozwiązanie, a tam, gdzie dało się to zmierzyć, także wynik."
+      : "Six UX/UI case studies told the way they were built: the problem, the design decisions with their rationale and the solution, and, where it could be measured, the outcome.";
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/work" },
+    openGraph: {
+      title,
+      description,
+      url: "/work",
+      siteName: person.fullName,
+      locale: lang === "pl" ? "pl_PL" : "en_GB",
+      alternateLocale: lang === "pl" ? "en_GB" : "pl_PL",
+      type: "website",
+    },
+  };
+}
 
 export default async function WorkIndexPage() {
   const lang = await resolveLang();

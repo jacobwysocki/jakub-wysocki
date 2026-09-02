@@ -12,10 +12,9 @@ import LangProvider from "@/components/LangProvider";
 import { resolveLang } from "@/lib/lang-server";
 
 /**
- * Strona główna jest jedynym adresem dwujęzycznym, więc jako jedyna czyta
- * ciastko z językiem. To ją przełącza na render dynamiczny — świadomy koszt
- * w zamian za brak migania PL→EN u odbiorcy spoza Polski. Wizytówki
- * /about i /o-mnie mają jeden język na URL i zostają statyczne.
+ * Treść strony głównej korzysta z tego samego serwerowego wyboru co
+ * `<html lang>` w root layout. Dzięki temu pierwszy render dokumentu i body
+ * jest spójny; LangProvider przejmuje późniejsze zmiany przełącznikiem.
  */
 export default async function Home() {
   const lang = await resolveLang();

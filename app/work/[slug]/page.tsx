@@ -57,8 +57,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const { projectId, study } = requirePublishedStudy(slug);
   const canonical = canonicalWorkHref(projectId);
-  const title = `${study.client} UX case study | ${person.fullName}`;
-  const description = study.problem.en;
+  // Metadane mówią językiem czytelnika, tak jak treść i <html lang>:
+  // polski odbiorca udostępnia polski tytuł. Robot bez ciastka dostaje
+  // angielski wariant, spójnie na każdej wizycie.
+  const lang = await resolveLang();
+  const title =
+    lang === "pl"
+      ? `${study.client}: studium przypadku UX | ${person.fullName}`
+      : `${study.client} UX case study | ${person.fullName}`;
+  const description = study.problem[lang];
 
   return {
     title,
@@ -71,8 +78,8 @@ export async function generateMetadata({
       description,
       url: canonical,
       siteName: person.fullName,
-      locale: "pl_PL",
-      alternateLocale: "en_GB",
+      locale: lang === "pl" ? "pl_PL" : "en_GB",
+      alternateLocale: lang === "pl" ? "en_GB" : "pl_PL",
       type: "article",
     },
     twitter: {

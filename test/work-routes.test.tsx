@@ -5,6 +5,7 @@ import WorkPage, {
   generateMetadata,
   generateStaticParams,
 } from "@/app/work/[slug]/page";
+import { generateMetadata as generateWorkIndexMetadata } from "@/app/work/page";
 import {
   PROJECT_IDS,
   caseStudies,
@@ -85,17 +86,22 @@ describe("/work/[slug]", () => {
       params: Promise.resolve({ slug: "printly" }),
     });
 
+    // Bez ciastka języka metadane mówią po angielsku (domyślny język
+    // robota); locale OG podąża za rozstrzygniętym językiem.
     expect(metadata).toMatchObject({
       title: `${study.client} UX case study | ${person.fullName}`,
       description: study.problem.en,
       alternates: { canonical: "/work/printly" },
       openGraph: {
         url: "/work/printly",
-        locale: "pl_PL",
-        alternateLocale: "en_GB",
+        locale: "en_GB",
+        alternateLocale: "pl_PL",
       },
     });
     expect(metadata.alternates?.languages).toBeUndefined();
+    expect(metadata.openGraph?.images).toBeUndefined();
+    const workIndexMetadata = await generateWorkIndexMetadata();
+    expect(workIndexMetadata.openGraph?.images).toBeUndefined();
   });
 
   it("renders a published case in the linear Simple Mode chrome", async () => {

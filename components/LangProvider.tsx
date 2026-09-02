@@ -38,9 +38,9 @@ export default function LangProvider({
     setLangState(normalizeLang(fromCookie ?? navigator.language));
   }, [initialLang]);
 
-  // Atrybut na <html> ustawia root layout wartością domyślną; tutaj
-  // doprowadzamy go do języka faktycznie renderowanego. To sam atrybut,
-  // więc nie powoduje przemalowania treści.
+  // Root layout ustawia ten sam język w odpowiedzi serwera. Efekt utrzymuje
+  // atrybut po zmianie przełącznikiem i nawigacji klienckiej; na pierwszej
+  // hydratacji zapisuje identyczną wartość, więc nie ma rozjazdu.
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
@@ -55,12 +55,9 @@ export default function LangProvider({
   return (
     <LangContext.Provider value={value}>
       {/*
-        lang na wrapperze, bo <html lang> ustawia root layout i nie da się go
-        zmienić z poziomu trasy bez uczynienia całej aplikacji dynamiczną.
-        Dokument deklaruje angielski (x-default to /about), a ta sekcja
-        nadpisuje go językiem faktycznie renderowanym — ten sam zabieg co
-        w EntityHome. Dzięki temu polska treść jest poprawnie otagowana
-        już w HTML-u serwerowym, a nie dopiero po hydratacji.
+        Wrapper zachowuje lokalną semantykę także podczas przełączenia języka
+        po stronie klienta, zanim efekt zsynchronizuje <html>. W pierwszej
+        odpowiedzi oba atrybuty dostają tę samą wartość z serwera.
       */}
       <div lang={lang}>{children}</div>
     </LangContext.Provider>
