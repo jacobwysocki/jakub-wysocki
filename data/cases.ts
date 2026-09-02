@@ -60,7 +60,7 @@ const squizzuSite = showcase.find((s) => s.slug === "squizzu");
 /** Case #2: produkt, który współtworzę od pierwszej linijki kodu */
 export const squizzuCase: FeaturedCase = {
   client: "Squizzu",
-  tag: { pl: "Case study", en: "Case study" },
+  tag: { pl: "Realizacja", en: "Case study" },
   image: "/projects/squizzu.jpg",
   alt: {
     pl: "Strona główna Squizzu otwarta w przeglądarce na MacBooku: hasło o ćwiczeniu rozmów rekrutacyjnych quiz po quizie i ikony kategorii technologicznych.",

@@ -430,31 +430,34 @@ export default function CaseSplit({
                     objectClass="object-center"
                   />
                 </div>
-                {(caseHref || project.link) && (
-                  <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-                    {caseHref && (
-                      <Link
-                        href={caseHref}
-                        className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
-                      >
-                        {t(ui.actions.viewCaseStudy)}
-                        <ArrowUpRight size={15} aria-hidden />
-                      </Link>
-                    )}
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
-                      >
-                        {t(project.linkLabel ?? ui.actions.openSite)}
-                        <ArrowUpRight size={15} aria-hidden />
-                      </a>
-                    )}
-                  </div>
-                )}
               </>
+            )}
+            {/* Drzwi do realizacji renderują się w OBU wariantach: okno
+                produktu ma własną pigułkę adresu, więc dubluje tylko link
+                zewnętrzny, nigdy wejście do case'a. */}
+            {(caseHref || (!project.preview && project.link)) && (
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                {caseHref && (
+                  <Link
+                    href={caseHref}
+                    className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
+                  >
+                    {t(ui.actions.viewCaseStudy)}
+                    <ArrowUpRight size={15} aria-hidden />
+                  </Link>
+                )}
+                {!project.preview && project.link && (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent transition-colors hover:text-ink"
+                  >
+                    {t(project.linkLabel ?? ui.actions.openSite)}
+                    <ArrowUpRight size={15} aria-hidden />
+                  </a>
+                )}
+              </div>
             )}
           </Reveal>
         </div>

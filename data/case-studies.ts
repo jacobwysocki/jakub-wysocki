@@ -1013,7 +1013,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     slug: "alumed",
     client: "Alumed",
     tag: {
-      pl: "UX design + web development",
+      pl: "Projekt UX + strona WWW",
       en: "UX design + web development",
     },
     role: {

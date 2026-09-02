@@ -40,7 +40,7 @@ function DesktopIcon({
           („Doświadczenie") nie ma gdzie się złamać, więc bez dzielenia
           wyrazów clamp ucinał je w poziomie — hyphens-auto dzieli po
           polsku, bo <html lang> jest ustawiane przed malowaniem. */}
-      <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [text-shadow:0_1px_3px_rgba(0,0,0,0.65)]">
+      <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [hyphenate-limit-chars:6_3_4] [text-shadow:0_1px_3px_rgba(0,0,0,0.65)]">
         {t(app.title)}
       </span>
     </button>
