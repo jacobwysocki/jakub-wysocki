@@ -46,8 +46,8 @@ export const engineeringRoles: Role[] = [
         en: "Established an API-first integration workflow using OpenAPI/Swagger-generated TypeScript clients, and collaborate with the backend team on .NET 8 APIs, authentication and payments.",
       },
       {
-        pl: "Zaprojektowałem i wdrożyłem całą warstwę grywalizacji: rankingi, odznaki, systemy progresji i kilka trybów nauki.",
-        en: "Designed and implemented the gamification experience, including leaderboards, badges, progression systems and multiple learning modes.",
+        pl: "Zaprojektowałem i wdrożyłem całą warstwę grywalizacji: rankingi, serie dni nauki, śledzenie postępów i kilka trybów nauki.",
+        en: "Designed and implemented the gamification experience, including leaderboards, learning streaks, progress tracking and multiple learning modes.",
       },
       {
         pl: "Zintegrowałem produktowych agentów GPT-4o z samonaprawiającą się walidacją uszkodzonego JSON-a.",

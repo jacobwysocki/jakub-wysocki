@@ -17,13 +17,12 @@ import { useLang } from "@/lib/lang-store";
  */
 
 const indexCopy = {
-  kicker: { pl: "Case studies", en: "Case studies" },
   title: { pl: "Wybrane realizacje", en: "Selected work" },
   lead: {
-    pl: "Sześć projektów opisanych tak, jak powstawały: problem, decyzje z uzasadnieniem, rozwiązanie i uczciwy wynik.",
-    en: "Six projects told the way they were built: the problem, the decisions with their rationale, the solution and an honest outcome.",
+    pl: "Sześć projektów opisanych tak, jak powstawały: problem, decyzje z uzasadnieniem i rozwiązanie, a tam, gdzie dało się to zmierzyć, także wynik.",
+    en: "Six projects told the way they were built: the problem, the decisions with their rationale and the solution, and, where it could be measured, the outcome.",
   },
-  read: { pl: "Zobacz case study", en: "Read the case study" },
+  read: { pl: "Zobacz realizację", en: "Read the case study" },
 } as const;
 
 function CardCover({ study }: { study: UxCaseStudy }) {
@@ -81,10 +80,7 @@ export default function WorkIndex() {
   return (
     <div className="mx-auto w-full max-w-[1040px] px-6 py-14 sm:px-8">
       <header className="max-w-[64ch]">
-        <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted">
-          {indexCopy.kicker[lang]}
-        </p>
-        <h1 className="mt-2 text-[34px] font-bold tracking-tight text-ink">
+        <h1 className="text-[34px] font-bold tracking-tight text-ink">
           {indexCopy.title[lang]}
         </h1>
         <p className="mt-4 text-[16px] leading-relaxed text-ink/80">
