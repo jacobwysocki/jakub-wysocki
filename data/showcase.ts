@@ -38,8 +38,8 @@ export const showcase: ShowcaseSite[] = [
     },
     overview: {
       what: {
-        pl: "Squizzu to grywalizowana platforma do nauki IT i przygotowania do rozmów rekrutacyjnych: użytkownicy rywalizują w quizach i wyzwaniach, a rankingi, odznaki i ścieżki progresji zamieniają naukę w grę.",
-        en: "Squizzu is a gamified IT learning and interview-preparation platform: users compete in quizzes and challenges while leaderboards, badges and progression paths turn studying into a game.",
+        pl: "Squizzu to grywalizowana platforma do nauki IT i przygotowania do rozmów rekrutacyjnych: użytkownicy rywalizują w quizach i wyzwaniach, a rankingi, serie dni nauki i śledzenie postępów zamieniają naukę w grę.",
+        en: "Squizzu is a gamified IT learning and interview-preparation platform: users compete in quizzes and challenges while leaderboards, learning streaks and progress tracking turn studying into a game.",
       },
       how: {
         pl: "Backend to .NET 8 z orkiestracją Aspire i bazą CosmosDB na Azure, frontend to Next.js z React 19 i TypeScriptem. Zaprojektowałem w Adobe XD 100+ autorskich ekranów i spójny system projektowy, integrację oparłem na klientach generowanych z OpenAPI/Swagger, a produktowych agentów GPT-4o spiąłem z samonaprawiającą się walidacją JSON-a.",

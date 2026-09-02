@@ -130,8 +130,8 @@ export const squizzuCase: FeaturedCase = {
         en: "Learning that plays like a game.",
       },
       text: {
-        pl: "Rankingi, odznaki, systemy progresji i kilka trybów nauki: całą warstwę grywalizacji zaprojektowałem i wdrożyłem. Platforma urosła na niej z zera do ponad tysiąca użytkowników.",
-        en: "Leaderboards, badges, progression systems and several learning modes: I designed and shipped the whole gamification layer. On it the platform grew from zero to over a thousand users.",
+        pl: "Rankingi, serie dni nauki, śledzenie postępów i kilka trybów nauki: całą warstwę grywalizacji zaprojektowałem i wdrożyłem. Platforma urosła na niej z zera do ponad tysiąca użytkowników.",
+        en: "Leaderboards, learning streaks, progress tracking and several learning modes: I designed and shipped the whole gamification layer. On it the platform grew from zero to over a thousand users.",
       },
     },
   ],

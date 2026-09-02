@@ -56,7 +56,7 @@ export const education = {
     /**
      * Kadr albo pętla z symulacji. Wrzuć plik do /public/images i podmień
      * null, np. "/images/drone-sim.webm" (wideo .webm/.mp4, autoplay
-     * w pętli) albo "/images/drone-sim.png" (statyczny screen).
+     * w pętli) albo "/images/drone-sim.mp4" (statyczny screen).
      * null oznacza brak medium.
      */
     media: "/images/drone-sim.mp4" as string | null,
