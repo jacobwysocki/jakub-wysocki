@@ -218,8 +218,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
     ],
     architecture: {
       summary: {
-        pl: "Wczesne pomysły przełożyłem na wymagania techniczne, ścieżki użytkownika i kontrakty między front-endem a back-endem. Architektura produktu była ustalona, zanim ruszył kod.",
-        en: "I translated the early ideas into technical requirements, user journeys and the contracts between frontend and backend. The product architecture was settled before code began.",
+        pl: "Front-end i back-end spina jeden kontrakt OpenAPI: typy klienta generują się prosto z niego, więc rozjazd po stronie API łamie build, zanim dotrze do ekranu użytkownika.",
+        en: "One OpenAPI contract binds the frontend and the backend: the client types are generated straight from it, so drift on the API side breaks the build before it can reach a user's screen.",
       },
     },
     process: {
@@ -348,7 +348,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
           en: "Difficulty-graded practice, not a flat question bank: every quiz holds a fixed 25/50/25 split of easy, medium and hard.",
         },
         rationale: {
-          pl: "Przygotowanie do rozmów działa, gdy jest ustrukturyzowane; stopniowany miks trzyma sesję na tyle wymagającą, by miała sens, nie przechylając się w zniechęcającą.",
+          pl: "Przygotowanie do rozmów działa, gdy jest ustrukturyzowane; stopniowany miks trzyma sesję na tyle wymagającą, by miała sens, ale nie tak trudną, żeby zniechęcała.",
           en: "Interview prep pays off when it's structured; a graded mix keeps a session hard enough to matter without tipping into discouraging.",
         },
       },
@@ -384,8 +384,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       {
         decision: {
-          pl: "Jakość treści bramkowana niezależnie: każde wygenerowane przez AI pytanie przechodzi osobny, „zimny” przebieg autokrytyki, a publikuje je dopiero człowiek.",
-          en: "Content quality gated independently: every AI-generated question passes a separate, cold self-critique pass, and only a human publishes it.",
+          pl: "Jakość treści bramkowana niezależnie, żeby użytkownik nigdy nie zobaczył błędnego pytania: każde pytanie od AI przechodzi osobny, „zimny” przebieg autokrytyki, a publikuje je człowiek.",
+          en: "Content quality gated independently so a user never meets a wrong question: every AI-drafted question passes a separate, cold self-critique pass, and a human publishes it.",
         },
         rationale: {
           pl: "W dwuosobowym zespole zabezpieczenia muszą działać same: drugi, niezależny sędzia na treści podnosi poprzeczkę, zanim ktokolwiek poświęci czas.",
@@ -535,7 +535,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         en: "High-end branding, web design and custom development: the client-facing, visual side of my profile.",
       },
       {
-        pl: "To okno jest hubem: pełne case'y klientów (Alumed, Printly, Venor, identyfikacja Squizzu) żyją w osobnych oknach.",
+        pl: "To okno jest hubem: pełne realizacje klientów (Alumed, Printly, Venor, identyfikacja Squizzu) żyją w osobnych oknach.",
         en: "This window is the hub: the full client cases (Alumed, Printly, Venor, the Squizzu identity) live in their own windows.",
       },
     ],
@@ -574,7 +574,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         },
         rationale: {
           pl: "Pozycjonowanie ma napędzać kod pracujący w tle, a nie ręczna, powtarzalna robota.",
-          en: "Rankings should be driven by code running in the background, not by manual, repetitive busywork.",
+          en: "Search rankings should be driven by code running in the background, not by manual, repetitive busywork.",
         },
       },
     ],
@@ -583,7 +583,34 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         pl: "Marka i strona studia zbudowane we Framerze i spięte z autorskim narzędziem SEO, a zarazem brama do realnych realizacji klientowskich, którym poświęcone są osobne case'y.",
         en: "The studio's brand and site built in Framer, wired to an in-house SEO tool, and serving as the gateway to the real client work that has its own dedicated cases.",
       },
-      media: [],
+      media: [
+        {
+          src: "/projects/ultrastudio/live-hero.jpg",
+          kind: "image",
+          excerpt: true,
+          alt: {
+            pl: "Górna część ultrastud.io na żywo: nagłówek branding & web design, wielki napis ultrastud.io i wstęp o pięciu latach tworzenia marek.",
+            en: "The top of ultrastud.io live: the branding & web design headline, the oversized ultrastud.io wordmark and the intro about five years of brand work.",
+          },
+          caption: {
+            pl: "Strona studia na żywo: identyfikacja, typografia i ton, które ustawiają poprzeczkę dla prac klienckich.",
+            en: "The studio site live: the identity, type and tone that set the bar for the client work.",
+          },
+        },
+        {
+          src: "/projects/ultrastudio/live-portfolio.jpg",
+          kind: "image",
+          excerpt: true,
+          alt: {
+            pl: "Sekcja realizacji na ultrastud.io: plakaty Printly w plenerze, Squizzu na laptopie i billboard Pod Skrzydłami Mistrzów.",
+            en: "The portfolio section on ultrastud.io: Printly posters outdoors, Squizzu on a laptop and the Pod Skrzydłami Mistrzów billboard.",
+          },
+          caption: {
+            pl: "Ściana realizacji: te same projekty, które w tym portfolio mają własne case'y.",
+            en: "The portfolio wall: the same projects that have their own cases in this portfolio.",
+          },
+        },
+      ],
     },
     reflection: {
       pl: "Ultra Studio to designowa strona mojego profilu, nie pojedynczy problem UX. Jego siłą jest to, do czego prowadzi: cztery prawdziwe realizacje i narzędzie, które sam zbudowałem.",
@@ -663,26 +690,6 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         rationale: {
           pl: "Bez endpointu, bez kolejki zadań, bez Chromium po stronie serwera.",
           en: "No endpoint, no job queue, no server-side Chromium.",
-        },
-      },
-      {
-        decision: {
-          pl: "Wybrałem znak, który odmawia składania obietnic: jedna obserwacja ustępująca zrównoważonemu wnioskowi, celowo nie strzałka, wykres, sieć ani cel.",
-          en: "I chose a mark that refuses to overpromise: one observation yielding to a counterweighted conclusion, deliberately not an arrow, chart, network or target.",
-        },
-        rationale: {
-          pl: "Uczciwość produktu polega na tym, że dowód prowadzi do przemyślanego następnego kroku, a nie do gwarantowanego wyniku. Forma musiała nieść tę samą granicę: mieć kierunek, ale nigdy nie twierdzić wyniku.",
-          en: "The product's honesty is that evidence leads to a reasoned next action, not a guaranteed outcome. The form had to carry that same boundary: directional, but never claiming a result.",
-        },
-      },
-      {
-        decision: {
-          pl: "Wybierałem przez system, nie nastrój: 374 kandydatów, kolejne listy skrótowe i prompt dopracowania z zablokowaną formą, wydestylowany z siedmiu wyborów.",
-          en: "I picked by system, not mood: 374 candidates, successive shortlists, and a form-locked refinement prompt distilled from seven picks.",
-        },
-        rationale: {
-          pl: "Faworyt z jednej sesji byłby zgadywaniem. Zawężenie 374 znaków przez jawne listy skrótowe i spisany kontrakt gustu sprawiło, że ostateczny wybór jest powtarzalny i możliwy do obrony, a nie kwestią chwilowego smaku.",
-          en: "A single-session favourite would have been a guess. Narrowing 374 marks through explicit shortlists and a written taste contract made the final choice reproducible and defensible, not a matter of taste on the day.",
         },
       },
     ],
@@ -928,8 +935,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       construction: {
         component: "VenorConstruction",
         note: {
-          pl: "Konstrukcja to siatka 64 jednostek: obserwacja tuszem o promieniu 8 w punkcie (20, 20) i wniosek w kolorze Deep Mulberry o promieniu 12 w punkcie (37,33, 37,33), stosunek pól 4:9 na osi 45 stopni. Ważony tymi polami środek ciężkości pary trafia dokładnie w (32, 32), środek pola konstrukcji.",
-          en: "The construction is a 64-unit grid: an r8 ink observation at (20, 20) and an r12 Deep Mulberry conclusion at (37.33, 37.33), a 4:9 area ratio on a 45-degree bearing. Weighted by those areas, the pair's centroid lands exactly at (32, 32), the centre of the box.",
+          pl: "Konstrukcja stoi na siatce 64 jednostek: mała obserwacja ustępuje większemu wnioskowi na osi 45 stopni, a ich wspólny, ważony polami środek ciężkości pada dokładnie na środek pola. Wymiary i proporcje niesie sam rysunek.",
+          en: "The construction sits on a 64-unit grid: a small observation yields to a larger conclusion on a 45-degree bearing, and their shared, area-weighted centroid lands exactly at the centre of the box. The drawing itself carries the dimensions.",
         },
       },
       palette: {
@@ -1027,6 +1034,12 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       pl: "Klinika medycyny estetycznej z segmentu premium potrzebowała strony, która wygląda tak ekskluzywnie jak sama praktyka, a jednocześnie ładuje się błyskawicznie i zostaje łatwa w edycji dla zespołu. Te trzy siły zwykle ze sobą walczą.",
       en: "A premium aesthetic-medicine clinic needed a site that looks as exclusive as the practice itself, while loading instantly and staying easy for the team to edit. Those three pulls usually fight each other.",
     },
+    context: [
+      {
+        pl: "Praktyka z segmentu premium: strona jest wizytówką kliniki, a zespół musi móc ją prowadzić samodzielnie, bez programisty.",
+        en: "A premium practice: the site is the clinic's calling card, and the team has to be able to run it themselves, without a developer.",
+      },
+    ],
     decisions: [
       {
         decision: {
@@ -1054,7 +1067,38 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         pl: "Skrojona, szybko ładująca się strona osadzona na strukturze WordPressa, którą zespół kliniki prowadzi samodzielnie.",
         en: "A bespoke, fast-loading site on a WordPress structure the clinic's team runs themselves.",
       },
-      media: [],
+      media: [
+        {
+          src: "/projects/alumed/live-hero.jpg",
+          kind: "image",
+          excerpt: true,
+          alt: {
+            pl: "Góra alumed.mx na żywo: serifowy nagłówek Medicina Estética Avanzada, przyciski WhatsApp i rezerwacji oraz trzy obszary praktyki medycznej.",
+            en: "The top of alumed.mx live: the serif Medicina Estética Avanzada headline, WhatsApp and booking buttons, and the three areas of medical practice.",
+          },
+          caption: {
+            pl: "Strona na żywo: spokojna, premium typografia i od razu widoczne dwie drogi kontaktu.",
+            en: "The live site: calm, premium typography with both contact routes visible from the first screen.",
+          },
+        },
+        {
+          src: "/projects/alumed/live-services.jpg",
+          kind: "image",
+          excerpt: true,
+          alt: {
+            pl: "Sekcja usług alumed.mx: numerowana lista najpopularniejszych zabiegów obok zdjęcia gabinetu i wezwanie do rezerwacji wizyty.",
+            en: "The alumed.mx services section: a numbered list of the most popular treatments beside a clinic photo, and the booking call to action.",
+          },
+          caption: {
+            pl: "Usługi jako czytelna, numerowana lista zamiast siatki kart; rezerwacja zawsze o jeden krok.",
+            en: "Services as a readable numbered list rather than a card grid, with booking always one step away.",
+          },
+        },
+      ],
+    },
+    reflection: {
+      pl: "Cała sztuka była w pogodzeniu trzech sił, które zwykle się wykluczają: ekskluzywnego wyglądu, natychmiastowego ładowania i łatwej edycji.",
+      en: "The whole craft was reconciling three forces that usually exclude each other: an exclusive look, instant loading and easy editing.",
     },
   },
 
@@ -1083,7 +1127,7 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       external: {
         url: "https://ultrastud.io/portfolio/printly",
         label: {
-          pl: "Zobacz case study na ultrastud.io",
+          pl: "Zobacz realizację na ultrastud.io",
           en: "See the case study on ultrastud.io",
         },
       },
@@ -1364,7 +1408,54 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
         pl: "Interaktywna symulacja 3D: rozstaw cele dostaw na siatce miasta, podaj wielkość floty albo pozwól aplikacji wyliczyć ją z zasięgu i udźwigu, a potem patrz, jak flota planuje bezkolizyjne trasy, wraca do bazy po doładunek i wraca do domu, z narracją na żywo.",
         en: "An interactive 3D simulation: drop delivery targets on a city grid, set a fleet size or let the app derive it from range and payload, then watch the fleet plan collision-free routes, return to base to reload and fly home, narrated live.",
       },
-      media: [],
+      media: [
+        {
+          src: "/projects/drone-app.jpg",
+          kind: "image",
+          alt: {
+            pl: "AERO-PATH w trakcie misji: trzy trasy dronów na siatce 3D z poziomami baterii, panel sterowania flotą, przyciski algorytmów i terminal symulacji z narracją na żywo.",
+            en: "AERO-PATH mid-mission: three drone routes on a 3D grid with battery levels, the fleet controls, the algorithm buttons and the simulation terminal narrating live.",
+          },
+          caption: {
+            pl: "Misja w toku, uchwycona w aplikacji na żywo.",
+            en: "A mission in flight, captured in the live app.",
+          },
+          callouts: [
+            {
+              x: 37.5,
+              y: 10.3,
+              note: {
+                pl: "Wielkość floty jako pytanie: liczbę dronów podajesz ręcznie albo wyliczana jest z dostaw i udźwigu.",
+                en: "Fleet size as a question: set the drone count by hand or let it be derived from deliveries and payload.",
+              },
+            },
+            {
+              x: 26,
+              y: 18.9,
+              note: {
+                pl: "Punkt odniesienia obok trudnej części: A* i Dijkstra stoją tuż przy kooperacyjnym routerze do porównania.",
+                en: "The baseline beside the hard part: A* and Dijkstra sit next to the cooperative router for comparison.",
+              },
+            },
+            {
+              x: 83,
+              y: 27.6,
+              note: {
+                pl: "Terminal symulacji opowiada przebieg na żywo: klastrowanie, kolejność wizyt, trasa powrotna.",
+                en: "The simulation terminal narrates the run live: clustering, visit order, the return leg.",
+              },
+            },
+            {
+              x: 75,
+              y: 56.6,
+              note: {
+                pl: "Poziom baterii leci razem z dronem, bo limit baterii jest częścią zadania, nie przypisem.",
+                en: "The battery level flies with the drone, because the battery limit is part of the problem, not a footnote.",
+              },
+            },
+          ],
+        },
+      ],
     },
     reflection: {
       pl: "Uczciwie co do zakresu: to aplikacja jednostronicowa, bez back-endu i bez testów poza domyślnymi z toolchainu. Jest po to, żeby pokazać, jak rozkładam trudny problem na czynniki: dzielę go na podproblemy, dobieram właściwe narzędzie do każdego i sprawiam, że wynik widać.",

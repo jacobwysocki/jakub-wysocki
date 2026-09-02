@@ -67,7 +67,7 @@ export const ui = {
     openDesktop: { pl: "Uruchom OS", en: "Launch OS" },
     visitStudio: { pl: "Zobacz ultrastud.io", en: "Visit ultrastud.io" },
     viewWork: { pl: "Zobacz projekty", en: "View work" },
-    viewCaseStudy: { pl: "Zobacz case study", en: "Read the case study" },
+    viewCaseStudy: { pl: "Zobacz realizację", en: "Read the case study" },
     allCaseStudies: {
       pl: "Wszystkie case studies",
       en: "All case studies",
@@ -90,11 +90,11 @@ export const ui = {
     minimizeWindow: { pl: "Minimalizuj okno", en: "Minimise window" },
     maximizeWindow: { pl: "Maksymalizuj okno", en: "Maximise window" },
     connecting: { pl: "Łączenie z", en: "Connecting to" },
-    caseTab: { pl: "Case study", en: "Case study" },
+    caseTab: { pl: "Realizacja", en: "Case study" },
     liveTab: { pl: "Na żywo", en: "Live preview" },
     overviewTab: { pl: "Przegląd", en: "Overview" },
     openFullCase: {
-      pl: "Otwórz pełne case study",
+      pl: "Otwórz pełną realizację",
       en: "Open the full case study",
     },
     whatIsIt: { pl: "Czym to jest", en: "What it is" },
