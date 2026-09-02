@@ -1,6 +1,11 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+// LangProvider odświeża metadane routerem; jsdom nie ma App Routera.
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
+
 import CaseSplit from "@/components/CaseSplit";
 import Timeline from "@/components/Timeline";
 import LangProvider from "@/components/LangProvider";
