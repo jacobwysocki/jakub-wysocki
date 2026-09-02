@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useT, type L10n } from "@/lib/lang-store";
 import { EASE_APPLE } from "@/lib/motion";
+import { TOPMOST_OVERLAY_ATTR } from "@/lib/overlay";
 import type { IterationFrame } from "@/data/case-studies";
 
 /**
@@ -47,6 +48,7 @@ export default function IterationLightbox({
   onNavigate: (index: number) => void;
 }) {
   const t = useT();
+  const reduced = useReducedMotion();
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<Element | null>(null);
   // Portal dotyka document, więc przy renderze na serwerze go nie ma
@@ -64,7 +66,8 @@ export default function IterationLightbox({
     const onKey = (event: KeyboardEvent) => {
       // Klawisze nakładki nie mogą dosięgnąć pulpitu: jego własny Escape
       // (bąbelkujący listener na window) zamknąłby też okno POD nakładką.
-      // Faza capture + stopPropagation kończą zdarzenie tutaj.
+      // Faza capture + stopPropagation kończą zdarzenie tutaj; warstwy
+      // niżej dodatkowo ustępują, widząc atrybut najwyższej nakładki.
       if (event.key === "Escape") {
         event.stopPropagation();
         onClose();
@@ -80,6 +83,31 @@ export default function IterationLightbox({
         event.preventDefault();
         event.stopPropagation();
         onNavigate(((index ?? 0) + 1) % count);
+      }
+      // Pułapka fokusa: aria-modal obiecuje, że Tab nie wyjdzie pod
+      // nakładkę, więc cykl domykamy ręcznie na jej przyciskach.
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusable = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        const active = document.activeElement;
+        const inside =
+          active instanceof HTMLElement && dialogRef.current.contains(active);
+        if (
+          event.shiftKey &&
+          (!inside || active === first || active === dialogRef.current)
+        ) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (!inside || active === last)) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener("keydown", onKey, true);
@@ -127,10 +155,17 @@ export default function IterationLightbox({
             aria-label={`${t(COPY.title)} ${(index ?? 0) + 1}/${count}: ${t(frame.alt)}`}
             tabIndex={-1}
             data-lenis-prevent
-            initial={{ opacity: 0, y: 32, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.98 }}
-            transition={{ duration: 0.4, ease: [...EASE_APPLE] }}
+            {...{ [TOPMOST_OVERLAY_ATTR]: "" }}
+            initial={
+              reduced ? { opacity: 0 } : { opacity: 0, y: 32, scale: 0.97 }
+            }
+            animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.98 }}
+            transition={
+              reduced
+                ? { duration: 0.15 }
+                : { duration: 0.4, ease: [...EASE_APPLE] }
+            }
             className="relative flex max-h-full w-full max-w-[1100px] flex-col outline-none"
           >
             <div className="mb-3 flex items-center justify-between gap-4">
