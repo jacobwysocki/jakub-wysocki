@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { ArrowUpRight } from "lucide-react";
+import { useInView, useReducedMotion } from "framer-motion";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { GithubIcon } from "@/components/logos";
 import { useLang } from "@/lib/lang-store";
-import type { CaseMedia, UxCaseStudy } from "@/data/case-studies";
+import type { CaseMedia, CaseMetric, UxCaseStudy } from "@/data/case-studies";
 
 /**
  * Wspólny korpus case study: jedna implementacja treści dla trasy /work/…
@@ -127,6 +129,142 @@ function MediaFigure({ media }: { media: CaseMedia }) {
         </figcaption>
       ) : null}
     </figure>
+  );
+}
+
+/**
+ * Animowany licznik figury wyniku. Warstwa wizualna pokazuje prawdziwą
+ * wartość od pierwszego renderu aż do wejścia w viewport; zero istnieje
+ * wyłącznie jako klatki biegnącej animacji. Równoległy tekst sr-only trzyma
+ * stałą, sformatowaną wartość, więc czytniki ekranu i roboty renderujące JS
+ * nigdy nie czytają zera.
+ */
+function AnimatedFigure({
+  target,
+  prefix,
+  suffix,
+  lang,
+}: {
+  target: number;
+  prefix: string;
+  suffix: string;
+  lang: "pl" | "en";
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const reduced = useReducedMotion();
+  // Prawdziwa wartość od pierwszego renderu po obu stronach; zero istnieje
+  // wyłącznie jako klatki animacji już w viewporcie. Stan zmienia się tylko
+  // w callbackach requestAnimationFrame, nie synchronicznie w efekcie.
+  const [display, setDisplay] = useState(target);
+  const started = useRef(false);
+  const format = (n: number) =>
+    n.toLocaleString(lang === "pl" ? "pl-PL" : "en-GB");
+
+  useEffect(() => {
+    if (!inView || reduced || started.current) return;
+    started.current = true;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / 1800, 1);
+      setDisplay(Math.round(target * (1 - Math.pow(1 - t, 4))));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduced, target]);
+
+  return (
+    <span ref={ref}>
+      <span
+        aria-hidden
+        className="inline-block whitespace-nowrap tabular-nums"
+        style={{
+          minWidth: `${prefix.length + format(target).length + suffix.length}ch`,
+        }}
+      >
+        {prefix}
+        {format(display)}
+        {suffix}
+      </span>
+      <span className="sr-only">
+        {prefix}
+        {format(target)}
+        {suffix}
+      </span>
+    </span>
+  );
+}
+
+/**
+ * Wynik jako figura, nie wiersz tekstu. Metryka z polem `from` opowiada
+ * drogę: wyszarzony punkt startu, akcentowa strzałka i wartość docelowa.
+ * Jedna zmierzona liczba to jedna figura; wykresu z jednego punktu uczciwie
+ * zrobić się nie da. Wartość bez cyfr (np. beta → live) zostaje statyczną
+ * drogą bez licznika. DOM trzyma porządek dt → dd (wymóg listy definicji),
+ * a wartość idzie nad etykietę odwróconą kolumną flex.
+ */
+function MetricFigure({ metric }: { metric: CaseMetric }) {
+  const lang = useLang();
+  // Prefiks i sufiks przeżywają w całości (waluty, procenty, jednostki);
+  // animowana i formatowana per język jest wyłącznie CAŁKOWITA liczba
+  // (goła albo z grupowaniem przecinkami). Wartość dziesiętna renderuje
+  // się statycznie, bo licznik zgubiłby kropkę (12.5% to nie 125%).
+  let parsed = metric.value.match(/^(\D*?)((?:\d{1,3}(?:,\d{3})+)|\d+)(.*)$/);
+  if (parsed && /^[.,]\d/.test(parsed[3])) parsed = null;
+  const target = parsed
+    ? Number.parseInt(parsed[2].replace(/,/g, ""), 10)
+    : null;
+  const prefix = parsed ? parsed[1] : "";
+  const suffix = parsed ? parsed[3] : "";
+  const journey = metric.from !== undefined;
+
+  return (
+    <div
+      data-testid="metric-figure"
+      className={`flex flex-col-reverse rounded-2xl border border-line/70 bg-black/[0.02] ${
+        journey
+          ? "w-full min-w-0 px-6 py-5 sm:w-auto sm:min-w-[260px] sm:px-7 sm:py-6"
+          : "min-w-[160px] px-6 py-5"
+      }`}
+    >
+      <dt
+        className={`text-[12.5px] leading-snug text-muted ${journey ? "mt-2" : "mt-0.5"}`}
+      >
+        {metric.label[lang]}
+      </dt>
+      {journey ? (
+        <dd className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="text-[20px] font-semibold tracking-tight text-muted sm:text-[22px]">
+            {metric.from}
+          </span>
+          <ArrowRight
+            size={20}
+            strokeWidth={2.5}
+            aria-hidden
+            className="self-center text-accent"
+          />
+          <span className="sr-only">{lang === "pl" ? "do" : "to"}</span>
+          <span className="text-[clamp(34px,8vw,54px)] font-bold leading-none tracking-tight text-ink">
+            {target !== null ? (
+              <AnimatedFigure
+                target={target}
+                prefix={prefix}
+                suffix={suffix}
+                lang={lang}
+              />
+            ) : (
+              metric.value
+            )}
+          </span>
+        </dd>
+      ) : (
+        <dd className="text-[30px] font-bold tracking-tight text-ink">
+          {metric.value}
+        </dd>
+      )}
+    </div>
   );
 }
 
@@ -362,7 +500,9 @@ export default function CaseStudyBody({
       className={
         chrome === "window"
           ? "mx-auto w-full max-w-[760px] px-8 pb-8"
-          : "mx-auto w-full max-w-[720px] px-6 py-10 sm:px-8"
+          : // Szeroka kolumna dla mediów; tekst i tak trzyma miarę 64ch,
+            // więc szerokość strony rośnie tylko na korzyść kadrów.
+            "mx-auto w-full max-w-[940px] px-6 py-10 sm:px-8"
       }
     >
       {chrome === "page" ? (
@@ -477,10 +617,10 @@ export default function CaseStudyBody({
               </div>
             ) : null}
             {study.process.iterations ? (
-              <>
+              <div>
                 <SubHeading>{sectionCopy.iterationsTitle[lang]}</SubHeading>
                 <Prose>{study.process.iterations.note[lang]}</Prose>
-                <ol className="mt-5 grid gap-4 sm:grid-cols-2">
+                <ol className="mt-5 grid gap-5 sm:grid-cols-2">
                   {study.process.iterations.frames.map((frame, index) => (
                     <li key={`${frame.src}-${index}`} className="min-w-0">
                       <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line/70">
@@ -511,7 +651,7 @@ export default function CaseStudyBody({
                     </li>
                   ))}
                 </ol>
-              </>
+              </div>
             ) : null}
           </>
         ) : null}
@@ -598,16 +738,9 @@ export default function CaseStudyBody({
               <Prose>{study.outcome.narrative[lang]}</Prose>
             ) : null}
             {study.outcome.metrics?.length ? (
-              <dl className="mt-5 flex flex-wrap gap-x-12 gap-y-5">
+              <dl className="mt-6 flex flex-wrap gap-4">
                 {study.outcome.metrics.map((metric) => (
-                  <div key={metric.label.en}>
-                    <dd className="text-[26px] font-bold tracking-tight text-ink">
-                      {metric.value}
-                    </dd>
-                    <dt className="mt-0.5 text-[12.5px] leading-snug text-muted">
-                      {metric.label[lang]}
-                    </dt>
-                  </div>
+                  <MetricFigure key={metric.label.en} metric={metric} />
                 ))}
               </dl>
             ) : null}
