@@ -39,8 +39,8 @@ export const askJakubCopy = {
     en: "Ask about documented work, projects, skills, or approach.",
   },
   composerPlaceholder: {
-    pl: "Na przykład: co pokazuje podejście full-stack?",
-    en: "For example: what demonstrates a full-stack approach?",
+    pl: "Np. co pokazuje pełny stack?",
+    en: "e.g. what shows the full stack?",
   },
   ask: { pl: "Zapytaj", en: "Ask" },
   conversation: { pl: "Rozmowa", en: "Conversation" },

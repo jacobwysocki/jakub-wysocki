@@ -87,7 +87,7 @@ export const studioProjects: StudioProject[] = [
     slug: "alumed",
     client: "Alumed",
     tag: {
-      pl: "UX design + web development",
+      pl: "Projekt UX + strona WWW",
       en: "UX design + web development",
     },
     description: {
@@ -175,7 +175,7 @@ export const studioInfo = {
  */
 export const featuredProject = {
   client: "Ultra Studio",
-  tag: { pl: "Case study", en: "Case study" } satisfies L10n,
+  tag: { pl: "Realizacja", en: "Case study" } satisfies L10n,
   image: "/projects/ultrastudio-case2.jpg" as string | null,
   gradient: "linear-gradient(145deg, #0A0A0C 0%, #1D1D1F 45%, #C2410C 130%)",
   steps: [

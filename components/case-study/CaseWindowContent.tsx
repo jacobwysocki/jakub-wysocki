@@ -52,7 +52,9 @@ export default function CaseWindowContent({
             <h1 className="mt-0.5 text-[19px] font-bold tracking-tight text-ink">
               {study.client}
             </h1>
-            <p className="mt-0.5 truncate text-[12.5px] text-muted">{meta}</p>
+            <p className="mt-0.5 text-[12.5px] leading-snug text-muted sm:truncate">
+              {meta}
+            </p>
           </div>
         </div>
 

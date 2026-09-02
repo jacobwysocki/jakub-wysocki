@@ -226,6 +226,14 @@ function Education() {
                 GitHub
                 <ArrowUpRight size={14} aria-hidden className={arrowClass} />
               </a>
+              {/* Trzecie drzwi: pełna realizacja pod /work/drone-path. */}
+              <Link
+                href="/work/drone-path"
+                className="group flex items-center gap-1.5 rounded-full border border-white/25 px-4 py-2 text-[13px] font-semibold text-white/85 transition-colors hover:bg-white/10"
+              >
+                {t(ui.actions.viewCaseStudy)}
+                <ArrowUpRight size={14} aria-hidden className={arrowClass} />
+              </Link>
             </div>
           </div>
         </Reveal>

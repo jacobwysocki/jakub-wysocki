@@ -299,7 +299,7 @@ export default function MobileDesktop({
                       />
                       {/* Jak na pulpicie: bez dzielenia wyrazów clamp ucinał
                           w poziomie pojedyncze długie słowo („Doświadczenie"). */}
-                      <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [text-shadow:0_1px_4px_rgba(0,0,0,0.65)]">
+                      <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [hyphenate-limit-chars:6_3_4] [text-shadow:0_1px_4px_rgba(0,0,0,0.65)]">
                         {t(app.title)}
                       </span>
                     </motion.button>
