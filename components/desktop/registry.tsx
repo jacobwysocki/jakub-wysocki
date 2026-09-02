@@ -126,9 +126,24 @@ const staticAdapters = {
  * Korpus case study ładuje się dopiero przy pierwszym otwarciu okna:
  * rejestr importuje wszystkie aplikacje statycznie, więc bez tej granicy
  * każdy wizytujący pulpit pobierałby też rekordy i layout case'ów.
+ *
+ * `loading` jest obowiązkowe: bez lokalnej granicy zawieszony import chowa
+ * cały pulpit (React pokazuje fallback najbliższej granicy wyżej) i ekran
+ * mruga bielą przy pierwszym otwarciu okna projektu.
  */
 const LazyCaseStudyApp = dynamic(
   () => import("@/components/case-study/CaseStudyApp"),
+  {
+    loading: () => (
+      <div aria-hidden className="animate-pulse space-y-4 p-8">
+        <div className="h-12 w-12 rounded-xl bg-ink/10" />
+        <div className="h-7 w-44 rounded-lg bg-ink/10" />
+        <div className="h-4 w-full max-w-md rounded bg-ink/5" />
+        <div className="h-4 w-3/4 max-w-sm rounded bg-ink/5" />
+        <div className="mt-6 h-64 w-full rounded-2xl bg-ink/5" />
+      </div>
+    ),
+  },
 );
 
 /** Znak kafelka dla aplikacji case study; kolor tła niesie tożsamość marki. */

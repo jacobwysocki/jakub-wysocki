@@ -21,13 +21,23 @@ import type { CaseMedia, CaseMetric, UxCaseStudy } from "@/data/case-studies";
  * Diagramy interaktywne są komponentami, nie danymi, więc mapowanie
  * nazwa → komponent żyje po stronie klienta. Import dynamiczny trzyma ciężkie
  * wizualizacje poza wspólnym chunkiem case'ów.
+ *
+ * `loading` jest obowiązkowe: bez niego zawieszenie importu nie ma lokalnej
+ * granicy i React chowa całą zawartość aż do granicy pulpitu — ekran mruga
+ * bielą tła strony przy pierwszym otwarciu okna z diagramem.
  */
+const diagramFallback = () => (
+  <div aria-hidden className="h-72 w-full animate-pulse rounded-2xl bg-ink/5" />
+);
+
 const caseDiagrams: Record<string, ReturnType<typeof dynamic>> = {
   VenorPipeline: dynamic(() => import("@/components/VenorPipeline"), {
     ssr: false,
+    loading: diagramFallback,
   }),
   VenorConstruction: dynamic(
     () => import("@/components/case-study/VenorConstruction"),
+    { loading: diagramFallback },
   ),
 };
 
