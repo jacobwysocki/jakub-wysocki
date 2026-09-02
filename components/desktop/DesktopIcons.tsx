@@ -28,7 +28,7 @@ function DesktopIcon({
       onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => onOpen({ x: e.clientX, y: e.clientY })}
       aria-label={`${t(app.title)}, ${t(ui.desktop.openWindowHint)}`}
-      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl p-2 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
+      className={`flex w-full flex-col items-center gap-1.5 rounded-2xl px-1 py-2 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
         active ? "bg-white/20 ring-1 ring-white/30" : "hover:bg-white/10"
       }`}
     >
@@ -36,10 +36,12 @@ function DesktopIcon({
         appId={app.id}
         className="h-[52px] w-[52px] shadow-[0_8px_20px_rgba(0,0,0,0.3)]"
       />
-      {/* Etykieta łamie się do dwóch linii. Pojedyncze długie słowo
-          („Doświadczenie") nie ma gdzie się złamać, więc bez dzielenia
-          wyrazów clamp ucinał je w poziomie — hyphens-auto dzieli po
-          polsku, bo <html lang> jest ustawiane przed malowaniem. */}
+      {/* Etykieta łamie się do dwóch linii. Poziomy padding przycisku jest
+          węższy niż pionowy, bo najdłuższa etykieta („Doświadczenie", 67px)
+          musi zmieścić się w komórce panelu w jednej linii. Dzielenie
+          wyrazów zostaje jako siatka bezpieczeństwa dla dłuższych słów —
+          hyphens-auto dzieli po polsku, bo <html lang> jest ustawiane
+          przed malowaniem. */}
       <span className="line-clamp-2 max-w-full break-words text-center text-[10.5px] font-medium leading-[1.15] text-white [hyphens:auto] [hyphenate-limit-chars:6_3_4] [text-shadow:0_1px_3px_rgba(0,0,0,0.65)]">
         {t(app.title)}
       </span>
