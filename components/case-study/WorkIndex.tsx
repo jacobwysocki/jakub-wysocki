@@ -98,7 +98,7 @@ export default function WorkIndex() {
           <li key={study.slug}>
             <Link
               href={`/work/${study.slug}`}
-              className="group block overflow-hidden rounded-2xl border border-line/70 bg-white shadow-soft transition-transform duration-300 hover:-translate-y-1"
+              className="group block overflow-hidden rounded-2xl border border-line/70 bg-white shadow-soft transition-shadow duration-500 ease-apple hover:shadow-lift"
             >
               <div className="aspect-[16/10] w-full overflow-hidden">
                 <CardCover study={study} />
