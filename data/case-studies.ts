@@ -941,8 +941,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
       },
       palette: {
         note: {
-          pl: "Formę zamknięto, zanim wybrano jakikolwiek kolor. Deep Mulberry #8A2853 wybrano jako kierunek produkcyjny 17.08.2026, z mierzonym kontrastem 8,05:1 na Paper; na ciemnym tle rdzeniowy akcent spada do 2,21:1, więc wymagany jest tam wariant Night Mulberry.",
-          en: "The form was locked before any colour was chosen. Deep Mulberry #8A2853 was selected as the production direction on 2026-08-17, with a measured 8.05:1 contrast on Paper; on a dark field the core accent drops to 2.21:1, so a Night Mulberry variant is required there.",
+          pl: "Formę zamknięto, zanim wybrano jakikolwiek kolor. Deep Mulberry #8A2853 wybrano jako kierunek produkcyjny 17.08.2026, z mierzonym kontrastem 8,05:1 na Paper; na ciemnym tle rdzeniowy akcent spada do 2,21:1, więc wniosek przejmuje tam jaśniejszy Mulberry Display.",
+          en: "The form was locked before any colour was chosen. Deep Mulberry #8A2853 was selected as the production direction on 2026-08-17, with a measured 8.05:1 contrast on Paper; on a dark field the core accent drops to 2.21:1, so the lighter Mulberry Display carries the conclusion there.",
         },
         colors: [
           {
@@ -973,8 +973,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
             name: "Mulberry Display",
             value: "#D77BA2",
             role: {
-              pl: "wniosek na ciemnym polu (Night Mulberry)",
-              en: "the conclusion on dark fields (Night Mulberry)",
+              pl: "wniosek na ciemnym polu",
+              en: "the conclusion on dark fields",
             },
           },
         ],
@@ -1446,8 +1446,8 @@ export const caseStudies: Partial<Record<ProjectId, UxCaseStudy>> = {
               },
             },
             {
-              x: 75,
-              y: 56.6,
+              x: 26.5,
+              y: 65,
               note: {
                 pl: "Poziom baterii leci razem z dronem, bo limit baterii jest częścią zadania, nie przypisem.",
                 en: "The battery level flies with the drone, because the battery limit is part of the problem, not a footnote.",
