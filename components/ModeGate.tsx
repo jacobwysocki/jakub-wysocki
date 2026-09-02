@@ -8,6 +8,11 @@ import { EASE_APPLE } from "@/lib/motion";
 
 // Pulpit ładuje się tylko na klencie i tylko, gdy jest potrzebny —
 // użytkownik prostego widoku nie pobiera jego kodu.
+//
+// Świadomy wyjątek od reguły „każdy dynamic() ma loading": ssr:false daje
+// w Next 16 własną granicę z pustym fallbackiem, więc zawieszenie nie chowa
+// strony, a postrzeganą chwilę ładowania pulpitu zagospodarowuje BootScreen
+// wewnątrz samego pulpitu. Osobny loading dublowałby ekran startowy.
 const Desktop = dynamic(() => import("@/components/desktop/Desktop"), {
   ssr: false,
 });

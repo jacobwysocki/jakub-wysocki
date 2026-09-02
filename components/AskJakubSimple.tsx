@@ -9,10 +9,12 @@ const PANEL_ID = "ask-jakub-simple-panel";
 
 // Panel wraz z providerem, kontrolerem sesji i transportem nie należy do
 // pierwszego pakietu strony. Import pojawia się dopiero po aktywacji
-// serwerowo wyrenderowanego przycisku.
+// serwerowo wyrenderowanego przycisku. `loading` daje zawieszeniu lokalną
+// granicę — bez niej React chowa całą stronę do najbliższej granicy wyżej
+// i ekran mruga bielą przy pierwszym kliknięciu.
 const AskJakubSimplePanel = dynamic(
   () => import("@/components/AskJakubSimplePanel"),
-  { ssr: false },
+  { ssr: false, loading: () => null },
 );
 
 export default function AskJakubSimple() {
