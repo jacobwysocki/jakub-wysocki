@@ -6,7 +6,13 @@ import { useInView, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { GithubIcon } from "@/components/logos";
 import { useLang } from "@/lib/lang-store";
-import type { CaseMedia, CaseMetric, UxCaseStudy } from "@/data/case-studies";
+import type {
+  CaseMedia,
+  CaseMetric,
+  IterationFrame,
+  UxCaseStudy,
+} from "@/data/case-studies";
+import IterationLightbox from "@/components/case-study/IterationLightbox";
 
 /**
  * Wspólny korpus case study: jedna implementacja treści dla trasy /work/…
@@ -51,6 +57,7 @@ const sectionCopy = {
   architecture: { pl: "Architektura", en: "Architecture" },
   process: { pl: "Proces", en: "Process" },
   iterationsTitle: { pl: "Iteracje", en: "Iterations" },
+  enlargeIteration: { pl: "Powiększ", en: "Enlarge" },
   decisions: { pl: "Decyzje projektowe", en: "Design decisions" },
   solution: { pl: "Rozwiązanie", en: "The solution" },
   outcome: { pl: "Wynik", en: "Outcome" },
@@ -72,6 +79,68 @@ const sectionCopy = {
 /** Stabilny klucz kadru niezależny od języka czytelnika. */
 function mediaKey(media: CaseMedia) {
   return typeof media.src === "string" ? media.src : media.src.pl;
+}
+
+/**
+ * Oś czasu iteracji: kompaktowa siatka jako przegląd, pełny ekran na klik.
+ * Miniatury pokazują CAŁĄ klatkę (object-contain na białym polu — same
+ * makiety mają białe tło, więc margines jest niewidoczny) zamiast kadru
+ * przyciętego do sztywnych proporcji; czytelność w naturalnej skali
+ * dostarcza nakładka.
+ */
+function IterationHistory({ frames }: { frames: IterationFrame[] }) {
+  const lang = useLang();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <>
+      <ol className="mt-5 grid gap-5 sm:grid-cols-2">
+        {frames.map((frame, index) => (
+          <li key={`${frame.src}-${index}`} className="min-w-0">
+            <button
+              type="button"
+              onClick={() => setOpenIndex(index)}
+              aria-haspopup="dialog"
+              aria-label={`${sectionCopy.enlargeIteration[lang]}: ${frame.alt[lang]}`}
+              className="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-line/70 outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-accent hover:shadow-soft"
+            >
+              <div className="relative aspect-[4/3] bg-white">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={frame.src}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-contain transition-transform duration-300 ease-apple group-hover:scale-[1.015]"
+                />
+                <span
+                  aria-hidden
+                  className="absolute left-2 top-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white ring-2 ring-white"
+                >
+                  {index + 1}
+                </span>
+              </div>
+            </button>
+            {frame.note || frame.final ? (
+              <p className="mt-2 text-[12.5px] leading-snug text-ink/75">
+                {frame.note?.[lang]}
+                {frame.final ? (
+                  <span className="ml-1 font-semibold text-accent">
+                    · {sectionCopy.finalTag[lang]}
+                  </span>
+                ) : null}
+              </p>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+      <IterationLightbox
+        frames={frames}
+        index={openIndex}
+        onClose={() => setOpenIndex(null)}
+        onNavigate={setOpenIndex}
+      />
+    </>
+  );
 }
 
 function MediaFigure({ media }: { media: CaseMedia }) {
@@ -636,37 +705,7 @@ export default function CaseStudyBody({
               <div>
                 <SubHeading>{sectionCopy.iterationsTitle[lang]}</SubHeading>
                 <Prose>{study.process.iterations.note[lang]}</Prose>
-                <ol className="mt-5 grid gap-5 sm:grid-cols-2">
-                  {study.process.iterations.frames.map((frame, index) => (
-                    <li key={`${frame.src}-${index}`} className="min-w-0">
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line/70">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={frame.src}
-                          alt={frame.alt[lang]}
-                          loading="lazy"
-                          className="h-full w-full object-cover object-top"
-                        />
-                        <span
-                          aria-hidden
-                          className="absolute left-2 top-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white ring-2 ring-white"
-                        >
-                          {index + 1}
-                        </span>
-                      </div>
-                      {frame.note || frame.final ? (
-                        <p className="mt-2 text-[12.5px] leading-snug text-ink/75">
-                          {frame.note?.[lang]}
-                          {frame.final ? (
-                            <span className="ml-1 font-semibold text-accent">
-                              · {sectionCopy.finalTag[lang]}
-                            </span>
-                          ) : null}
-                        </p>
-                      ) : null}
-                    </li>
-                  ))}
-                </ol>
+                <IterationHistory frames={study.process.iterations.frames} />
               </div>
             ) : null}
           </>
