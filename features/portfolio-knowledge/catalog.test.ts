@@ -176,6 +176,26 @@ describe("Portfolio Knowledge catalog", () => {
     expect(entry?.evidence).toEqual(["evidence:about"]);
   });
 
+  it("leads the current-work fact with the Deloitte Digital contract and keeps both ventures", () => {
+    const entry = portfolioKnowledge.entries.find(
+      (candidate) => candidate.id === "knowledge:profile:current-work",
+    );
+
+    for (const lang of ["pl", "en"] as const) {
+      const fact = entry?.fact[lang] ?? "";
+      expect(fact.indexOf("Deloitte Digital")).toBeGreaterThanOrEqual(0);
+      expect(fact.indexOf("Deloitte Digital")).toBeLessThan(
+        fact.indexOf("Ultra Studio"),
+      );
+      expect(fact).toContain("Squizzu");
+    }
+    expect(entry?.evidence).toEqual([
+      "evidence:experience:deloitte-digital",
+      "evidence:experience:ultrastudio",
+      "evidence:experience:squizzu",
+    ]);
+  });
+
   it("fails closed for unknown generated IDs", () => {
     expect(findEvidence("evidence:missing")).toBeUndefined();
     expect(findEvidence({ id: "evidence:about" })).toBeUndefined();
