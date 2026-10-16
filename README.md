@@ -1,6 +1,6 @@
 # jakub-wysocki
 
-Personal portfolio of Jakub Wysocki — software engineer & UX/UI designer, co-founder of [Ultra Studio](https://ultrastud.io) and [Squizzu](https://www.squizzu.com).
+Personal portfolio of Jakub Wysocki — software engineer & UX/UI designer, currently an AI Specialist / UX/UI Designer at Deloitte Digital (B2B contract) and co-founder of [Ultra Studio](https://ultrastud.io) and [Squizzu](https://www.squizzu.com).
 
 The site ships in two switchable presentations of the same public portfolio facts:
 
