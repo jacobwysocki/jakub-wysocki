@@ -22,14 +22,14 @@ export const deloitteDigital: Role = {
   id: "deloitte-digital",
   company: "Deloitte Digital",
   role: {
-    pl: "AI Specialist / UX/UI Designer (Senior Consultant)",
-    en: "AI Specialist / UX/UI Designer (Senior Consultant)",
+    pl: "AI Specialist & UX/UI Designer (Senior Consultant)",
+    en: "AI Specialist & UX/UI Designer (Senior Consultant)",
   },
   period: { pl: "paź 2026 - dziś", en: "Oct 2026 - present" },
   location: { pl: "Kraków (hybrydowo)", en: "Kraków, Poland (hybrid)" },
   summary: {
-    pl: "Kontrakt B2B (przez YourITeams) w zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
-    en: "B2B contract (via YourITeams) embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
+    pl: "Kontrakt B2B w zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
+    en: "B2B contract embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
   },
   highlights: [
     {

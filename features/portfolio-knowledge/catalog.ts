@@ -70,7 +70,6 @@ const roleMetadata = {
     aliases: [
       "Deloitte Digital",
       "Deloitte",
-      "YourITeams",
       "Senior Consultant",
       "consulting",
       "B2B contract",
