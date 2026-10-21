@@ -17,7 +17,7 @@ export const RETRIEVAL_FIXTURE_LIMIT = 6;
 
 export const retrievalFixtures: readonly RetrievalFixture[] = [
   {
-    name: "English current contract",
+    name: "English current role",
     lang: "en",
     question: "What does Jakub do at Deloitte Digital?",
     expectedAny: [
@@ -26,7 +26,7 @@ export const retrievalFixtures: readonly RetrievalFixture[] = [
     ],
   },
   {
-    name: "Polish current contract",
+    name: "Polish current role",
     lang: "pl",
     question: "Czym Jakub zajmuje się w Deloitte Digital?",
     expectedAny: [

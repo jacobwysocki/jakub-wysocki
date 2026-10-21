@@ -10,13 +10,13 @@ import {
 } from "@/data/experience";
 
 describe("experience order", () => {
-  it("opens every role list with the current Deloitte Digital contract", () => {
+  it("opens every role list with the current Deloitte Digital role", () => {
     expect(engineeringRoles[0]).toBe(deloitteDigital);
     expect(allRoles.slice(0, 2)).toEqual([deloitteDigital, studioNote]);
     expect(allRoles.filter((role) => role === deloitteDigital)).toHaveLength(1);
   });
 
-  it("writes the ongoing contract in the shared period convention", () => {
+  it("writes the ongoing role in the shared period convention", () => {
     expect(deloitteDigital.period).toEqual({
       pl: "paź 2026 - dziś",
       en: "Oct 2026 - present",

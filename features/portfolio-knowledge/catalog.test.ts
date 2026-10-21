@@ -176,7 +176,7 @@ describe("Portfolio Knowledge catalog", () => {
     expect(entry?.evidence).toEqual(["evidence:about"]);
   });
 
-  it("leads the current-work fact with the Deloitte Digital contract and keeps both ventures", () => {
+  it("leads the current-work fact with the Deloitte Digital role and keeps both ventures", () => {
     const entry = portfolioKnowledge.entries.find(
       (candidate) => candidate.id === "knowledge:profile:current-work",
     );

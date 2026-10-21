@@ -387,7 +387,7 @@ export default function Timeline() {
   }, [fillHeight]);
 
   // Ta sama kolejność co na wizytówkach: najświeższe zajęcie otwiera oś
-  // (kontrakt w Deloitte Digital), potem Ultra Studio i historia zawodowa.
+  // (rola w Deloitte Digital), potem Ultra Studio i historia zawodowa.
   const entries = allRoles;
 
   return (

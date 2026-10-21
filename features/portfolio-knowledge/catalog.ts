@@ -62,7 +62,7 @@ function requiredProjectLocation(
 }
 
 const roleMetadata = {
-  // Keywords stay specific to the contract itself. Generic design and
+  // Keywords stay specific to this role itself. Generic design and
   // engineering vocabulary is already carried by the role's tech tags and
   // fact text; repeating it here let one role crowd out every other entry
   // for broad "design and engineering" questions.
@@ -72,11 +72,9 @@ const roleMetadata = {
       "Deloitte",
       "Senior Consultant",
       "consulting",
-      "B2B contract",
     ],
     pl: [
       "konsultant",
-      "kontrakt",
       "prototypowanie",
       "badania użyteczności",
       "agenci AI",
@@ -85,7 +83,6 @@ const roleMetadata = {
     ],
     en: [
       "consultant",
-      "contract",
       "prototyping",
       "usability research",
       "agent workflows",
@@ -446,7 +443,7 @@ function currentWorkRole(roleId: string): Role {
   return role;
 }
 
-/** The B2B contract leads; both co-founded ventures continue alongside it. */
+/** The Deloitte Digital role leads; both co-founded ventures continue alongside it. */
 const primaryWorkRole = currentWorkRole("deloitte-digital");
 const ventureRoles = [
   currentWorkRole("ultrastudio"),

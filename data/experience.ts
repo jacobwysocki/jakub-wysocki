@@ -15,7 +15,7 @@ export type Role = {
 };
 
 /**
- * Bieżący kontrakt: pierwsza pozycja na każdej liście jako najświeższe
+ * Bieżąca rola: pierwsza pozycja na każdej liście jako najświeższe
  * zajęcie.
  */
 export const deloitteDigital: Role = {
@@ -28,8 +28,8 @@ export const deloitteDigital: Role = {
   period: { pl: "paź 2026 - dziś", en: "Oct 2026 - present" },
   location: { pl: "Kraków (hybrydowo)", en: "Kraków, Poland (hybrid)" },
   summary: {
-    pl: "Kontrakt B2B w zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
-    en: "B2B contract embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
+    pl: "W zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
+    en: "Embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
   },
   highlights: [
     {
@@ -284,7 +284,7 @@ export const studioNote: Role = {
 };
 
 /** Wszystkie pozycje dla widoków, które pokazują też notkę o studiu,
- *  od najświeższego zajęcia: kontrakt w Deloitte Digital, potem Ultra Studio,
+ *  od najświeższego zajęcia: rola w Deloitte Digital, potem Ultra Studio,
  *  dalej historia zawodowa. */
 export const allRoles: Role[] = [
   deloitteDigital,

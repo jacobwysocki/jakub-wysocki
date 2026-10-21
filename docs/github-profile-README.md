@@ -16,7 +16,7 @@
 
 ### 🚀 What I'm building now
 
-- **Deloitte Digital** — _AI Specialist & UX/UI Designer (Senior Consultant), B2B contract._ Embedded in Deloitte Digital's product and engineering teams on a large-scale, consumer-facing digital product: product design and rapid prototyping with AI-assisted tooling, validated in moderated usability research, plus LLM-based features and agent workflows with human-in-the-loop as the default architecture.
+- **Deloitte Digital** — _AI Specialist & UX/UI Designer (Senior Consultant)._ Embedded in Deloitte Digital's product and engineering teams on a large-scale, consumer-facing digital product: product design and rapid prototyping with AI-assisted tooling, validated in moderated usability research, plus LLM-based features and agent workflows with human-in-the-loop as the default architecture.
 - **[Squizzu](https://www.squizzu.com)** — _Co-Founder & Full-Stack Engineer._ A gamified IT learning and interview-preparation platform. Built the architecture (.NET 8 / Aspire, Next.js + React 19, CosmosDB on Azure), integrated **GPT-4o** product agents with self-healing JSON validation, and designed **100+ screens** from scratch.
 - **[Ultra Studio](https://ultrastud.io)** — _Co-Founder, Design & Development._ A creative studio for high-end branding, web design and custom development.
 
