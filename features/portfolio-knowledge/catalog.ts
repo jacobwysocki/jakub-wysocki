@@ -62,6 +62,36 @@ function requiredProjectLocation(
 }
 
 const roleMetadata = {
+  // Keywords stay specific to this role itself. Generic design and
+  // engineering vocabulary is already carried by the role's tech tags and
+  // fact text; repeating it here let one role crowd out every other entry
+  // for broad "design and engineering" questions.
+  "deloitte-digital": {
+    aliases: [
+      "Deloitte Digital",
+      "Deloitte",
+      "Senior Consultant",
+      "consulting",
+    ],
+    pl: [
+      "konsultant",
+      "prototypowanie",
+      "badania użyteczności",
+      "agenci AI",
+      "człowiek w pętli",
+      "zespół międzynarodowy",
+    ],
+    en: [
+      "consultant",
+      "prototyping",
+      "usability research",
+      "agent workflows",
+      "human-in-the-loop",
+      "international team",
+    ],
+    topics: ["experience", "design", "engineering", "ai", "hiring"],
+    highlights: ["design-research", "ai-delivery", "international-team"],
+  },
   ultrastudio: {
     aliases: ["Ultra Studio", "studio", "creative studio", "agency"],
     pl: ["studio kreatywne", "branding", "projektowanie", "agencja"],
@@ -405,13 +435,21 @@ const educationEntries: readonly KnowledgeEntry[] = [
   })),
 ];
 
-const currentWorkRoles = ["ultrastudio", "squizzu"].map((roleId) => {
+function currentWorkRole(roleId: string): Role {
   const role = allRoles.find((candidate) => candidate.id === roleId);
   if (!role) {
     throw new Error(`Missing current-work role: ${roleId}`);
   }
   return role;
-});
+}
+
+/** The Deloitte Digital role leads; both co-founded ventures continue alongside it. */
+const primaryWorkRole = currentWorkRole("deloitte-digital");
+const ventureRoles = [
+  currentWorkRole("ultrastudio"),
+  currentWorkRole("squizzu"),
+];
+const currentWorkRoles = [primaryWorkRole, ...ventureRoles];
 
 const studioDetailKeys = {
   squizzu: ["product", "brand"],
@@ -666,17 +704,20 @@ export const knowledgeEntries: readonly KnowledgeEntry[] = [
       ["currently", "current work", "what is Jakub working on", "active roles"],
     ),
     fact: {
-      pl: `Obecnie Jakub pracuje w dwóch równoległych rolach. ${currentWorkRoles
+      pl: `Obecnie Jakub pracuje w ${primaryWorkRole.company}, a równolegle rozwija dwa współzałożone przedsięwzięcia: ${ventureRoles
+        .map((role) => role.company)
+        .join(" i ")}. ${currentWorkRoles
         .map((role) => `${role.role.pl} w ${role.company}: ${role.summary.pl}`)
         .join(" ")}`,
-      en: `Jakub currently works across two concurrent roles. ${currentWorkRoles
+      en: `Jakub currently works at ${primaryWorkRole.company} and continues two co-founded ventures alongside it: ${ventureRoles
+        .map((role) => role.company)
+        .join(" and ")}. ${currentWorkRoles
         .map((role) => `${role.role.en} at ${role.company}: ${role.summary.en}`)
         .join(" ")}`,
     },
-    evidence: [
-      "evidence:experience:ultrastudio",
-      "evidence:experience:squizzu",
-    ],
+    evidence: currentWorkRoles.map(
+      (role) => `evidence:experience:${role.id}` as const,
+    ),
   },
   {
     id: "knowledge:profile:passions",
@@ -802,6 +843,7 @@ export const followUpSuggestedQuestions: readonly SuggestedQuestion[] = [
     topics: ["design", "engineering", "experience", "projects"],
     knowledge: [
       "knowledge:profile:bio",
+      "knowledge:role:deloitte-digital:highlight:design-research",
       "knowledge:role:mandata:highlight:maps",
       "knowledge:showcase:squizzu:how",
     ],
@@ -814,6 +856,7 @@ export const followUpSuggestedQuestions: readonly SuggestedQuestion[] = [
     },
     topics: ["ai", "engineering", "experience", "projects"],
     knowledge: [
+      "knowledge:role:deloitte-digital:highlight:ai-delivery",
       "knowledge:role:bunzl:highlight:text-to-sql",
       "knowledge:role:squizzu:highlight:gpt-agents",
       "knowledge:role:ultrastudio:highlight:seo-agent",

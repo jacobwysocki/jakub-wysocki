@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Award, Code2, GraduationCap } from "lucide-react";
-import { engineeringRoles, studioNote, type Role } from "@/data/experience";
+import { allRoles, type Role } from "@/data/experience";
 import { education } from "@/data/education";
 import { contactInfo } from "@/data/site";
 import { ui } from "@/data/ui";
@@ -386,8 +386,9 @@ export default function Timeline() {
     };
   }, [fillHeight]);
 
-  // Ultra Studio otwiera oś jako najświeższe, potem historia zawodowa
-  const entries = [studioNote, ...engineeringRoles];
+  // Ta sama kolejność co na wizytówkach: najświeższe zajęcie otwiera oś
+  // (rola w Deloitte Digital), potem Ultra Studio i historia zawodowa.
+  const entries = allRoles;
 
   return (
     <section

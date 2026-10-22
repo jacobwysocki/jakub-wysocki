@@ -14,7 +14,52 @@ export type Role = {
   tech: string[];
 };
 
+/**
+ * Bieżąca rola: pierwsza pozycja na każdej liście jako najświeższe
+ * zajęcie.
+ */
+export const deloitteDigital: Role = {
+  id: "deloitte-digital",
+  company: "Deloitte Digital",
+  role: {
+    pl: "AI Specialist & UX/UI Designer (Senior Consultant)",
+    en: "AI Specialist & UX/UI Designer (Senior Consultant)",
+  },
+  period: { pl: "paź 2026 - dziś", en: "Oct 2026 - present" },
+  location: { pl: "Kraków (zdalnie)", en: "Kraków (remote)" },
+  summary: {
+    pl: "W zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
+    en: "Embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
+  },
+  highlights: [
+    {
+      pl: "Projektowanie produktu i szybkie prototypowanie z narzędziami wspieranymi przez AI, weryfikowane w moderowanych badaniach użyteczności z użytkownikami.",
+      en: "Product design and rapid prototyping with AI-assisted tooling, validated in moderated usability research with real users.",
+    },
+    {
+      pl: "Wnoszenie inżynierii AI do procesu dostarczania: funkcje oparte na LLM, przepływy agentowe i ich ewaluacja, z człowiekiem w pętli jako domyślną architekturą.",
+      en: "Bringing AI engineering into the delivery process: LLM-based features, agent workflows and evaluation, with human-in-the-loop as the default architecture.",
+    },
+    {
+      pl: "Praca na styku designu i inżynierii w międzynarodowym zespole, po angielsku i po polsku.",
+      en: "Working across design and engineering in an international team, in English and Polish.",
+    },
+  ],
+  // Tagi wyprowadzone wprost z opisu wyżej.
+  // Metody i klasy technologii, nie dyscypliny: design niesie już tytuł roli,
+  // a jako tag kradł każde ogólne pytanie o design i inżynierię w Ask Jakub.
+  tech: [
+    "AI-assisted prototyping",
+    "Usability research",
+    "LLM",
+    "AI agents",
+    "Evaluation",
+    "Human-in-the-loop",
+  ],
+};
+
 export const engineeringRoles: Role[] = [
+  deloitteDigital,
   {
     id: "squizzu",
     company: "Squizzu",
@@ -238,9 +283,14 @@ export const studioNote: Role = {
   ],
 };
 
-/** Wszystkie pozycje dla widoków, które pokazują też notkę o studiu.
- *  Ultra Studio pierwsze jako najświeższe zajęcie. */
-export const allRoles: Role[] = [studioNote, ...engineeringRoles];
+/** Wszystkie pozycje dla widoków, które pokazują też notkę o studiu,
+ *  od najświeższego zajęcia: rola w Deloitte Digital, potem Ultra Studio,
+ *  dalej historia zawodowa. */
+export const allRoles: Role[] = [
+  deloitteDigital,
+  studioNote,
+  ...engineeringRoles.filter((role) => role !== deloitteDigital),
+];
 
 /** Kuratorowana lista filtrów technologii (sidebar okna Doświadczenie) */
 export const TECH_FILTERS = [

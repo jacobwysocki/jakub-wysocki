@@ -17,6 +17,24 @@ export const RETRIEVAL_FIXTURE_LIMIT = 6;
 
 export const retrievalFixtures: readonly RetrievalFixture[] = [
   {
+    name: "English current role",
+    lang: "en",
+    question: "What does Jakub do at Deloitte Digital?",
+    expectedAny: [
+      "knowledge:role:deloitte-digital:summary",
+      "knowledge:role:deloitte-digital:highlight:ai-delivery",
+    ],
+  },
+  {
+    name: "Polish current role",
+    lang: "pl",
+    question: "Czym Jakub zajmuje się w Deloitte Digital?",
+    expectedAny: [
+      "knowledge:role:deloitte-digital:summary",
+      "knowledge:role:deloitte-digital:highlight:design-research",
+    ],
+  },
+  {
     name: "English full-stack hiring",
     lang: "en",
     question:
