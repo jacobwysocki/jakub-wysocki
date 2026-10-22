@@ -26,7 +26,7 @@ export const deloitteDigital: Role = {
     en: "AI Specialist & UX/UI Designer (Senior Consultant)",
   },
   period: { pl: "paź 2026 - dziś", en: "Oct 2026 - present" },
-  location: { pl: "Kraków (hybrydowo)", en: "Kraków, Poland (hybrid)" },
+  location: { pl: "Kraków (zdalnie)", en: "Kraków (remote)" },
   summary: {
     pl: "W zespołach produktowo-inżynieryjnych Deloitte Digital, przy dużym produkcie cyfrowym dla odbiorców końcowych.",
     en: "Embedded in Deloitte Digital's product and engineering teams, working on a large-scale, consumer-facing digital product.",
